@@ -9,9 +9,6 @@ const ViewAnalysis = (props) => {
                 <Grid container item xs={6} direction="column" alignItems="center" justify="center">
                     <AnalysisPlayer url='https://www.youtube.com/watch?v=5BehRvzETDY'/>
                 </Grid>
-                <Grid container item xs={6} direction="column" alignItems="center" justify="center">
-                    <VideoPlayer url='https://www.youtube.com/watch?v=5BehRvzETDY'/>
-                </Grid>
             </Grid>
         </Box>
     )

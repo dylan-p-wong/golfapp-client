@@ -5,6 +5,7 @@ import Swing from '../swing/Swing';
 import Notes from '../notes/Notes';
 import { useParams } from 'react-router';
 import ViewAnalysis from '../analysis/ViewAnalysis';
+import DrillView from '../drill/DrillView';
 
 const Lesson = (props) => {
     const { id } = useParams();
@@ -32,7 +33,7 @@ const Lesson = (props) => {
             </AppBar>
             { value == 0 && <AddSwing /> }
             { value == 1 && <ViewAnalysis /> }
-            { value == 2 && <Swing /> }
+            { value == 2 && <DrillView /> }
             { value == 3 && <Notes /> }
         </Box>
     )

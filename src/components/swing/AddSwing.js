@@ -37,7 +37,7 @@ const AddSwing = (props) => {
                     <Grid container spacing={3} >
                         <Grid container item xs={6} direction="column" alignItems="center" justify="center">
                             <Typography variant='h5'>Front</Typography>
-                            <DropzoneArea onChange={handleFileChange} showAlerts={false} filesLimit={1}/>
+                            <DropzoneArea onChange={handleFileChange} showAlerts={false} filesLimit={1} maxFileSize={10000000} showFileNames={true} acceptedFiles={["video/mp4"]}/>
                         </Grid>
                         <Grid container item xs={6} direction="column" alignItems="center" justify="center">
                             <Typography variant='h5'>Side</Typography>

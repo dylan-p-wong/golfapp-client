@@ -1,47 +1,166 @@
 import ReactPlayer from 'react-player';
-import { Icon, Box, Button } from '@material-ui/core'
-import React, { useState, createRef, useRef, useEffect } from 'react';
+import { Icon, Box, Button, Tooltip, Divider } from '@material-ui/core'
+import React, { useState, createRef, useRef, useEffect, Fragment } from 'react';
 import FastForwardIcon from '@material-ui/icons/FastForward';
 import FastRewindIcon from '@material-ui/icons/FastRewind';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
+import MicIcon from '@material-ui/icons/Mic';
+import StopIcon from '@material-ui/icons/Stop';
+import GestureIcon from '@material-ui/icons/Gesture';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import RemoveIcon from '@material-ui/icons/Remove';
+import ClearIcon from '@material-ui/icons/Clear';
+import UndoIcon from '@material-ui/icons/Undo';
+import RedoIcon from '@material-ui/icons/Redo';
+import VideoPlayer from './VideoPlayer';
+import SaveIcon from '@material-ui/icons/Save';
+import CancelIcon from '@material-ui/icons/Cancel';
+
+const drawOptions = [
+    {
+        text: 'Draw',
+        value: 0,
+        icon: <GestureIcon/>
+    },
+    {
+        text: 'Line',
+        value: 1,
+        icon: <RemoveIcon />
+    },
+    {
+        text: 'Circle',
+        value: 2,
+        icon: <RadioButtonUncheckedIcon />
+    }
+];
 
 const AnalysisPlayer = (props) => {
-    const player = createRef();
-    const canvasRef = useRef(null);
-    const contextRef = useRef(null);
-    const [isDrawing, setIsDrawing] = useState(false);
+    const [preview, setPreview] = useState(false);
+    const [previewSource, setPreviewSource] = useState(null);
 
-    const [playing, setPlaying] = useState(false);
-    const [playbackRate, setPlaybackRate] = useState(1);
+    const [analysisFile, setAnalysisFile] = useState(null);
+
+    const contextRef = useRef(null);
+    const canvasRef = useRef(null);
+
+    const videoContextRef = useRef(null);
+    const canvasVideoRef = useRef(null);
+
+    const combinedContextRef = useRef(null);
+    const combinedCanvasRef = useRef(null);
+
+    const mediaRecorder = useRef(null);
+    const videoRef = useRef(null);
+
+    const [canvasStep, setCanvasStep] = useState(-1);
+    const [canvasArray, setCanvasArray] = useState([]);
+    const [drawingType, setDrawingType] = useState(0);
+
+    const [isDrawing, setIsDrawing] = useState(false);
+    const [recording, setRecording] = useState(false);
+
+    const [playing, setPlaying] = useState(true);
+
+    const canvasPush = () => {
+        const newStep = canvasStep + 1;
+        setCanvasStep(newStep);
+        setCanvasArray(prevArray => [...prevArray, canvasRef.current.toDataURL()])
+    }
+    const onUndo = () => {
+    }
+    const onRedo = () => {
+    }
+
+    const onClear = () => {
+        contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+        canvasPush();
+    }
 
     const move = (amount) => {
-        const currentTime = player.current.getCurrentTime();
-        const duration = player.current.getDuration();
+        videoRef.current.currentTime = videoRef.current.currentTime + amount;
+    }
 
-        if (currentTime + amount < 0) {
-            player.current.seekTo(0);
-        } else if (currentTime + amount > duration) {
-            player.current.seekTo(duration);
-        } else {
-            player.current.seekTo(currentTime + amount);
-        }
+    const setPlaybackHandle = (e) => {
+        videoRef.current.playbackRate = parseFloat(e.currentTarget.value);
+    }
+
+    const onRecord = () => {
+        setRecording(true);
+
+        const videoStream = combinedCanvasRef.current.captureStream(60);
+        mediaRecorder.current = new MediaRecorder(videoStream);
+        
+        mediaRecorder.current.addEventListener('dataavailable', (e) => {
+            const file = new File([e.data], "test.mp4", { lastModified: new Date(), type: "video/mp4" });
+            setAnalysisFile(file);
+
+            const url = URL.createObjectURL(e.data);
+            setPreviewSource(url);
+            setPreview(true);
+        });
+        mediaRecorder.current.start();
+    }
+
+    const onStopRecord = () => {
+        mediaRecorder.current.stop();
+        setRecording(false);
+    }
+
+    const onSaveAnalysisFile = () => {
+        console.log(analysisFile);
     }
 
     useEffect(() => {
-        const canvas = canvasRef.current;
-        canvas.width = window.innerWidth * 2;
-        canvas.height = window.innerHeight * 2;
-        canvas.style.width = `${window.innerWidth}px`;
-        canvas.style.height = `${window.innerHeight}px`;
 
-        const context = canvas.getContext('2d');
-        context.scale(2, 2);
-        context.lineCap = 'round';
-        context.strokeStyle = 'black';
-        context.lineWidth = 5;
-        contextRef.current = context;
-    }, []);
+        if (canvasRef && canvasRef.current) {
+            const canvas = canvasRef.current;
+            canvas.width = 700;
+            canvas.height = 700;
+            const context = canvas.getContext('2d');
+    
+            context.lineCap = 'round';
+            context.strokeStyle = 'black';
+            context.lineWidth = 5;
+            contextRef.current = context;
+        }
+
+        if (canvasVideoRef && canvasVideoRef.current) {
+            const videoCanvas = canvasVideoRef.current;
+            videoCanvas.width = 700;
+            videoCanvas.height = 700;
+            const videoCanvasContext = videoCanvas.getContext('2d');
+            videoContextRef.current = videoCanvasContext;
+        }
+        
+        if (combinedCanvasRef && combinedCanvasRef.current) {
+            const combinedCanvas = combinedCanvasRef.current;
+            combinedCanvas.width = 700;
+            combinedCanvas.height = 700;
+            const combinedCanvasContext = combinedCanvas.getContext('2d');
+            combinedContextRef.current = combinedCanvasContext;
+        }
+        
+    }, [preview]);
+
+    useEffect(() => {
+        if (videoRef && videoRef.current) {
+            videoRef.current.addEventListener('play', () => {
+                function step() {
+                    if (!canvasVideoRef || !canvasVideoRef.current || !videoContextRef || !videoContextRef.current || !videoRef || !videoRef.current || !canvasRef || !canvasRef.current || !combinedContextRef || !combinedContextRef.current) return;
+                    
+                    videoContextRef.current.drawImage(videoRef.current, 0, 0, canvasVideoRef.current.width, canvasVideoRef.current.height);
+
+                    combinedContextRef.current.drawImage(canvasVideoRef.current, 0, 0);
+                    combinedContextRef.current.drawImage(canvasRef.current, 0, 0);
+                    
+                    requestAnimationFrame(step);
+                }
+        
+                requestAnimationFrame(step);
+            });
+        }
+    }, [preview]);
 
     const startDrawing = ({ nativeEvent }) => {
         const { offsetX, offsetY } = nativeEvent;
@@ -53,37 +172,91 @@ const AnalysisPlayer = (props) => {
     const finishDrawing = () => {
         contextRef.current.closePath();
         setIsDrawing(false);
+        canvasPush();
     };
 
     const draw = ({ nativeEvent }) => {
         if (!isDrawing) {
             return;
         }
+
         const { offsetX, offsetY } = nativeEvent;
+
         contextRef.current.lineTo(offsetX, offsetY);
         contextRef.current.stroke();
     };
 
+    const onPause = () => {
+        videoRef.current.pause();
+        setPlaying(false);
+    }
+
+    const onPlay = () => {
+        setPlaying(true);
+        videoRef.current.play();
+    }
+
     return (
         <Box>
-            <canvas onMouseDown={startDrawing} onMouseUp={finishDrawing} onMouseMove={draw} ref={canvasRef} style={{ position: 'absolute', zIndex: 998, width: '700px', height: '700px' }}/>
-            <ReactPlayer
-                ref={player}
-                playing={playing} 
-                playbackRate={playbackRate}
-                muted={true}
-                loop={true}
-                url={props.url} 
-                width='700px' 
-                height='700px'
-            />
-            <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-            >
-                { playing ? <PauseIcon style={{ zIndex: 999}} onClick={() => setPlaying(false)} /> : <PlayArrowIcon style={{ zIndex: 999}} onClick={() => setPlaying(true)} />}
+            { !preview ? 
+                <Fragment>
+                    <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                    >
+                        { recording ? <StopIcon onClick={onStopRecord}/> : <MicIcon onClick={onRecord}/>}
+                    </Box>
+                    <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                    >
+                        <Button size="small" variant="contained" value={0.25} onClick={setPlaybackHandle}>0.25x</Button>
+                        <Button size="small" variant="contained" value={0.5} onClick={setPlaybackHandle}>0.5x</Button>
+                        <Button size="small" variant="contained" value={1} onClick={setPlaybackHandle}>1x</Button>
+                    </Box>
+                    <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                    >
+                        { drawOptions.map(item => <Box onClick={() => setDrawingType(item.value)}>{item.icon}</Box> )}
+                        <UndoIcon onClick={onUndo}/>
+                        <RedoIcon />
+                        <ClearIcon onClick={onClear}/>
+                    </Box>
+                    <Box position='relative' width={700} height={700}>
+                    <canvas ref={canvasVideoRef} style={{ position: 'absolute', zIndex: 997, width: '700px', height: '700px' }}/>
+                    <canvas onMouseDown={startDrawing} onMouseUp={finishDrawing} onMouseMove={draw} ref={canvasRef} style={{ position: 'absolute', zIndex: 998, width: '700px', height: '700px' }}/>
+                    <canvas ref={combinedCanvasRef} style={{ position: 'absolute', zIndex: 996, width: '700px', height: '700px' }}></canvas>
+                    </Box>
+                    <video hidden src="/static/images/tiger.mp4" ref={videoRef} autoPlay loop></video>
+                    <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                    >
+                        <FastRewindIcon onClick={() => move(-0.1)} />
+                        { playing ? <PauseIcon onClick={onPause} /> : <PlayArrowIcon onClick={onPlay} />}
+                        <FastForwardIcon onClick={() => move(0.1)} />            
+                    </Box>
+                </Fragment>
+            : 
+            <Box>
+                <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                >
+                    <SaveIcon onClick={onSaveAnalysisFile}/>
+                    <CancelIcon />
+                    <RedoIcon onClick={() => setPreview(false)}/>
+                </Box>
+                <VideoPlayer url={previewSource}/>
             </Box>
+        }
+            
         </Box>
     )
 }
