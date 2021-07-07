@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Tabs, Box, AppBar, Tab, Divider } from "@material-ui/core"
-import Swing from '../swing/Swing';
+import Swing from '../swing/ViewSwing';
 import Notes from '../notes/Notes';
 import { useParams } from 'react-router';
 

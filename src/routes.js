@@ -14,7 +14,7 @@ import LessonPage from './pages/Lesson';
 import Lesson from './components/lesson/Lesson';
 import SwingPage from './pages/Swing';
 import AddSwing from './components/swing/AddSwing';
-import ViewSwing from './components/swing/Swing';
+import Swing from './components/swing/Swing';
 import AddLesson from './components/lesson/AddLesson';
 import { requireAuthentication, noAuthentication } from './components/shared/Authentication';
 
@@ -40,9 +40,9 @@ const routes = [
       { path: 'products', element: <ProductList /> },
       { path: 'mygame', element: <AuthedMyGame /> },
       { path: 'mycoaching', element: <AuthedMyCoaching /> },
-      { path: 'lesson', element: <AuthedLessonPage />, children: [ {path: ':id', element: <Lesson />}, {path: 'add', element: <AddLesson />} ]},
-      { path: 'swing', element: <AuthedSwingPage />, children: [ {path: ':id', element: <ViewSwing />}, {path: 'add', element: <AddSwing />} ]},
-      { path: 'drill', children: [ {path: 'add', element: <AddSwing />}, {path: ':id', element: <ViewSwing />} ]},
+      { path: 'lesson', element: <AuthedLessonPage />, children: [ {path: ':_id', element: <Lesson />}, {path: 'add', element: <AddLesson />} ]},
+      { path: 'swing', element: <AuthedSwingPage />, children: [ {path: ':_id', element: <Swing />}, {path: 'add', element: <AddSwing />} ]},
+      { path: 'drill', children: [ {path: 'add', element: <AddSwing />}, {path: ':_id', element: <Swing />} ]},
       { path: '*', element: <Navigate to="/404" /> },
     ]
   },

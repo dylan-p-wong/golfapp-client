@@ -6,11 +6,13 @@ import 'src/mixins/chartjs';
 import theme from 'src/theme';
 import routes from 'src/routes';
 import { ApolloClient, ApolloProvider, InMemoryCache, createHttpLink } from '@apollo/client';
+import { createUploadLink } from 'apollo-upload-client'
+import { ToastContainer, toast } from 'react-toastify';
 
-const link = createHttpLink({
+const link = createUploadLink({
   uri: 'http://localhost:4000/customers/api',
   credentials: 'include'
-})
+});
 
 const client = new ApolloClient({
   link,
@@ -25,6 +27,7 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <GlobalStyles />
         {routing}
+        <ToastContainer />
       </ThemeProvider>
     </ApolloProvider>
   );
