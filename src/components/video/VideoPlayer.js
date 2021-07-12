@@ -55,9 +55,9 @@ const VideoPlayer = (props) => {
                 justifyContent="center"
                 alignItems="center"
             >
-                <FastRewindIcon onClick={() => move(0.1)} />
+                <FastRewindIcon onClick={() => move(-0.1)} />
                 { playing ? <PauseIcon onClick={() => setPlaying(false)} /> : <PlayArrowIcon onClick={() => setPlaying(true)} />}
-                <FastForwardIcon onClick={() => move(-0.1)} />
+                <FastForwardIcon onClick={() => move(0.1)} />
             </Box>
         </Box>
     )

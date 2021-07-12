@@ -40,7 +40,7 @@ const routes = [
       { path: 'products', element: <ProductList /> },
       { path: 'mygame', element: <AuthedMyGame /> },
       { path: 'mycoaching', element: <AuthedMyCoaching /> },
-      { path: 'lesson', element: <AuthedLessonPage />, children: [ {path: ':_id', element: <Lesson />}, {path: 'add', element: <AddLesson />} ]},
+      { path: 'lesson', element: <AuthedLessonPage />, children: [ {path: ':_id', element: <Lesson />}, {path: 'add/:_id', element: <AddLesson />} ]},
       { path: 'swing', element: <AuthedSwingPage />, children: [ {path: ':_id', element: <Swing />}, {path: 'add', element: <AddSwing />} ]},
       { path: 'drill', children: [ {path: 'add', element: <AddSwing />}, {path: ':_id', element: <Swing />} ]},
       { path: '*', element: <Navigate to="/404" /> },

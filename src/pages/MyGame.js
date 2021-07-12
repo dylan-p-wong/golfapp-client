@@ -5,13 +5,17 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useQuery } from '@apollo/client';
 import { USER_SWINGS } from 'src/graphql/swing';
+import { GET_USER_LESSONS_PLAYER } from 'src/graphql/lesson';
 
 const MyGame = () => {
   const navigate = useNavigate();
-  const { loading, error, data } = useQuery(USER_SWINGS);
+  const { loading: userSwingsLoading, error: userSwingsError, data: userSwingsData } = useQuery(USER_SWINGS);
+  const { loading: userLessonsLoading, error: userLessonsError, data: userLessonsData } = useQuery(GET_USER_LESSONS_PLAYER);
 
-  if (loading) return <h1>Loading...</h1>;
-  if (error) return <h1>Error</h1>;
+  if (userSwingsLoading || userLessonsLoading) return <h1>Loading...</h1>;
+  if (userSwingsError || userLessonsError) return <h1>Error</h1>;
+
+  console.log(userLessonsData);
 
   return (
   <>
@@ -38,7 +42,7 @@ const MyGame = () => {
             <CardHeader title="Saved Swings" action={<Button color="primary" variant="contained" size="small" onClick={() => navigate('/app/swing/add', { replace: true })}>Add Swing</Button>}/>
             <CardContent>
               {
-                data.userSwings.map(swing => {
+                userSwingsData.userSwings.map(swing => {
                   return (
                     <Box m={2} onClick={() => navigate(`/app/swing/${swing._id}`, { replace: true })}>
                       <Card>
@@ -58,21 +62,6 @@ const MyGame = () => {
             <Card>
               <CardHeader title="Saved Drills" action={<Button color="primary" variant="contained" size="small">Find Drills</Button>}/>
               <CardContent>
-                <Box m={2}>
-                  <Card>
-                    <CardHeader title="2021-03-04" subheader="Dylan Wong"/>
-                  </Card>
-                </Box>
-                <Box m={2}>
-                  <Card>
-                    <CardHeader title="2021-03-04" subheader="Dylan Wong"/>
-                  </Card>
-                </Box>
-                <Box m={2}>
-                  <Card>
-                    <CardHeader title="2021-03-04" subheader="Dylan Wong"/>
-                  </Card>
-                </Box>
               </CardContent>
             </Card>
           </Grid>
@@ -83,21 +72,15 @@ const MyGame = () => {
             <Card>
               <CardHeader title="My Lessons" action={<Button color="primary" variant="contained" size="small">Find Lesson</Button>}/>
               <CardContent>
-                <Box m={2} onClick={() => navigate('/app/lesson/asdf', { replace: true })}>
-                  <Card>
-                    <CardHeader title="2021-03-04" subheader="Dylan Wong"/>
-                  </Card>
-                </Box>
-                <Box m={2}>
-                  <Card>
-                    <CardHeader title="2021-03-04" subheader="Dylan Wong"/>
-                  </Card>
-                </Box>
-                <Box m={2}>
-                  <Card>
-                    <CardHeader title="2021-03-04" subheader="Dylan Wong"/>
-                  </Card>
-                </Box>
+                { userLessonsData.getUserPlayerLessons.map(item => {
+                  return (
+                    <Box m={2} onClick={() => navigate(`/app/lesson/${item._id}`, { replace: true })}>
+                      <Card>
+                        <CardHeader title={"Coach: " + item.coach.firstname + " " + item.player.lastname} subheader={item.date}/>
+                      </Card>
+                    </Box>
+                  )
+                }) }
               </CardContent>
             </Card>
           </Grid>

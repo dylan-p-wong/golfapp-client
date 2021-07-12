@@ -12,8 +12,6 @@ const Swing = (props) => {
     if (loading) return <h1>Loading..</h1>;
     if (error) return <h1>Error</h1>
 
-    console.log(data);
-
     return (
         <Box>
             <ViewSwing videoURL={data.getSwing.frontVideo}/>

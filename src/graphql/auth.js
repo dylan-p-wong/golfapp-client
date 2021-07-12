@@ -29,3 +29,16 @@ export const ME = gql`
         }
     }
 `;
+
+export const GET_USERS = gql`
+    query{
+        getUsers{
+            _id
+            email
+            firstname
+            lastname
+            swingDirection
+            handicap
+        }
+    }
+`;

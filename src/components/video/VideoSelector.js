@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Tab, Tabs, Box, AppBar, Avatar, Button } from "@material-ui/core"
+import { USER_SWINGS } from 'src/graphql/swing';
+import { useQuery } from '@apollo/client';
 
 const VideoSelector = (props) => {
-    const { items, onAdd } = props;
-
+    const { items = [], onAdd, text } = props;
     const [value, setValue] = useState(0);
 
     const handleChange = (event, newValue) => {
@@ -20,18 +21,19 @@ const VideoSelector = (props) => {
                 variant="scrollable"
                 scrollButtons="auto"
             >
-                <Tab 
-                    label={"test"}
-                    value={0}
-                    icon={<Avatar src="https://www.pixsy.com/wp-content/uploads/2021/04/ben-sweet-2LowviVHZ-E-unsplash-1.jpeg"/>}
-                />
-                <Tab 
-                    label={"test"}
-                    value={1}
-                    icon={<Avatar src="https://www.pixsy.com/wp-content/uploads/2021/04/ben-sweet-2LowviVHZ-E-unsplash-1.jpeg"/>}
-                />
+                {
+                    items.map((item, index) => {
+                        return (
+                            <Tab 
+                                label={item.title + " " + item.date}
+                                icon={<Avatar src="https://www.pixsy.com/wp-content/uploads/2021/04/ben-sweet-2LowviVHZ-E-unsplash-1.jpeg"/>}
+                                index={index}
+                            />
+                        )
+                    })
+                }
             </Tabs>
-            <Button onClick={props.onAdd}>Add Swing</Button>
+            <Button onClick={() => props.onAdd(items[value])}>{text}</Button>
         </AppBar>
     )
 }

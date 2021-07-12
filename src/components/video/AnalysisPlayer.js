@@ -16,6 +16,9 @@ import RedoIcon from '@material-ui/icons/Redo';
 import VideoPlayer from './VideoPlayer';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
+import { useMutation } from '@apollo/client';
+import { ADD_ANALYSIS } from 'src/graphql/analysis';
+import { ADD_ANALYSIS_TO_LESSON } from 'src/graphql/lesson';
 
 const drawOptions = [
     {
@@ -36,6 +39,11 @@ const drawOptions = [
 ];
 
 const AnalysisPlayer = (props) => {
+    const [addAnalysis, {}] = useMutation(ADD_ANALYSIS);
+    const [addAnalysisToLesson, {}] = useMutation(ADD_ANALYSIS_TO_LESSON);
+
+    const { videoURL, onCancel, playerId, lessonId } = props;
+
     const [preview, setPreview] = useState(false);
     const [previewSource, setPreviewSource] = useState(null);
 
@@ -92,7 +100,7 @@ const AnalysisPlayer = (props) => {
         mediaRecorder.current = new MediaRecorder(videoStream);
         
         mediaRecorder.current.addEventListener('dataavailable', (e) => {
-            const file = new File([e.data], "test.mp4", { lastModified: new Date(), type: "video/mp4" });
+            const file = new File([e.data], "analysis.mp4", { lastModified: new Date(), type: "video/mp4" });
             setAnalysisFile(file);
 
             const url = URL.createObjectURL(e.data);
@@ -107,8 +115,14 @@ const AnalysisPlayer = (props) => {
         setRecording(false);
     }
 
-    const onSaveAnalysisFile = () => {
-        console.log(analysisFile);
+    const onSaveAnalysisFile = async () => {
+        const { data, error, loading } = await addAnalysis({ variables: { date: "2021-01-01", title: "test", note: "testting", playerId, video: analysisFile, direction: 'FRONT' }});
+        
+        console.log(data);
+
+        if (lessonId) {
+            await addAnalysisToLesson({ variables: { lessonId, analysisId: data.addAnalysis._id }});
+        }
     }
 
     useEffect(() => {
@@ -206,6 +220,7 @@ const AnalysisPlayer = (props) => {
                         alignItems="center"
                     >
                         { recording ? <StopIcon onClick={onStopRecord}/> : <MicIcon onClick={onRecord}/>}
+                        <CancelIcon onClick={onCancel}/>
                     </Box>
                     <Box
                         display="flex"
@@ -231,7 +246,7 @@ const AnalysisPlayer = (props) => {
                     <canvas onMouseDown={startDrawing} onMouseUp={finishDrawing} onMouseMove={draw} ref={canvasRef} style={{ position: 'absolute', zIndex: 998, width: '700px', height: '700px' }}/>
                     <canvas ref={combinedCanvasRef} style={{ position: 'absolute', zIndex: 996, width: '700px', height: '700px' }}></canvas>
                     </Box>
-                    <video hidden src="/static/images/tiger.mp4" ref={videoRef} autoPlay loop></video>
+                    <video hidden crossOrigin="anonymous" src={videoURL} ref={videoRef} autoPlay loop></video>
                     <Box
                         display="flex"
                         justifyContent="center"
@@ -250,7 +265,7 @@ const AnalysisPlayer = (props) => {
                     alignItems="center"
                 >
                     <SaveIcon onClick={onSaveAnalysisFile}/>
-                    <CancelIcon />
+                    <CancelIcon onClick={onCancel}/>
                     <RedoIcon onClick={() => setPreview(false)}/>
                 </Box>
                 <VideoPlayer url={previewSource}/>
