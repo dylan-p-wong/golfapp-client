@@ -15,8 +15,6 @@ const MyGame = () => {
   if (userSwingsLoading || userLessonsLoading) return <h1>Loading...</h1>;
   if (userSwingsError || userLessonsError) return <h1>Error</h1>;
 
-  console.log(userLessonsData);
-
   return (
   <>
     <Helmet>

@@ -1,6 +1,6 @@
 import ReactPlayer from 'react-player';
 import { Icon, Box, Button, Tooltip, Divider } from '@material-ui/core'
-import React, { useState, createRef, useRef, useEffect, Fragment } from 'react';
+import React, { useState, createRef, useRef, useEffect, Fragment, useImperativeHandle, forwardRef } from 'react';
 import FastForwardIcon from '@material-ui/icons/FastForward';
 import FastRewindIcon from '@material-ui/icons/FastRewind';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
@@ -13,7 +13,6 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import ClearIcon from '@material-ui/icons/Clear';
 import UndoIcon from '@material-ui/icons/Undo';
 import RedoIcon from '@material-ui/icons/Redo';
-import VideoPlayer from './VideoPlayer';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { useMutation } from '@apollo/client';
@@ -39,11 +38,11 @@ const drawOptions = [
     }
 ];
 
-const AnalysisPlayer = (props) => {
+const AnalysisBase = forwardRef((props, ref) => {
     const [addAnalysis, {}] = useMutation(ADD_ANALYSIS);
     const [addAnalysisToLesson, {}] = useMutation(ADD_ANALYSIS_TO_LESSON);
     
-    const { videoURL, onCancel, playerId, lessonId } = props;
+    const { videoURL } = props;
 
     const [preview, setPreview] = useState(false);
     const [previewSource, setPreviewSource] = useState(null);
@@ -61,7 +60,7 @@ const AnalysisPlayer = (props) => {
 
     const mediaRecorder = useRef(null);
     const videoRef = useRef(null);
-    
+
     const [canvasStep, setCanvasStep] = useState(-1);
     const [canvasArray, setCanvasArray] = useState([]);
     const [drawingType, setDrawingType] = useState(0);
@@ -76,10 +75,10 @@ const AnalysisPlayer = (props) => {
         setCanvasStep(newStep);
         setCanvasArray(prevArray => [...prevArray, canvasRef.current.toDataURL()])
     }
-    const onUndo = () => {
-    }
-    const onRedo = () => {
-    }
+    // const onUndo = () => {
+    // }
+    // const onRedo = () => {
+    // }
 
     const onClear = () => {
         contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
@@ -94,38 +93,28 @@ const AnalysisPlayer = (props) => {
         videoRef.current.playbackRate = parseFloat(e.currentTarget.value);
     }
 
-    const onRecord = () => {
-        setRecording(true);
-        toast("Recording started!");
-
-        const videoStream = combinedCanvasRef.current.captureStream(60);
-        mediaRecorder.current = new MediaRecorder(videoStream);
-        
-        mediaRecorder.current.addEventListener('dataavailable', (e) => {
-            const file = new File([e.data], "analysis.mp4", { lastModified: new Date(), type: "video/mp4" });
-            setAnalysisFile(file);
-
-            const url = URL.createObjectURL(e.data);
-            setPreviewSource(url);
-            setPreview(true);
-        });
-        mediaRecorder.current.start();
-    }
-
-    const onStopRecord = () => {
-        mediaRecorder.current.stop();
-        toast("Recording stopped!");
-        setRecording(false);
-    }
-
-    const onSaveAnalysisFile = async () => {
-        const { data, error, loading } = await addAnalysis({ variables: { date: "2021-01-01", title: "test", note: "testting", playerId, video: analysisFile }});
-        
-        if (lessonId) {
-            await addAnalysisToLesson({ variables: { lessonId, analysisId: data.addAnalysis._id }});
+    useImperativeHandle(ref, () => ({
+        startRecord() {
+            setRecording(true);
+    
+            const videoStream = combinedCanvasRef.current.captureStream(60);
+            mediaRecorder.current = new MediaRecorder(videoStream);
+            
+            mediaRecorder.current.addEventListener('dataavailable', (e) => {
+                const file = new File([e.data], "analysis.mp4", { lastModified: new Date(), type: "video/mp4" });
+                console.log(file);
+                setAnalysisFile(file);
+            });
+            mediaRecorder.current.start();
+        },
+        stopRecord() {
+            mediaRecorder.current.stop();
+            setRecording(false);
+        },
+        getFile() {
+            return analysisFile;
         }
-        toast("Analysis Saved!");
-    }
+    }));
 
     useEffect(() => {
 
@@ -214,75 +203,49 @@ const AnalysisPlayer = (props) => {
 
     return (
         <Box>
-            { !preview ? 
-                <Fragment>
-                    <Box
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                    >
-                        { recording ? <StopIcon onClick={onStopRecord}/> : <MicIcon onClick={onRecord}/>}
-                        <CancelIcon onClick={onCancel}/>
-                    </Box>
-                    <Box
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                    >
-                        <Button size="small" variant="contained" value={0.25} onClick={setPlaybackHandle}>0.25x</Button>
-                        <Button size="small" variant="contained" value={0.5} onClick={setPlaybackHandle}>0.5x</Button>
-                        <Button size="small" variant="contained" value={1} onClick={setPlaybackHandle}>1x</Button>
-                    </Box>
-                    <Box
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                    >
-                        { drawOptions.map(item => <Box onClick={() => setDrawingType(item.value)}>{item.icon}</Box> )}
-                        <UndoIcon onClick={onUndo}/>
-                        <RedoIcon />
-                        <ClearIcon onClick={onClear}/>
-                    </Box>
-                    <Box
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                    >
-                    <Box position='relative' width={700} height={700} border={1}>
-                        <canvas ref={canvasVideoRef} style={{ position: 'absolute', zIndex: 997, width: '700px', height: '700px' }}/>
-                        <canvas onMouseDown={startDrawing} onMouseUp={finishDrawing} onMouseMove={draw} ref={canvasRef} style={{ position: 'absolute', zIndex: 998, width: '700px', height: '700px' }}/>
-                        <canvas ref={combinedCanvasRef} style={{ position: 'absolute', zIndex: 996, width: '700px', height: '700px' }}></canvas>
-                    </Box>
-                    </Box>
-
-                    <video hidden crossOrigin="anonymous" src={videoURL} ref={videoRef} autoPlay loop></video>
-                    <Box
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                    >
-                        <FastRewindIcon onClick={() => move(-0.1)} />
-                        { playing ? <PauseIcon onClick={onPause} /> : <PlayArrowIcon onClick={onPlay} />}
-                        <FastForwardIcon onClick={() => move(0.1)} />            
-                    </Box>
-                </Fragment>
-            : 
-            <Box>
-                <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                >
-                    <SaveIcon onClick={onSaveAnalysisFile}/>
-                    <CancelIcon onClick={onCancel}/>
-                    <RedoIcon onClick={() => setPreview(false)}/>
-                </Box>
-                <VideoPlayer url={previewSource}/>
+            <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+            >
+                <Button size="small" variant="contained" value={0.25} onClick={setPlaybackHandle}>0.25x</Button>
+                <Button size="small" variant="contained" value={0.5} onClick={setPlaybackHandle}>0.5x</Button>
+                <Button size="small" variant="contained" value={1} onClick={setPlaybackHandle}>1x</Button>
             </Box>
-        }
-            
+            <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+            >
+                { drawOptions.map(item => <Box onClick={() => setDrawingType(item.value)}>{item.icon}</Box> )}
+                {/* <UndoIcon onClick={onUndo}/> */}
+                {/* <RedoIcon /> */}
+                <ClearIcon onClick={onClear}/>
+            </Box>
+            <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+            >
+                <Box position='relative' width={700} height={700} border={1}>
+                    <canvas ref={canvasVideoRef} style={{ position: 'absolute', zIndex: 997, width: '700px', height: '700px' }}/>
+                    <canvas onMouseDown={startDrawing} onMouseUp={finishDrawing} onMouseMove={draw} ref={canvasRef} style={{ position: 'absolute', zIndex: 998, width: '700px', height: '700px' }}/>
+                    <canvas ref={combinedCanvasRef} style={{ position: 'absolute', zIndex: 996, width: '700px', height: '700px' }}></canvas>
+                </Box>
+            </Box>
+
+            <video hidden crossOrigin="anonymous" src={videoURL} ref={videoRef} autoPlay loop></video>
+            <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+            >
+                <FastRewindIcon onClick={() => move(-0.1)} />
+                { playing ? <PauseIcon onClick={onPause} /> : <PlayArrowIcon onClick={onPlay} />}
+                <FastForwardIcon onClick={() => move(0.1)} />            
+            </Box>
         </Box>
     )
-}
+});
 
-export default AnalysisPlayer;
+export default AnalysisBase;

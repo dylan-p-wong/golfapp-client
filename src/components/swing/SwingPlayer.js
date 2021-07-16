@@ -6,10 +6,10 @@ const ViewSwing = (props) => {
         <Box p={6}>
             <Grid container spacing={3} >
                 <Grid container item xs={6} direction="column" alignItems="center" justify="center">
-                    <VideoPlayer url={props.videoURL}/>
+                    <VideoPlayer url={props.frontVideoURL}/>
                 </Grid>
                 <Grid container item xs={6} direction="column" alignItems="center" justify="center">
-                    <VideoPlayer url={props.videoURL}/>
+                    <VideoPlayer url={props.sideVideoURL}/>
                 </Grid>
             </Grid>
         </Box>

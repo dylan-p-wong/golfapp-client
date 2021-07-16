@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const ADD_ANALYSIS = gql`
-    mutation($date: String!, $title: String!, $note: String!, $playerId: String, $video: Upload!, $direction: videoDirectionEnumType){
-        addAnalysis(date: $date, title: $title, note: $note, playerId: $playerId, video: $video, direction: $direction) {
+    mutation($date: String!, $title: String!, $playerId: String, $video1: Upload, $video2: Upload){
+        addAnalysis(date: $date, title: $title, playerId: $playerId, video1: $video1, video2: $video2) {
             _id
             date
             title

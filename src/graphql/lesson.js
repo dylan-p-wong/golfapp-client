@@ -6,21 +6,13 @@ export const CREATE_LESSON = gql`
             _id
             date
             title
-            swings {
-                _id
-                date
-                title
-                note
-                frontVideo
-                sideVideo
-                player
-                owner
-            }
-            analyses
-            drills
             notes
-            player
-            coach
+            player {
+                _id
+            }
+            coach {
+                _id
+            }
         }
     }
 `;
@@ -31,7 +23,16 @@ export const GET_USER_LESSONS_PLAYER = gql`
             _id
             date
             title
-            analyses
+            analyses {
+                _id
+                date
+                title
+                note
+                frontVideo
+                sideVideo
+                player
+                owner
+            }
             drills
             notes
             player{
@@ -60,7 +61,16 @@ export const GET_USER_LESSONS_COACH = gql`
             _id
             date
             title
-            analyses
+            analyses {
+                _id
+                date
+                title
+                note
+                frontVideo
+                sideVideo
+                player
+                owner
+            }
             drills
             notes
             player{

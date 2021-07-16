@@ -7,10 +7,11 @@ import { USER_SWINGS } from "src/graphql/swing";
 import VideoSelector from "../video/VideoSelector";
 import AddSwing from "./AddSwing";
 import VideoPlayer from "../video/VideoPlayer";
-import ViewSwing from "./ViewSwing";
+import ViewSwing from "./SwingPlayer";
+import { toast } from "react-toastify";
 
-const LessonSwingChoice = (props) => {
-    const { lessonId, playerId } = props;
+const LessonSwingView= (props) => {
+    const { lessonId, playerId, editView } = props;
     const [addSwingToLesson, { loading, error, data }] = useMutation(ADD_SWING_TO_LESSON);
     const { loading : lessonSwingsLoading, error: lessonSwingsError, data: lessonSwingsData } = useQuery(GET_LESSON_SWINGS, { variables: { lessonId }});
     const { loading: userSwingsLoading, error: userSwingsError, data: userSwingsData } = useQuery(USER_SWINGS, { variables: { playerId }});
@@ -21,6 +22,7 @@ const LessonSwingChoice = (props) => {
 
     const onAddSwing = (swing) => {
         addSwingToLesson({ variables: { lessonId, swingId: swing._id }});
+        toast("Swing added to lesson!");
     }
 
     const onViewSwing = (swing) => {
@@ -29,11 +31,13 @@ const LessonSwingChoice = (props) => {
 
     return (
         <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column">
-            <VideoSelector items={userSwingsData.userSwings} text={"Add Swing"} onAdd={onAddSwing}/>
+            {
+                editView && <VideoSelector items={userSwingsData.userSwings} text={"Add Swing"} onAdd={onAddSwing}/>
+            }
             <VideoSelector items={lessonSwingsData.getLessonSwings} text={"View Swing"} onAdd={onViewSwing}/>
-            { viewingSwing && <ViewSwing videoURL={viewingSwing.frontVideo}/> }
+            { viewingSwing && <ViewSwing frontVideoURL={viewingSwing.frontVideo} sideVideoURL={viewingSwing.sideVideo}/> }
         </Box>
     );
 }
 
-export default LessonSwingChoice;
+export default LessonSwingView;

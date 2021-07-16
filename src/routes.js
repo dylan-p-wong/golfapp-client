@@ -11,11 +11,10 @@ import Register from 'src/pages/Register';
 import MyGame from 'src/pages/MyGame';
 import MyCoaching from 'src/pages/MyCoaching';
 import LessonPage from './pages/Lesson';
-import Lesson from './components/lesson/Lesson';
 import SwingPage from './pages/Swing';
 import AddSwing from './components/swing/AddSwing';
 import Swing from './components/swing/Swing';
-import AddLesson from './components/lesson/AddLesson';
+import Lesson from './components/lesson/Lesson';
 import { requireAuthentication, noAuthentication } from './components/shared/Authentication';
 
 const AuthedAccount = requireAuthentication(Account);
@@ -25,7 +24,6 @@ const AuthedMyCoaching = requireAuthentication(MyCoaching);
 const AuthedLessonPage = requireAuthentication(LessonPage);
 const AuthedSwingPage = requireAuthentication(SwingPage);
 //const AuthedDrillPage = requireAuthentication(Drill);
-
 const NoAuthedLogin = noAuthentication(Login);
 const NoAuthedRegister = noAuthentication(Register);
 
@@ -40,7 +38,7 @@ const routes = [
       { path: 'products', element: <ProductList /> },
       { path: 'mygame', element: <AuthedMyGame /> },
       { path: 'mycoaching', element: <AuthedMyCoaching /> },
-      { path: 'lesson', element: <AuthedLessonPage />, children: [ {path: ':_id', element: <Lesson />}, {path: 'add/:_id', element: <AddLesson />} ]},
+      { path: 'lesson', element: <AuthedLessonPage />, children: [ {path: ':_id', element: <Lesson />}, {path: 'add/:_id', element: <Lesson editView/>} ]},
       { path: 'swing', element: <AuthedSwingPage />, children: [ {path: ':_id', element: <Swing />}, {path: 'add', element: <AddSwing />} ]},
       { path: 'drill', children: [ {path: 'add', element: <AddSwing />}, {path: ':_id', element: <Swing />} ]},
       { path: '*', element: <Navigate to="/404" /> },

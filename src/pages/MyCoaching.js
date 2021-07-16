@@ -73,22 +73,7 @@ const MyCoaching = () => {
           >
             <Card>
             <CardHeader title="Lesson Requests" action={<Button color="primary" variant="contained" size="small" onClick={() => setOpen(true)}>Create Lesson</Button>}/>
-            <CardContent>
-                <Box m={2}>
-                  <Card>
-                    <CardHeader title="2021-03-04" subheader="Dylan Wong"/>
-                  </Card>
-                </Box>
-                <Box m={2}>
-                  <Card>
-                    <CardHeader title="2021-03-04" subheader="Dylan Wong"/>
-                  </Card>
-                </Box>
-                <Box m={2}>
-                  <Card>
-                    <CardHeader title="2021-03-04" subheader="Dylan Wong"/>
-                  </Card>
-                </Box>
+              <CardContent>
               </CardContent>
             </Card>
           </Grid>
@@ -122,7 +107,7 @@ const MyCoaching = () => {
             </Card>
           </Grid>
           <Grid item xs={12}>
-            <CustomerListResults customers={customers}/>
+            {/* <CustomerListResults customers={customers}/> */}
           </Grid>
         </Grid>
       </Container>

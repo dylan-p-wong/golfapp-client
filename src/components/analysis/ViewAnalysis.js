@@ -12,6 +12,6 @@ const ViewAnalysis = (props) => {
             </Grid>
         </Box>
     )
-}
+};
 
 export default ViewAnalysis;

@@ -5,7 +5,7 @@ import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/picker
 import { useState } from "react";
 import MomentUtils from "@date-io/moment";
 import moment from 'moment';
-import Swing from './ViewSwing';
+import Swing from './SwingPlayer';
 import { ADD_SWING } from 'src/graphql/swing'; 
 import { useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
@@ -14,7 +14,8 @@ const AddSwing = (props) => {
     const navigate = useNavigate();
     const [selectedDate, setSelectedDate] = useState("2021-01-01");
     const [preview, setPreview] = useState(false);
-    const [videoFile, setVideoFile] = useState([]);
+    const [frontVideoFile, setFrontVideoFile] = useState([]);
+    const [sideVideoFile, setSideVideoFile] = useState([]);
     const [title, setTitle] = useState("");
     const [note, setNote] = useState("");
     const [addSwing, { data, loading }] = useMutation(ADD_SWING);
@@ -23,8 +24,12 @@ const AddSwing = (props) => {
         setSelectedDate(date);
     };
 
-    const handleFileChange = (file) => {
-        setVideoFile(file);
+    const handleFileChange = type => (file) => {
+        if (type === 'FRONT') {
+            setFrontVideoFile(file);
+        } else if (type === 'SIDE') {
+            setSideVideoFile(file);
+        }
     }
 
     const handlePreview = () => {
@@ -46,7 +51,7 @@ const AddSwing = (props) => {
 
     const onAddSwing = async () => {
         try {
-            const test = await addSwing({ variables: { date: selectedDate, video: videoFile[0], note, title: title, direction: 'FRONT' }});
+            const test = await addSwing({ variables: { date: selectedDate, frontVideo: frontVideoFile[0], sideVideo: sideVideoFile[0], note, title: title }});
             console.log(test);
         } catch (e) {
             console.log(e);
@@ -61,16 +66,16 @@ const AddSwing = (props) => {
             </Box>
             <Divider />
 
-            { preview ? <Swing videoURL={videoFile.length ? URL.createObjectURL(videoFile[0]) : null}/> : 
+            { preview ? <Swing frontVideoURL={frontVideoFile.length ? URL.createObjectURL(frontVideoFile[0]) : null} sideVideoURL={sideVideoFile.length ? URL.createObjectURL(sideVideoFile[0]) : null}/> : 
                 <Box>
                     <Grid container spacing={3} >
                         <Grid container item xs={6} direction="column" alignItems="center" justify="center">
                             <Typography variant='h5'>Front</Typography>
-                            <DropzoneArea onChange={handleFileChange} showAlerts={false} filesLimit={1} maxFileSize={10000000} showFileNames={true} acceptedFiles={["video/mp4"]} initialFiles={videoFile}/>
+                            <DropzoneArea onChange={handleFileChange('FRONT')} showAlerts={false} filesLimit={1} maxFileSize={10000000} showFileNames={true} acceptedFiles={["video/mp4"]} initialFiles={frontVideoFile}/>
                         </Grid>
                         <Grid container item xs={6} direction="column" alignItems="center" justify="center">
                             <Typography variant='h5'>Side</Typography>
-                            <DropzoneArea onChange={handleFileChange} showAlerts={false} filesLimit={1} maxFileSize={10000000} showFileNames={true} acceptedFiles={["video/mp4"]}/>   
+                            <DropzoneArea onChange={handleFileChange('SIDE')} showAlerts={false} filesLimit={1} maxFileSize={10000000} showFileNames={true} acceptedFiles={["video/mp4"]} initialFiles={sideVideoFile}/>   
                         </Grid>
                     </Grid>
                     <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils}>
