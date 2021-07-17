@@ -1,4 +1,4 @@
-import { Box, Button, DialogContent, DialogTitle, Dialog, TextField, Input } from '@material-ui/core';
+import { Box, Button, DialogContent, DialogTitle, Dialog, TextField, Input, LinearProgress } from '@material-ui/core';
 import FastForwardIcon from '@material-ui/icons/FastForward';
 import FastRewindIcon from '@material-ui/icons/FastRewind';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
@@ -21,11 +21,12 @@ import { ADD_ANALYSIS } from 'src/graphql/analysis';
 import { ADD_ANALYSIS_TO_LESSON } from 'src/graphql/lesson';
 import { useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
+import AnalysisVideoPlayer from '../video/AnalysisVideoPlayer';
 
 const AnalysisPlayer = (props) => {
     const { videos, onCancel, playerId, lessonId } = props; 
-    const [addAnalysis, {}] = useMutation(ADD_ANALYSIS);
-    const [addAnalysisToLesson, {}] = useMutation(ADD_ANALYSIS_TO_LESSON);
+    const [addAnalysis, { data, loading }] = useMutation(ADD_ANALYSIS);
+    const [addAnalysisToLesson] = useMutation(ADD_ANALYSIS_TO_LESSON);
 
     const [open, setOpen] = useState(false);
     const [title, setTitle] = useState("");
@@ -125,8 +126,8 @@ const AnalysisPlayer = (props) => {
                     <Box flexDirection="column" display="flex">
                         <TextField fullWidth placeholder="Title" onChange={handleTitleChange}/>
                         <Button onClick={onSave} variant="contained">Save</Button>
+                        {loading && <LinearProgress />}
                     </Box>
-                    
                 </DialogContent>
             </Dialog>
             <Box display={analysisVideoURLs.length ? "none" : ""}>
@@ -144,11 +145,14 @@ const AnalysisPlayer = (props) => {
                     justifyContent="center"
                     alignItems="center"
                 >
-                    {
+                    {/* {
                         videoURLs.map((item, index) => {
                             return <AnalysisBase ref={index === 0 ? analysisPlayerRef : analysisPlayerRef2} videoURL={item}/>
                         })
-                    }
+                    } */}
+                    { videoURLs.length && <AnalysisBase ref={analysisPlayerRef} videoURL={videoURLs[0]}/>}
+                    
+                    { videoURLs.length > 1 && <AnalysisBase ref={analysisPlayerRef} videoURL={videoURLs[1]}/>}
                 </Box>
             </Box>
             {
@@ -163,7 +167,8 @@ const AnalysisPlayer = (props) => {
                         <CancelIcon onClick={onCancel}/>
                         <RedoIcon onClick={() => {setPreview(false); setAnalysisVideoURLs([])}}/>
                     </Box>
-                    <ViewSwing key={analysisVideoURLs.length} frontVideoURL={analysisVideoURLs.length ? analysisVideoURLs[0] : null} sideVideoURL={analysisVideoURLs.length > 1 ? analysisVideoURLs[1] : null}/>
+                    {/* <ViewSwing key={analysisVideoURLs.length} frontVideoURL={analysisVideoURLs.length ? analysisVideoURLs[0] : null} sideVideoURL={analysisVideoURLs.length > 1 ? analysisVideoURLs[1] : null}/> */}
+                    <AnalysisVideoPlayer video1={analysisVideoURLs.length ? analysisVideoURLs[0] : null} video2={analysisVideoURLs.length > 1 ? analysisVideoURLs[1] : null}/>
                 </Box>
             }
 

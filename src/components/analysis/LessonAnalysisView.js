@@ -1,11 +1,12 @@
 import { Box, Button, Dialog, DialogTitle, DialogContent } from "@material-ui/core";
 //import AnalysisPlayer from "../video/AnalysisPlayer";
-import AnalysisPlayer from '../analysis/AnalysisPlayer2';
+import AnalysisPlayer from './AnalysisPlayer';
 import VideoSelector from "../video/VideoSelector";
 import { useQuery } from "@apollo/client";
 import { GET_LESSON_ANALYSES, GET_LESSON_SWINGS } from "src/graphql/lesson";
 import { useState } from "react";
 import ViewSwing from "../swing/SwingPlayer";
+import AnalysisVideoPlayer from "../video/AnalysisVideoPlayer";
 
 const AddAnalysis = (props) => {
     const { lessonId, playerId, editView } = props;
@@ -21,6 +22,10 @@ const AddAnalysis = (props) => {
     if (lessonSwingsError || lessonAnalysesError) return <h1>Error</h1>
 
     const onAddSwing = (swing) => {
+        if (analysisURLs.length >= 2) {
+
+            return;
+        }
         setViewingSwing(null);
         setPendingSwingToAnalyze(swing);
         setOpen(true);
@@ -36,7 +41,7 @@ const AddAnalysis = (props) => {
             arr.push(pendingSwingToAnalyze.frontVideo);
         }
         setPendingSwingToAnalyze(null);
-        setAnalysisURLs(analysisURLs);
+        setAnalysisURLs(arr);
         setOpen(false);
     }
 
@@ -69,7 +74,7 @@ const AddAnalysis = (props) => {
             {editView && <VideoSelector items={lessonSwingsData.getLessonSwings} text={"Add Swing to Analyze"} onAdd={onAddSwing}/>}
             <VideoSelector items={lessonAnalysesData.getLessonAnalyses} text={"View Analysis"} onAdd={onViewSwing}/>
             { analysisURLs.length > 0 && editView && <AnalysisPlayer playerId={playerId} lessonId={lessonId} videos={analysisURLs} key={analysisURLs.length} onCancel={onCancel}/>}
-            { viewingSwing && <ViewSwing frontVideoURL={viewingSwing.frontVideo} sideVideoURL={viewingSwing.sideVideo}/> }
+            { viewingSwing && <AnalysisVideoPlayer video1={viewingSwing.frontVideo} video2={viewingSwing.sideVideo}/>}
         </Box>
     )
 }

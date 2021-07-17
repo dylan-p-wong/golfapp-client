@@ -75,10 +75,6 @@ const AnalysisBase = forwardRef((props, ref) => {
         setCanvasStep(newStep);
         setCanvasArray(prevArray => [...prevArray, canvasRef.current.toDataURL()])
     }
-    // const onUndo = () => {
-    // }
-    // const onRedo = () => {
-    // }
 
     const onClear = () => {
         contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
@@ -102,13 +98,13 @@ const AnalysisBase = forwardRef((props, ref) => {
             
             mediaRecorder.current.addEventListener('dataavailable', (e) => {
                 const file = new File([e.data], "analysis.mp4", { lastModified: new Date(), type: "video/mp4" });
-                console.log(file);
                 setAnalysisFile(file);
             });
             mediaRecorder.current.start();
         },
         stopRecord() {
             mediaRecorder.current.stop();
+            onPause();
             setRecording(false);
         },
         getFile() {
