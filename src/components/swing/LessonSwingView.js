@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { Button, Card, Dialog } from "@material-ui/core";
 import { Box, Typography } from "@material-ui/core";
 import { useState } from "react";
@@ -12,7 +12,32 @@ import { toast } from "react-toastify";
 
 const LessonSwingView= (props) => {
     const { lessonId, playerId, editView } = props;
-    const [addSwingToLesson, { loading, error, data }] = useMutation(ADD_SWING_TO_LESSON);
+    const [addSwingToLesson, { loading, error, data }] = useMutation(ADD_SWING_TO_LESSON, {
+        update(cache, { data }) {
+            const { addSwingToLesson } = data;
+            cache.modify({
+                fields: {
+                    getLessonSwings(existingSwings = []) {
+                        const newSwingRef = cache.writeFragment({
+                            data: addSwingToLesson,
+                            fragment: gql`
+                            fragment SwingType on Swings {
+                                _id
+                                date
+                                title
+                                note
+                                frontVideo
+                                sideVideo
+                                player
+                                owner
+                            }`
+                        });
+                        return [...existingSwings, newSwingRef];
+                    }
+                }
+            })
+        }
+    });
     const { loading : lessonSwingsLoading, error: lessonSwingsError, data: lessonSwingsData } = useQuery(GET_LESSON_SWINGS, { variables: { lessonId }});
     const { loading: userSwingsLoading, error: userSwingsError, data: userSwingsData } = useQuery(USER_SWINGS, { variables: { playerId }});
     const [viewingSwing, setViewingSwing ] = useState(null);

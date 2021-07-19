@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Tab, Tabs, Box, AppBar, Avatar, Button } from "@material-ui/core"
+import { Tab, Tabs, Box, AppBar, Avatar, Button, Typography } from "@material-ui/core"
 import { USER_SWINGS } from 'src/graphql/swing';
 import { useQuery } from '@apollo/client';
 

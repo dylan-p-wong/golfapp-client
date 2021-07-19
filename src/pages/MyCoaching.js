@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet';
-import { Box, Container, Grid, Card, CardHeader, Button, CardContent, Dialog, DialogContent, DialogTitle, DialogActions, Autocomplete, TextField } from '@material-ui/core';
+import { Box, Container, Grid, Card, CardHeader, Button, CardContent, Dialog, DialogContent, DialogTitle, DialogActions, Autocomplete, TextField, Divider, Typography } from '@material-ui/core';
 import CustomerListResults from 'src/components/customer/CustomerListResults';
 import customers from 'src/__mocks__/customers';
 import { useNavigate } from 'react-router-dom';
@@ -7,30 +7,32 @@ import { useState } from 'react';
 import users from '../__mocks__/customers';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_USERS } from 'src/graphql/auth';
-import { CREATE_LESSON, GET_USER_LESSONS_COACH } from 'src/graphql/lesson';
+import { CREATE_LESSON, GET_USER_LESSONS_COACH, GET_USER_LESSON_REQUESTS_COACH } from 'src/graphql/lesson';
 import { Navigate } from 'react-router-dom';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import moment from 'moment';
 
 const MyCoaching = () => {
   const navigate = useNavigate();
   const { loading: coachLessonsLoading, error: coachLessonsError, data: coachLessonsData } = useQuery(GET_USER_LESSONS_COACH);
   const { loading : usersLoading, error : usersError, data : usersData } = useQuery(GET_USERS);
+  const { loading : coachLessonRequestsLoading, error : coachLessonRequestsError, data : coachLessonRequestsData } = useQuery(GET_USER_LESSON_REQUESTS_COACH);
   const [createLesson, { loading : lessonLoading, error : lessonError, data : lessonData }] = useMutation(CREATE_LESSON);
+  const [title, setTitle] = useState("");
 
   const [selectedUser, setSelectedUser] = useState(null);
   const [open, setOpen] = useState(false);
 
-  if (usersLoading || lessonLoading || coachLessonsLoading) return <h1>Loading...</h1>
-  if (usersError || lessonError || coachLessonsError) return <h1>Error</h1>
+  if (usersLoading || lessonLoading || coachLessonsLoading || coachLessonRequestsLoading) return <h1>Loading...</h1>
+  if (usersError || lessonError || coachLessonsError || coachLessonRequestsError) return <h1>Error</h1>
 
   if (lessonData) {
     return <Navigate to={`/app/lesson/add/${lessonData.createLesson._id}`} />
   }
 
   const addLessonHandle = () => {
-    createLesson({ variables: { playerId: selectedUser._id }});
+    createLesson({ variables: { playerId: selectedUser._id, title }});
   }
-
-  console.log(coachLessonsData)
 
   return (
   <>
@@ -51,6 +53,7 @@ const MyCoaching = () => {
         >
           <DialogTitle>{"Select Student"}</DialogTitle>
           <DialogContent>
+            <TextField fullWidth label="Title" placeholder="Note title" onChange={e => setTitle(e.target.value)}/>
             <Autocomplete
               onChange={(event, newValue) => { setSelectedUser(newValue) }}
               style={{ width: 300 }} 
@@ -69,15 +72,30 @@ const MyCoaching = () => {
         >
           <Grid
             item
-            xs={4}
+            xs={6}
           >
             <Card>
             <CardHeader title="Lesson Requests" action={<Button color="primary" variant="contained" size="small" onClick={() => setOpen(true)}>Create Lesson</Button>}/>
               <CardContent>
+                {
+                  coachLessonRequestsData.getUserCoachLessonRequests.map(item => {
+                    return (
+                      <Box m={2} key={item._id}>
+                        <Card>
+                          <CardHeader title={item.player.firstname + " " + item.player.lastname + " - " + item.note} action={<Button variant="contained" size="small">Create Lesson</Button>}/>
+                          <Divider />
+                          <Box p={1} display="flex" alignItems="center">
+                              <Typography align="left" variant="body2" color="textSecondary" pl={1}>{moment.unix(item.createdAt / 1000).format('MMMM Do YYYY')}</Typography>
+                          </Box>
+                        </Card>
+                      </Box>
+                    )
+                  })
+                }
               </CardContent>
             </Card>
           </Grid>
-          <Grid
+          {/* <Grid
             item
             xs={4}
           >
@@ -86,10 +104,10 @@ const MyCoaching = () => {
               <CardContent>
               </CardContent>
             </Card>
-          </Grid>
+          </Grid> */}
           <Grid
             item
-            xs={4}
+            xs={6}
           >
             <Card>
               <CardHeader title="Past Lessons"/>
@@ -98,7 +116,11 @@ const MyCoaching = () => {
                   return (
                     <Box m={2} key={item._id} onClick={() => navigate(`/app/lesson/${item._id}`, { replace: true })}>
                       <Card>
-                        <CardHeader title={item.player.firstname + " " + item.player.lastname} subheader={item.date}/>
+                        <CardHeader title={item.title + " - " + item.player.firstname + " " + item.player.lastname}/>
+                        <Divider />
+                        <Box p={1} display="flex" alignItems="center">
+                            <Typography align="left" variant="body2" color="textSecondary" pl={1}>{moment.unix(item.createdAt / 1000).format('MMMM Do YYYY')}</Typography>
+                        </Box>
                       </Card>
                     </Box>
                   )

@@ -12,17 +12,12 @@ import { toast } from 'react-toastify';
 
 const AddSwing = (props) => {
     const navigate = useNavigate();
-    const [selectedDate, setSelectedDate] = useState("2021-01-01");
     const [preview, setPreview] = useState(false);
     const [frontVideoFile, setFrontVideoFile] = useState([]);
     const [sideVideoFile, setSideVideoFile] = useState([]);
     const [title, setTitle] = useState("");
     const [note, setNote] = useState("");
     const [addSwing, { data, loading }] = useMutation(ADD_SWING);
-
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
-    };
 
     const handleFileChange = type => (file) => {
         if (type === 'FRONT') {
@@ -51,8 +46,7 @@ const AddSwing = (props) => {
 
     const onAddSwing = async () => {
         try {
-            const test = await addSwing({ variables: { date: selectedDate, frontVideo: frontVideoFile[0], sideVideo: sideVideoFile[0], note, title: title }});
-            console.log(test);
+            const swing = await addSwing({ variables: { frontVideo: frontVideoFile[0], sideVideo: sideVideoFile[0], note, title: title }});
         } catch (e) {
             console.log(e);
         }
@@ -78,7 +72,7 @@ const AddSwing = (props) => {
                             <DropzoneArea onChange={handleFileChange('SIDE')} showAlerts={false} filesLimit={1} maxFileSize={10000000} showFileNames={true} acceptedFiles={["video/mp4"]} initialFiles={sideVideoFile}/>   
                         </Grid>
                     </Grid>
-                    <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils}>
+                    {/* <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils}>
                         <KeyboardDatePicker
                             fullWidth
                             autoOk={true}
@@ -89,7 +83,7 @@ const AddSwing = (props) => {
                             format="YYYY-MM-DD"
                             onChange={handleDateChange}
                         />
-                    </MuiPickersUtilsProvider>
+                    </MuiPickersUtilsProvider> */}
                     <TextField fullWidth placeholder="Title" onChange={handleTitleChange}/>
                     <TextField 
                         fullWidth

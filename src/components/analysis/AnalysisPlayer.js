@@ -19,14 +19,39 @@ import ViewSwing from '../swing/SwingPlayer';
 import AnalysisBase from './AnalysisBase';
 import { ADD_ANALYSIS } from 'src/graphql/analysis';
 import { ADD_ANALYSIS_TO_LESSON } from 'src/graphql/lesson';
-import { useMutation } from '@apollo/client';
+import { gql, useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
 import AnalysisVideoPlayer from '../video/AnalysisVideoPlayer';
 
 const AnalysisPlayer = (props) => {
     const { videos, onCancel, playerId, lessonId } = props; 
     const [addAnalysis, { data, loading }] = useMutation(ADD_ANALYSIS);
-    const [addAnalysisToLesson] = useMutation(ADD_ANALYSIS_TO_LESSON);
+    const [addAnalysisToLesson] = useMutation(ADD_ANALYSIS_TO_LESSON, {
+        update(cache, { data }) {
+            const { addAnalysisToLesson } = data;
+            cache.modify({
+                fields: {
+                    getLessonAnalyses(existingAnalyses = []) {
+                        const newAnalysisRef = cache.writeFragment({
+                            data: addAnalysisToLesson,
+                            fragment: gql`
+                            fragment SwingType on Analyses {
+                                _id
+                                date
+                                title
+                                note
+                                frontVideo
+                                sideVideo
+                                player
+                                owner
+                            }`
+                        });
+                        return [...existingAnalyses, newAnalysisRef];
+                    }
+                }
+            })
+        }
+    });
 
     const [open, setOpen] = useState(false);
     const [title, setTitle] = useState("");
