@@ -7,7 +7,7 @@ import { useState } from 'react';
 import users from '../__mocks__/customers';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_USERS } from 'src/graphql/auth';
-import { CREATE_LESSON, GET_USER_LESSONS_COACH, GET_USER_LESSON_REQUESTS_COACH } from 'src/graphql/lesson';
+import { ADD_LESSON_TO_LESSON_REQUEST, CREATE_LESSON, GET_USER_LESSONS_COACH, GET_USER_LESSON_REQUESTS_COACH } from 'src/graphql/lesson';
 import { Navigate } from 'react-router-dom';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import moment from 'moment';
@@ -18,8 +18,8 @@ const MyCoaching = () => {
   const { loading : usersLoading, error : usersError, data : usersData } = useQuery(GET_USERS);
   const { loading : coachLessonRequestsLoading, error : coachLessonRequestsError, data : coachLessonRequestsData } = useQuery(GET_USER_LESSON_REQUESTS_COACH);
   const [createLesson, { loading : lessonLoading, error : lessonError, data : lessonData }] = useMutation(CREATE_LESSON);
+  const [addLessonToLessonRequest, { laoding: addLessonToLessonRequestLoading, error: addLessonToLessonRequestError, data: addLessonToLessonRequestData }] = useMutation(ADD_LESSON_TO_LESSON_REQUEST);
   const [title, setTitle] = useState("");
-
   const [selectedUser, setSelectedUser] = useState(null);
   const [open, setOpen] = useState(false);
 
@@ -30,8 +30,13 @@ const MyCoaching = () => {
     return <Navigate to={`/app/lesson/add/${lessonData.createLesson._id}`} />
   }
 
-  const addLessonHandle = () => {
-    createLesson({ variables: { playerId: selectedUser._id, title }});
+  const addLessonHandle = async () => {
+    await createLesson({ variables: { playerId: selectedUser._id, title }});
+  }
+
+  const addLessonToLessonRequestHandle = async (item) => {
+    const { data, error, loading } = await createLesson({ variables: { playerId: item.player._id, title: item.note }});
+    await addLessonToLessonRequest({ variables: { lessonId: data.createLesson._id, lessonRequestId: item._id }});
   }
 
   return (
@@ -82,7 +87,7 @@ const MyCoaching = () => {
                     return (
                       <Box m={2} key={item._id}>
                         <Card>
-                          <CardHeader title={item.player.firstname + " " + item.player.lastname + " - " + item.note} action={<Button variant="contained" size="small">Create Lesson</Button>}/>
+                          <CardHeader title={item.player.firstname + " " + item.player.lastname + " - " + item.note} action={<Button variant="contained" size="small" onClick={() => addLessonToLessonRequestHandle(item)}>Create Lesson</Button>}/>
                           <Divider />
                           <Box p={1} display="flex" alignItems="center">
                               <Typography align="left" variant="body2" color="textSecondary" pl={1}>{moment.unix(item.createdAt / 1000).format('MMMM Do YYYY')}</Typography>

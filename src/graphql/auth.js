@@ -42,3 +42,16 @@ export const GET_USERS = gql`
         }
     }
 `;
+
+export const GET_COACHES = gql`
+    query{
+        getCoaches{
+            _id
+            email
+            firstname
+            lastname
+            swingDirection
+            handicap
+        }
+    }
+`;

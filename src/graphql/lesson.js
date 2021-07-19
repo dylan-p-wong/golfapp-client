@@ -320,3 +320,57 @@ export const GET_USER_LESSON_REQUESTS_COACH = gql`
         }
     }
 `;
+
+export const CREATE_LESSON_REQUEST = gql`
+    mutation($note: String, $coachId: String){
+        createLessonRequest(note: $note, coachId: $coachId){
+            _id
+            note
+            player {
+                _id
+                email
+                firstname
+                lastname
+                swingDirection
+                handicap
+            }
+            coach {
+                _id
+                email
+                firstname
+                lastname
+                swingDirection
+                handicap
+            }
+            updatedAt
+            createdAt
+        }
+    }
+`;
+
+export const ADD_LESSON_TO_LESSON_REQUEST = gql`
+    mutation($lessonId: String!, $lessonRequestId: String!){
+        addLessonToLessonRequest(lessonId: $lessonId, lessonRequestId: $lessonRequestId){
+            _id
+            note
+            player {
+                _id
+                email
+                firstname
+                lastname
+                swingDirection
+                handicap
+            }
+            coach {
+                _id
+                email
+                firstname
+                lastname
+                swingDirection
+                handicap
+            }
+            updatedAt
+            createdAt
+        }
+    }
+`;

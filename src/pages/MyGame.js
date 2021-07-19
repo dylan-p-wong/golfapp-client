@@ -1,21 +1,36 @@
 import { Helmet } from 'react-helmet';
-import { Box, Container, Grid, Card, CardHeader, Button, CardContent, Divider, Typography } from '@material-ui/core';
+import { Autocomplete, DialogActions, Dialog, DialogTitle, DialogContent, TextField, Box, Container, Grid, Card, CardHeader, Button, CardContent, Divider, Typography } from '@material-ui/core';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { USER_SWINGS } from 'src/graphql/swing';
-import { GET_USER_LESSONS_PLAYER, GET_USER_LESSON_REQUESTS_PLAYER } from 'src/graphql/lesson';
+import { CREATE_LESSON_REQUEST, GET_USER_LESSONS_PLAYER, GET_USER_LESSON_REQUESTS_PLAYER } from 'src/graphql/lesson';
 import moment from 'moment';
+import { useState } from 'react';
+import { GET_COACHES } from 'src/graphql/auth';
 
 const MyGame = () => {
   const navigate = useNavigate();
   const { loading: userSwingsLoading, error: userSwingsError, data: userSwingsData } = useQuery(USER_SWINGS);
   const { loading: userLessonsLoading, error: userLessonsError, data: userLessonsData } = useQuery(GET_USER_LESSONS_PLAYER);
   const { loading: userLessonRequestsLoading, error: userLessonRequestsError, data: userLessonRequestsData } = useQuery(GET_USER_LESSON_REQUESTS_PLAYER);
+  const { loading: coachesLoading, error: coachesError, data: coachesData} = useQuery(GET_COACHES);
+  const [createLessonRequest, { loading: createLessonRequestLoading, error: createLessonRequestError, data: createLessonRequestData }] = useMutation(CREATE_LESSON_REQUEST);
 
-  if (userSwingsLoading || userLessonsLoading || userLessonRequestsLoading) return <h1>Loading...</h1>;
-  if (userSwingsError || userLessonsError || userLessonRequestsError) return <h1>Error</h1>;
+  const [note, setNote] = useState("");
+  const [open, setOpen] = useState(false);
+  const [selectedCoach, setSelectedCoach] = useState(null);
+
+  if (coachesLoading || userSwingsLoading || userLessonsLoading || userLessonRequestsLoading || createLessonRequestLoading) return <h1>Loading...</h1>;
+  if (coachesError || userSwingsError || userLessonsError || userLessonRequestsError || createLessonRequestError) return <h1>Error</h1>;
+
+
+  const addLessonRequestHandle = async () => {
+    await createLessonRequest({ variables: { note, coachId: selectedCoach._id }});
+    toast("Lesson Request Sent!");
+    setOpen(false);
+  }
 
   return (
   <>
@@ -30,6 +45,25 @@ const MyGame = () => {
       }}
     >
       <Container maxWidth={false}>
+      <Dialog
+          open={open}
+          onClose={() => setOpen(false)}
+        >
+          <DialogTitle>{"Select Coach"}</DialogTitle>
+          <DialogContent>
+            <TextField fullWidth label="Note" placeholder="Swing fix" onChange={e => setNote(e.target.value)}/>
+            <Autocomplete
+              onChange={(event, newValue) => { setSelectedCoach(newValue) }}
+              style={{ width: 300 }} 
+              options={coachesData.getCoaches}
+              getOptionLabel={(option) => option.email}
+              renderInput={(params) => <TextField {...params} label="Coach" variant="outlined"/>}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary" variant="contained" size="small" onClick={addLessonRequestHandle}>Create Request</Button>
+          </DialogActions>
+        </Dialog>
         <Grid
         container
         spacing={3}
@@ -64,7 +98,7 @@ const MyGame = () => {
             xs={4}
           >
             <Card>
-              <CardHeader title="Requested Lessons" action={<Button color="primary" variant="contained" size="small">Request Lesson</Button>}/>
+              <CardHeader title="Requested Lessons" action={<Button color="primary" variant="contained" size="small" onClick={() => setOpen(true)}>Request Lesson</Button>}/>
               <CardContent>
                 {
                   userLessonRequestsData.getUserPlayerLessonRequests.map(item => {
