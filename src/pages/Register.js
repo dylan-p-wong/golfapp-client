@@ -49,12 +49,14 @@ const Register = () => {
                 firstName: Yup.string().max(255).required('First name is required'),
                 lastName: Yup.string().max(255).required('Last name is required'),
                 password: Yup.string().max(255).required('password is required'),
+                playerAccount: Yup.boolean(),
+                coachAccount: Yup.boolean(),
                 policy: Yup.boolean().oneOf([true], 'This field must be checked')
               })
             }
             onSubmit={async (values) => {
-              const { email, password, firstName, lastName } = values;
-              await signup({ variables: { email, password, firstname: firstName, lastname: lastName }});
+              const { email, password, firstName, lastName, playerAccount, coachAccount } = values;
+              await signup({ variables: { email, password, firstname: firstName, lastname: lastName, playerAccount, coachAccount }});
               await client.resetStore();
               navigate('/app/dashboard', { replace: true });
             }}
@@ -134,6 +136,44 @@ const Register = () => {
                   value={values.password}
                   variant="outlined"
                 />
+                <Box
+                  sx={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    ml: -1
+                  }}
+                >
+                  <Checkbox
+                    checked={values.playerAccount}
+                    name="playerAccount"
+                    onChange={handleChange}
+                  />
+                  <Typography
+                    color="textSecondary"
+                    variant="body1"
+                  >
+                    Player Account
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    ml: -1
+                  }}
+                >
+                  <Checkbox
+                    checked={values.coachAccount}
+                    name="coachAccount"
+                    onChange={handleChange}
+                  />
+                  <Typography
+                    color="textSecondary"
+                    variant="body1"
+                  >
+                    Coaching Account
+                  </Typography>
+                </Box>
                 <Box
                   sx={{
                     alignItems: 'center',

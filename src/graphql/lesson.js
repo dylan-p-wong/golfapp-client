@@ -43,7 +43,7 @@ export const GET_USER_LESSONS_PLAYER = gql`
                 email
                 firstname
                 lastname
-                swingDirection
+                hand
                 handicap
             }
             coach{
@@ -51,7 +51,7 @@ export const GET_USER_LESSONS_PLAYER = gql`
                 email
                 firstname
                 lastname
-                swingDirection
+                hand
                 handicap
             }
         }
@@ -83,7 +83,7 @@ export const GET_USER_LESSONS_COACH = gql`
                 email
                 firstname
                 lastname
-                swingDirection
+                hand
                 handicap
             }
             coach{
@@ -91,7 +91,7 @@ export const GET_USER_LESSONS_COACH = gql`
                 email
                 firstname
                 lastname
-                swingDirection
+                hand
                 handicap
             }
         }
@@ -160,7 +160,7 @@ export const GET_LESSON = gql`
                 email
                 firstname
                 lastname
-                swingDirection
+                hand
                 handicap
             }
             coach{
@@ -168,7 +168,7 @@ export const GET_LESSON = gql`
                 email
                 firstname
                 lastname
-                swingDirection
+                hand
                 handicap
             }
         }
@@ -188,7 +188,7 @@ export const GET_LESSON_FULL = gql`
                 email
                 firstname
                 lastname
-                swingDirection
+                hand
                 handicap
             }
             coach{
@@ -196,7 +196,7 @@ export const GET_LESSON_FULL = gql`
                 email
                 firstname
                 lastname
-                swingDirection
+                hand
                 handicap
             }
             swings {
@@ -277,7 +277,7 @@ export const GET_USER_LESSON_REQUESTS_PLAYER = gql`
                 email
                 firstname
                 lastname
-                swingDirection
+                hand
                 handicap
             }
             coach {
@@ -285,11 +285,19 @@ export const GET_USER_LESSON_REQUESTS_PLAYER = gql`
                 email
                 firstname
                 lastname
-                swingDirection
+                hand
                 handicap
             }
             updatedAt
             createdAt
+            lesson {
+                _id
+                createdAt
+                updatedAt
+                title
+            }
+            isCancelled
+            __typename
         }
     }
 `;
@@ -304,7 +312,7 @@ export const GET_USER_LESSON_REQUESTS_COACH = gql`
                 email
                 firstname
                 lastname
-                swingDirection
+                hand
                 handicap
             }
             coach {
@@ -312,11 +320,19 @@ export const GET_USER_LESSON_REQUESTS_COACH = gql`
                 email
                 firstname
                 lastname
-                swingDirection
+                hand
                 handicap
             }
             updatedAt
             createdAt
+            lesson {
+                _id
+                createdAt
+                updatedAt
+                title
+            }
+            isCancelled
+            __typename
         }
     }
 `;
@@ -331,7 +347,7 @@ export const CREATE_LESSON_REQUEST = gql`
                 email
                 firstname
                 lastname
-                swingDirection
+                hand
                 handicap
             }
             coach {
@@ -339,11 +355,19 @@ export const CREATE_LESSON_REQUEST = gql`
                 email
                 firstname
                 lastname
-                swingDirection
+                hand
                 handicap
             }
             updatedAt
             createdAt
+            lesson {
+                _id
+                createdAt
+                updatedAt
+                title
+            }
+            isCancelled
+            __typename
         }
     }
 `;
@@ -358,7 +382,7 @@ export const ADD_LESSON_TO_LESSON_REQUEST = gql`
                 email
                 firstname
                 lastname
-                swingDirection
+                hand
                 handicap
             }
             coach {
@@ -366,11 +390,54 @@ export const ADD_LESSON_TO_LESSON_REQUEST = gql`
                 email
                 firstname
                 lastname
-                swingDirection
+                hand
                 handicap
             }
             updatedAt
             createdAt
+            lesson {
+                _id
+                createdAt
+                updatedAt
+                title
+            }
+            isCancelled
+            __typename
+        }
+    }
+`;
+
+export const CANCEL_LESSON_REQUEST = gql`
+    mutation($lessonRequestId: String!){
+        cancelLessonRequest(lessonRequestId: $lessonRequestId){
+            _id
+            note
+            player {
+                _id
+                email
+                firstname
+                lastname
+                hand
+                handicap
+            }
+            coach {
+                _id
+                email
+                firstname
+                lastname
+                hand
+                handicap
+            }
+            updatedAt
+            createdAt
+            lesson {
+                _id
+                createdAt
+                updatedAt
+                title
+            }
+            isCancelled
+            __typename
         }
     }
 `;

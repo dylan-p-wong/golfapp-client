@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import { useQuery } from '@apollo/client';
 import { ME } from '../../graphql/auth';
+import getInitials from 'src/utils/getInitials';
 
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
@@ -35,12 +36,10 @@ const AccountProfile = (props) => {
           }}
         >
           <Avatar
-            src={user.avatar}
-            sx={{
-              height: 100,
-              width: 100
-            }}
-          />
+            src={data.userInfo.avatar}
+          >
+            {getInitials(data.userInfo.firstname + " " + data.userInfo.lastname)}
+          </Avatar>
           <Typography
             color="textPrimary"
             gutterBottom

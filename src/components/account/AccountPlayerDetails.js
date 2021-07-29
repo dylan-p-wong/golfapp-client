@@ -11,14 +11,23 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-const AccountProfileDetails = (props) => {
-  const { firstname, lastname, email, phone } = props;
+const hands = [
+  {
+    value: 'RIGHT',
+    label: 'Right'
+  },
+  {
+    value: 'LEFT',
+    label: 'Left'
+  }
+];
+
+const AccountPlayerDetails = (props) => {
+  const { hand, handicap } = props;
 
   const [values, setValues] = useState({
-    firstname,
-    lastname,
-    // email,
-    phone,
+    hand: hand,
+    handicap: handicap,
   });
 
   const handleChange = (event) => {
@@ -29,7 +38,8 @@ const AccountProfileDetails = (props) => {
   };
 
   const onSave = async () => {
-    await props.updateUser({variables: { info: values }});
+      console.log(values);
+    await props.updateUser({ variables: { info: {...values, handicap: parseFloat(values.handicap)} }});
   }
 
   return (
@@ -41,7 +51,7 @@ const AccountProfileDetails = (props) => {
       <Card>
         <CardHeader
           subheader="The information can be edited"
-          title="Profile"
+          title="Golf Info"
         />
         <Divider />
         <CardContent>
@@ -56,14 +66,24 @@ const AccountProfileDetails = (props) => {
             >
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
-                label="First name"
-                name="firstname"
+                label="Select Hand"
+                name="hand"
                 onChange={handleChange}
                 required
-                value={values.firstname}
+                select
+                SelectProps={{ native: true }}
+                value={values.hand}
                 variant="outlined"
-              />
+              >
+                {hands.map((option) => (
+                  <option
+                    key={option.value}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
             </Grid>
             <Grid
               item
@@ -72,41 +92,11 @@ const AccountProfileDetails = (props) => {
             >
               <TextField
                 fullWidth
-                label="Last name"
-                name="lastname"
-                onChange={handleChange}
-                value={values.lastname}
-                variant="outlined"
-                required
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Email Address"
-                name="email"
-                required
-                disabled
-                value={email}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Phone Number"
-                name="phone"
+                label="Handicap"
+                name="handicap"
                 onChange={handleChange}
                 type="number"
-                value={values.phone}
+                value={values.handicap}
                 variant="outlined"
               />
             </Grid>
@@ -133,8 +123,9 @@ const AccountProfileDetails = (props) => {
   );
 };
 
-AccountProfileDetails.propTypes = {
-  updateUser: PropTypes.func.isRequired
+AccountPlayerDetails.propTypes = {
+    updateUser: PropTypes.func.isRequired
 }
+  
 
-export default AccountProfileDetails;
+export default AccountPlayerDetails;

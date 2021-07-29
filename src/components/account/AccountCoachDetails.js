@@ -9,16 +9,19 @@ import {
   Grid,
   TextField
 } from '@material-ui/core';
+import { useQuery } from '@apollo/client';
+import { ME } from '../../graphql/auth';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import MomentUtils from "@date-io/moment";
+import moment from 'moment';
 import PropTypes from 'prop-types';
 
-const AccountProfileDetails = (props) => {
-  const { firstname, lastname, email, phone } = props;
+const AccountCoachDetails = (props) => {
+  const { coachingCredentials, dateStartedCoaching } = props;
+  const [selectedDate, setSelectedDate] = useState(dateStartedCoaching ? moment.unix(dateStartedCoaching / 1000) : null);
 
   const [values, setValues] = useState({
-    firstname,
-    lastname,
-    // email,
-    phone,
+    coachingCredentials,
   });
 
   const handleChange = (event) => {
@@ -28,8 +31,12 @@ const AccountProfileDetails = (props) => {
     });
   };
 
+  const handleDateChange = (date) => {
+    setSelectedDate(date.startOf('year'));
+  }
+
   const onSave = async () => {
-    await props.updateUser({variables: { info: values }});
+    await props.updateUser({ variables: {info: {...values, dateStartedCoaching: selectedDate.unix() * 1000 }}});
   }
 
   return (
@@ -41,7 +48,7 @@ const AccountProfileDetails = (props) => {
       <Card>
         <CardHeader
           subheader="The information can be edited"
-          title="Profile"
+          title="Teaching Info"
         />
         <Divider />
         <CardContent>
@@ -56,26 +63,10 @@ const AccountProfileDetails = (props) => {
             >
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
-                label="First name"
-                name="firstname"
+                label="Coaching Credentials"
+                name="coachingCredentials"
                 onChange={handleChange}
-                required
-                value={values.firstname}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Last name"
-                name="lastname"
-                onChange={handleChange}
-                value={values.lastname}
+                value={values.coachingCredentials}
                 variant="outlined"
                 required
               />
@@ -85,30 +76,18 @@ const AccountProfileDetails = (props) => {
               md={6}
               xs={12}
             >
-              <TextField
-                fullWidth
-                label="Email Address"
-                name="email"
-                required
-                disabled
-                value={email}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Phone Number"
-                name="phone"
-                onChange={handleChange}
-                type="number"
-                value={values.phone}
-                variant="outlined"
-              />
+              <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils}>
+                  <KeyboardDatePicker
+                      views={["year"]}
+                      fullWidth
+                      autoOk={true}
+                      required
+                      label="Year"
+                      value={selectedDate}
+                      format="YYYY"
+                      onChange={handleDateChange}
+                  />
+              </MuiPickersUtilsProvider>
             </Grid>
           </Grid>
         </CardContent>
@@ -133,8 +112,8 @@ const AccountProfileDetails = (props) => {
   );
 };
 
-AccountProfileDetails.propTypes = {
+AccountCoachDetails.propTypes = {
   updateUser: PropTypes.func.isRequired
 }
 
-export default AccountProfileDetails;
+export default AccountCoachDetails;

@@ -15,32 +15,30 @@ import SwingPage from './pages/Swing';
 import AddSwing from './components/swing/AddSwing';
 import Swing from './components/swing/Swing';
 import Lesson from './components/lesson/Lesson';
+import Subscriptions from './pages/Subscriptions';
 import { requireAuthentication, noAuthentication } from './components/shared/Authentication';
+import ProfilePage from './pages/Profile';
 
-const AuthedAccount = requireAuthentication(Account);
-const AuthedDashboard = requireAuthentication(Dashboard);
-const AuthedMyGame = requireAuthentication(MyGame);
-const AuthedMyCoaching = requireAuthentication(MyCoaching);
-const AuthedLessonPage = requireAuthentication(LessonPage);
-const AuthedSwingPage = requireAuthentication(SwingPage);
-//const AuthedDrillPage = requireAuthentication(Drill);
 const NoAuthedLogin = noAuthentication(Login);
 const NoAuthedRegister = noAuthentication(Register);
+const AuthedDashboardLayout = requireAuthentication(DashboardLayout);
 
 const routes = [
   {
     path: 'app',
-    element: <DashboardLayout />,
+    element: <AuthedDashboardLayout />,
     children: [
-      { path: 'account', element: <AuthedAccount /> },
-      { path: 'customers', element: <CustomerList /> },
-      { path: 'dashboard', element:  <AuthedDashboard />},
+      { path: 'profile', element: <ProfilePage />, children: [{path: ':_id'}] },
+      { path: 'account', element: <Account /> },
+      { path: 'coaches', element: <CustomerList /> },
+      { path: 'dashboard', element:  <Dashboard />},
       { path: 'products', element: <ProductList /> },
-      { path: 'mygame', element: <AuthedMyGame /> },
-      { path: 'mycoaching', element: <AuthedMyCoaching /> },
-      { path: 'lesson', element: <AuthedLessonPage />, children: [ {path: ':_id', element: <Lesson />}, {path: 'add/:_id', element: <Lesson editView/>} ]},
-      { path: 'swing', element: <AuthedSwingPage />, children: [ {path: ':_id', element: <Swing />}, {path: 'add', element: <AddSwing />} ]},
+      { path: 'mygame', element: <MyGame /> },
+      { path: 'mycoaching', element: <MyCoaching /> },
+      { path: 'lesson', element: <LessonPage />, children: [ {path: ':_id', element: <Lesson />}, {path: 'add/:_id', element: <Lesson editView/>} ]},
+      { path: 'swing', element: <SwingPage />, children: [ {path: ':_id', element: <Swing />}, {path: 'add', element: <AddSwing />} ]},
       { path: 'drill', children: [ {path: 'add', element: <AddSwing />}, {path: ':_id', element: <Swing />} ]},
+      { path: 'subscription', element: <Subscriptions />},
       { path: '*', element: <Navigate to="/404" /> },
     ]
   },

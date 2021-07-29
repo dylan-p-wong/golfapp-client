@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet';
-import { Box, Container, Grid, Card, CardHeader, Button, CardContent, Dialog, DialogContent, DialogTitle, DialogActions, Autocomplete, TextField, Divider, Typography } from '@material-ui/core';
+import { Box, Container, Grid, Card, CardHeader, Button, CardContent, Dialog, DialogContent, DialogTitle, DialogActions, Autocomplete, TextField, Divider, Typography, Chip, Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel, Tooltip } from '@material-ui/core';
 import CustomerListResults from 'src/components/customer/CustomerListResults';
 import customers from 'src/__mocks__/customers';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +11,7 @@ import { ADD_LESSON_TO_LESSON_REQUEST, CREATE_LESSON, GET_USER_LESSONS_COACH, GE
 import { Navigate } from 'react-router-dom';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import moment from 'moment';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
 const MyCoaching = () => {
   const navigate = useNavigate();
@@ -18,13 +19,13 @@ const MyCoaching = () => {
   const { loading : usersLoading, error : usersError, data : usersData } = useQuery(GET_USERS);
   const { loading : coachLessonRequestsLoading, error : coachLessonRequestsError, data : coachLessonRequestsData } = useQuery(GET_USER_LESSON_REQUESTS_COACH);
   const [createLesson, { loading : lessonLoading, error : lessonError, data : lessonData }] = useMutation(CREATE_LESSON);
-  const [addLessonToLessonRequest, { laoding: addLessonToLessonRequestLoading, error: addLessonToLessonRequestError, data: addLessonToLessonRequestData }] = useMutation(ADD_LESSON_TO_LESSON_REQUEST);
+  const [addLessonToLessonRequest, { loading: addLessonToLessonRequestLoading, error: addLessonToLessonRequestError, data: addLessonToLessonRequestData }] = useMutation(ADD_LESSON_TO_LESSON_REQUEST);
   const [title, setTitle] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [open, setOpen] = useState(false);
 
-  if (usersLoading || lessonLoading || coachLessonsLoading || coachLessonRequestsLoading) return <h1>Loading...</h1>
-  if (usersError || lessonError || coachLessonsError || coachLessonRequestsError) return <h1>Error</h1>
+  if (usersLoading || lessonLoading || coachLessonsLoading || coachLessonRequestsLoading || addLessonToLessonRequestLoading) return <h1>Loading...</h1>
+  if (usersError || lessonError || coachLessonsError || coachLessonRequestsError || addLessonToLessonRequestError) return <h1>Error</h1>
 
   if (lessonData) {
     return <Navigate to={`/app/lesson/add/${lessonData.createLesson._id}`} />
@@ -82,21 +83,63 @@ const MyCoaching = () => {
             <Card>
             <CardHeader title="Lesson Requests" action={<Button color="primary" variant="contained" size="small" onClick={() => setOpen(true)}>Create Lesson</Button>}/>
               <CardContent>
-                {
-                  coachLessonRequestsData.getUserCoachLessonRequests.map(item => {
-                    return (
-                      <Box m={2} key={item._id}>
-                        <Card>
-                          <CardHeader title={item.player.firstname + " " + item.player.lastname + " - " + item.note} action={<Button variant="contained" size="small" onClick={() => addLessonToLessonRequestHandle(item)}>Create Lesson</Button>}/>
-                          <Divider />
-                          <Box p={1} display="flex" alignItems="center">
-                              <Typography align="left" variant="body2" color="textSecondary" pl={1}>{moment.unix(item.createdAt / 1000).format('MMMM Do YYYY')}</Typography>
-                          </Box>
-                        </Card>
-                      </Box>
-                    )
-                  })
-                }
+                <PerfectScrollbar>
+                  <Box>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>
+                            Player
+                          </TableCell>
+                          <TableCell sortDirection="desc">
+                            <Tooltip
+                              enterDelay={300}
+                              title="Sort"
+                            >
+                              <TableSortLabel
+                                active
+                                direction="desc"
+                              >
+                                Date
+                              </TableSortLabel>
+                            </Tooltip>
+                          </TableCell>
+                          <TableCell>
+                            Status
+                          </TableCell>
+                          <TableCell>
+                            Actions
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {coachLessonRequestsData.getUserCoachLessonRequests.map(item => (
+                          <TableRow
+                            hover
+                            key={item._id}
+                          >
+                            <TableCell>
+                              {item.player.firstname + " " + item.player.lastname}
+                            </TableCell>
+                            <TableCell>
+                              {moment.unix(item.createdAt / 1000).format('DD/MM/YYYY')}
+                            </TableCell>
+                            <TableCell>
+                              <Chip
+                                color="primary"
+                                label={item.lesson ? 'completed' : item.isCancelled ? 'cancelled' : 'pending'}
+                                size="small"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              {item.lesson ? <Button onClick={() => navigate(`/app/lesson/${item.lesson._id}`, { replace: true })} variant="contained" size="small">View</Button> : !item.isCancelled ? <Button variant="contained" size="small" onClick={() => addLessonToLessonRequestHandle(item)}>Create Lesson</Button> : null}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </Box>
+                </PerfectScrollbar>
               </CardContent>
             </Card>
           </Grid>

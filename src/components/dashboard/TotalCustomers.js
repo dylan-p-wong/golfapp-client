@@ -24,13 +24,13 @@ const TotalCustomers = (props) => (
             gutterBottom
             variant="h6"
           >
-            TOTAL CUSTOMERS
+            TOTAL STUDENTS
           </Typography>
           <Typography
             color="textPrimary"
             variant="h3"
           >
-            1,600
+            16
           </Typography>
         </Grid>
         <Grid item>
@@ -45,7 +45,7 @@ const TotalCustomers = (props) => (
           </Avatar>
         </Grid>
       </Grid>
-      <Box
+      {/* <Box
         sx={{
           alignItems: 'center',
           display: 'flex',
@@ -68,7 +68,7 @@ const TotalCustomers = (props) => (
         >
           Since last month
         </Typography>
-      </Box>
+      </Box> */}
     </CardContent>
   </Card>
 );

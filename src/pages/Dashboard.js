@@ -10,6 +10,10 @@ import LatestProducts from 'src/components/dashboard//LatestProducts';
 import TasksProgress from 'src/components/dashboard//TasksProgress';
 import TotalCustomers from 'src/components/dashboard//TotalCustomers';
 import TotalProfit from 'src/components/dashboard//TotalProfit';
+import LessonsTaught from 'src/components/dashboard/LessonsTaught';
+import LessonsRecieved from 'src/components/dashboard/LessonsRecieved';
+import TotalSwings from 'src/components/dashboard/TotalSwings';
+import Messages from 'src/components/dashboard/Messages';
 
 const Dashboard = () => (
   <>
@@ -35,7 +39,7 @@ const Dashboard = () => (
             xl={3}
             xs={12}
           >
-            <Budget />
+            <LessonsRecieved sx={{ height: '100%' }}/>
           </Grid>
           <Grid
             item
@@ -44,7 +48,7 @@ const Dashboard = () => (
             xl={3}
             xs={12}
           >
-            <TotalCustomers />
+            <TotalCustomers sx={{ height: '100%' }}/>
           </Grid>
           <Grid
             item
@@ -53,7 +57,7 @@ const Dashboard = () => (
             xl={3}
             xs={12}
           >
-            <TasksProgress />
+            <TotalSwings />
           </Grid>
           <Grid
             item
@@ -62,7 +66,7 @@ const Dashboard = () => (
             xl={3}
             xs={12}
           >
-            <TotalProfit sx={{ height: '100%' }} />
+            <LessonsTaught sx={{ height: '100%' }} />
           </Grid>
 
           <Grid
@@ -72,7 +76,10 @@ const Dashboard = () => (
             xl={3}
             xs={12}
           >
-            <LatestProducts sx={{ height: '100%' }} />
+            {/* <LatestProducts sx={{ height: '100%' }} /> */}
+            <img src="/static/images/sky_on_course.jpg" width={380}>
+            </img>
+
           </Grid>
           <Grid
             item
@@ -81,7 +88,7 @@ const Dashboard = () => (
             xl={9}
             xs={12}
           >
-            <LatestOrders />
+            <Messages />
           </Grid>
         </Grid>
       </Container>

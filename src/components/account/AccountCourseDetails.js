@@ -11,14 +11,33 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-const AccountProfileDetails = (props) => {
-  const { firstname, lastname, email, phone } = props;
+const states = [
+  {
+    value: '',
+    label: ''
+  },
+  {
+    value: 'alabama',
+    label: 'Alabama'
+  },
+  {
+    value: 'new-york',
+    label: 'New York'
+  },
+  {
+    value: 'san-francisco',
+    label: 'San Francisco'
+  }
+];
+
+const AccountCourseDetails = (props) => {
+  const { homeCourse, homeCourseCity, homeCourseProvince, homeCourseCountry } = props;
 
   const [values, setValues] = useState({
-    firstname,
-    lastname,
-    // email,
-    phone,
+    homeCourse: homeCourse,
+    homeCourseProvince: homeCourseProvince,
+    homeCourseCountry: homeCourseCountry,
+    homeCourseCity: homeCourseCity
   });
 
   const handleChange = (event) => {
@@ -29,7 +48,7 @@ const AccountProfileDetails = (props) => {
   };
 
   const onSave = async () => {
-    await props.updateUser({variables: { info: values }});
+    await props.updateUser({ variables: {info: values}});
   }
 
   return (
@@ -41,7 +60,7 @@ const AccountProfileDetails = (props) => {
       <Card>
         <CardHeader
           subheader="The information can be edited"
-          title="Profile"
+          title="Home Course Info"
         />
         <Divider />
         <CardContent>
@@ -56,12 +75,10 @@ const AccountProfileDetails = (props) => {
             >
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
-                label="First name"
-                name="firstname"
+                label="Course Name"
+                name="homeCourse"
                 onChange={handleChange}
-                required
-                value={values.firstname}
+                value={values.homeCourse}
                 variant="outlined"
               />
             </Grid>
@@ -72,26 +89,10 @@ const AccountProfileDetails = (props) => {
             >
               <TextField
                 fullWidth
-                label="Last name"
-                name="lastname"
+                label="City"
+                name="homeCourseCity"
                 onChange={handleChange}
-                value={values.lastname}
-                variant="outlined"
-                required
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Email Address"
-                name="email"
-                required
-                disabled
-                value={email}
+                value={values.homeCourseCity}
                 variant="outlined"
               />
             </Grid>
@@ -102,13 +103,37 @@ const AccountProfileDetails = (props) => {
             >
               <TextField
                 fullWidth
-                label="Phone Number"
-                name="phone"
+                label="Country"
+                name="homeCourseCountry"
                 onChange={handleChange}
-                type="number"
-                value={values.phone}
+                value={values.homeCourseCountry}
                 variant="outlined"
               />
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                label="Select Province"
+                name="homeCourseProvince"
+                onChange={handleChange}
+                select
+                SelectProps={{ native: true }}
+                value={values.homeCourseProvince}
+                variant="outlined"
+              >
+                {states.map((option) => (
+                  <option
+                    key={option.value}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
             </Grid>
           </Grid>
         </CardContent>
@@ -133,8 +158,8 @@ const AccountProfileDetails = (props) => {
   );
 };
 
-AccountProfileDetails.propTypes = {
+AccountCourseDetails.propTypes = {
   updateUser: PropTypes.func.isRequired
 }
 
-export default AccountProfileDetails;
+export default AccountCourseDetails;

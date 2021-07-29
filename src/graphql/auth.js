@@ -13,19 +13,30 @@ export const LOGIN = gql`
 `;
 
 export const SIGNUP = gql`
-    mutation($email: String, $password: String, $firstname: String, $lastname: String){
-        signup(email: $email, password: $password, firstname: $firstname, lastname: $lastname)
+    mutation($email: String, $password: String, $firstname: String, $lastname: String, $playerAccount: Boolean, $coachAccount: Boolean){
+        signup(email: $email, password: $password, firstname: $firstname, lastname: $lastname, playerAccount: $playerAccount, coachAccount: $coachAccount)
     }
 `;
 
 export const ME = gql`
     query{
         userInfo{
+        _id
         email
+        phone
         firstname
         lastname
-        swingDirection
+        hand
         handicap
+        homeCourse
+        homeCourseCity
+        homeCourseCountry
+        homeCourseProvince
+        coachAccount
+        playerAccount
+        coachingCredentials
+        dateStartedCoaching
+        __typename
         }
     }
 `;
@@ -35,10 +46,20 @@ export const GET_USERS = gql`
         getUsers{
             _id
             email
+            phone
             firstname
             lastname
-            swingDirection
+            hand
             handicap
+            homeCourse
+            homeCourseCity
+            homeCourseCountry
+            homeCourseProvince
+            coachAccount
+            playerAccount
+            coachingCredentials
+            dateStartedCoaching
+            __typename
         }
     }
 `;
@@ -48,10 +69,20 @@ export const GET_COACHES = gql`
         getCoaches{
             _id
             email
+            phone
             firstname
             lastname
-            swingDirection
+            hand
             handicap
+            homeCourse
+            homeCourseCity
+            homeCourseCountry
+            homeCourseProvince
+            coachAccount
+            playerAccount
+            coachingCredentials
+            dateStartedCoaching
+            __typename
         }
     }
 `;

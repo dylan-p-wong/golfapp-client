@@ -27,6 +27,7 @@ import GolfCourseIcon from '@material-ui/icons/GolfCourse';
 import SchoolIcon from '@material-ui/icons/School';
 import { useQuery } from '@apollo/client';
 import { ME } from '../graphql/auth';
+import getInitials from 'src/utils/getInitials';
 
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
@@ -41,9 +42,9 @@ const items = [
     title: 'Dashboard'
   },
   {
-    href: '/app/customers',
+    href: '/app/coaches',
     icon: UsersIcon,
-    title: 'Customers'
+    title: 'Coaches'
   },
   {
     href: '/app/products',
@@ -113,19 +114,24 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
           p: 2
         }}
       >
+        {
+          
+        }
         <Avatar
           component={RouterLink}
-          src={user.avatar}
+          src={data.userInfo.avatar}
           sx={{
             cursor: 'pointer',
-            width: 64,
-            height: 64
           }}
           to="/app/account"
-        />
+        >
+          {getInitials(data.userInfo.firstname + " " + data.userInfo.lastname)}
+        </Avatar>
         {
+          
           data && data.userInfo ? 
           <Box>
+            
             <Typography
               color="textPrimary"
               variant="h5"
@@ -138,7 +144,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
               variant="body2"
               align="center"
             >
-              Player
+              { data.userInfo.playerAccount && data.userInfo.coachAccount ? "Player | Coach" : data.userInfo.coachAccount ? "Coach" : data.userInfo.playerAccount ? "Player" : null }
             </Typography>
           </Box> : null
         }
@@ -170,14 +176,14 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
           gutterBottom
           variant="h4"
         >
-          Need more?
+          Want to upload more swings?
         </Typography>
-        <Typography
+        {/* <Typography
           align="center"
           variant="body2"
         >
-          Upgrade to PRO version and access 20 more screens
-        </Typography>
+          Upgrade your subscription
+        </Typography> */}
         <Box
           sx={{
             display: 'flex',
@@ -188,10 +194,10 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
           <Button
             color="primary"
             component="a"
-            href="https://react-material-kit.devias.io"
+            href="/app/subscription"
             variant="contained"
           >
-            See PRO version
+            View Subscriptions
           </Button>
         </Box>
       </Box>

@@ -1,13 +1,22 @@
 import { Helmet } from 'react-helmet';
 import { Box, Container } from '@material-ui/core';
 import CustomerListResults from 'src/components/customer/CustomerListResults';
-import CustomerListToolbar from 'src/components/customer/CustomerListToolbar';
-import customers from 'src/__mocks__/customers';
+import CoachListToolbar from 'src/components/coaches/CoachListToolbar';
+import customers from 'src/__mocks__/customers'
+import { GET_COACHES } from 'src/graphql/auth';
+import { useQuery } from '@apollo/client';
+import CoachesList from 'src/components/coaches/CoachesList';
 
-const CustomerList = () => (
+const CustomerList = () => {
+  const { loading: coachesLoading, error: coachesError, data: coachesData} = useQuery(GET_COACHES);
+
+  if (coachesLoading) return <h1>Loading...</h1>
+  if (coachesError) return <h1>Error</h1>
+
+  return (
   <>
     <Helmet>
-      <title>Customers | Material Kit</title>
+      <title>Coaches | Material Kit</title>
     </Helmet>
     <Box
       sx={{
@@ -17,13 +26,13 @@ const CustomerList = () => (
       }}
     >
       <Container maxWidth={false}>
-        <CustomerListToolbar />
+        <CoachListToolbar />
         <Box sx={{ pt: 3 }}>
-          <CustomerListResults customers={customers} />
+          <CoachesList coaches={coachesData.getCoaches}/>
         </Box>
       </Container>
     </Box>
   </>
-);
+)};
 
 export default CustomerList;
