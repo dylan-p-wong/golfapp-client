@@ -94,7 +94,7 @@ const CoachesList = ({ coaches, ...rest }) => {
                     {coach.phone}
                   </TableCell>
                   <TableCell>
-                    {`${coach.homeCourse}, ${coach.homeCourseCity}, ${coach.homeCourseProvince}, ${coach.homeCourseCountry}`}
+                    {coach.homeCourse && coach.homeCourseCity && coach.homeCourseProvince && coach.homeCourseCountry ? `${coach.homeCourse}, ${coach.homeCourseCity}, ${coach.homeCourseProvince}, ${coach.homeCourseCountry}` : null}
                   </TableCell>
                   <TableCell>
                     {coach.coachingCredentials}

@@ -14,15 +14,16 @@ import AccountCoachDetails from 'src/components/account/AccountCoachDetails';
 import { useMutation, useQuery } from '@apollo/client';
 import { ME } from '../graphql/auth';
 import { UPDATE_USER } from 'src/graphql/user';
+import AccountTypeDetails from 'src/components/account/AccountTypeDetails';
 
 const Account = () => {
   const { loading, error, data } = useQuery(ME);
   const [updateUser, {loading: updateLoading, error: updateError, data: updateData}] = useMutation(UPDATE_USER);
 
-  const { firstname, lastname, email, phone, hand, handicap, homeCourse, homeCourseCity, homeCourseProvince, homeCourseCountry, coachingCredentials, dateStartedCoaching } = data.userInfo;
-
   if (loading || updateLoading) return <h1>Loading...</h1>
   if (error || updateError) return <h1>Error</h1>
+
+  const { createdAt, updatedAt, firstname, lastname, email, phone, hand, handicap, homeCourse, homeCourseCity, homeCourseProvince, homeCourseCountry, coachingCredentials, dateStartedCoaching, playerAccount, coachAccount } = data.userInfo;
 
   return (
   <>
@@ -48,10 +49,11 @@ const Account = () => {
             xs={12}
           >
             <Box mb={2}>
-              <AccountProfile />
+              <AccountProfile firstname={firstname} lastname={lastname} createdAt={createdAt} updatedAt={updatedAt}/>
             </Box>
 
-            <SettingsNotifications />
+            <AccountTypeDetails playerAccount={playerAccount} coachAccount={coachAccount} updateUser={updateUser}/>
+            {/* <SettingsNotifications /> */}
           </Grid>
           <Grid
             item
@@ -63,13 +65,13 @@ const Account = () => {
               <AccountProfileDetails firstname={firstname} lastname={lastname} email={email} phone={phone} updateUser={updateUser}/>
             </Box>
             <Box mb={2}>
-              <AccountPlayerDetails hand={hand} handicap={handicap} updateUser={updateUser}/>
+              {playerAccount && <AccountPlayerDetails hand={hand} handicap={handicap} updateUser={updateUser}/>}
             </Box>
             <Box mb={2}>
               <AccountCourseDetails homeCourse={homeCourse} homeCourseCity={homeCourseCity} homeCourseProvince={homeCourseProvince} homeCourseCountry={homeCourseCountry} updateUser={updateUser}/>
             </Box>
             <Box mb={2}>
-              <AccountCoachDetails dateStartedCoaching={dateStartedCoaching} coachingCredentials={coachingCredentials} updateUser={updateUser}/>
+              {coachAccount && <AccountCoachDetails dateStartedCoaching={dateStartedCoaching} coachingCredentials={coachingCredentials} updateUser={updateUser}/>}
             </Box>
             <SettingsPassword />
           </Grid>

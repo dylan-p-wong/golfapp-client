@@ -12,6 +12,7 @@ export const ADD_SWING = gql`
             owner
             createdAt
             updatedAt
+            __typename
         }
     }
 `;
@@ -28,6 +29,7 @@ export const USER_SWINGS = gql`
             sideVideo
             player
             owner
+            __typename
         }
     }
 `;

@@ -19,7 +19,7 @@ const Swing = (props) => {
                 <Button color="secondary" variant="contained">Delete</Button>
             </Box>
             <Divider />
-            <ViewSwing frontVideoURL={data.getSwing.frontVideo} sideVideoURL={data.getSwing.sideVideo}/>
+            <ViewSwing video1={data.getSwing.frontVideo} video2={data.getSwing.sideVideo}/>
         </Box>
     )
 }

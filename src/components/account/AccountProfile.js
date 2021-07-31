@@ -23,7 +23,7 @@ const user = {
 };
 
 const AccountProfile = (props) => {
-  const { loading, error, data } = useQuery(ME);
+  const { createdAt, updatedAt, firstname, avatar, lastname } = props;
 
   return (
     <Card {...props}>
@@ -36,28 +36,34 @@ const AccountProfile = (props) => {
           }}
         >
           <Avatar
-            src={data.userInfo.avatar}
+            src={avatar}
           >
-            {getInitials(data.userInfo.firstname + " " + data.userInfo.lastname)}
+            {getInitials(firstname + " " + lastname)}
           </Avatar>
           <Typography
             color="textPrimary"
             gutterBottom
             variant="h3"
           >
-            {data && data.userInfo ? data.userInfo.firstname + " " + data.userInfo.lastname: null}
+            {firstname + " " + lastname}
           </Typography>
-          <Typography
+          {/* <Typography
             color="textSecondary"
             variant="body1"
           >
             {`${user.city} ${user.country}`}
+          </Typography> */}
+          <Typography
+            color="textSecondary"
+            variant="body1"
+          >
+            Joined Date: {`${moment.unix(createdAt / 1000).format("DD/MM/YYYY")}`}
           </Typography>
           <Typography
             color="textSecondary"
             variant="body1"
           >
-            {`${moment().format('hh:mm A')} ${user.timezone}`}
+            Updated Date: {`${moment.unix(updatedAt / 1000).format("DD/MM/YYYY")}`}
           </Typography>
         </Box>
       </CardContent>

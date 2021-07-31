@@ -7,7 +7,7 @@ import MomentUtils from "@date-io/moment";
 import moment from 'moment';
 import Swing from './SwingPlayer';
 import { ADD_SWING } from 'src/graphql/swing'; 
-import { useMutation } from '@apollo/client';
+import { useMutation, gql } from '@apollo/client';
 import { toast } from 'react-toastify';
 
 const AddSwing = (props) => {
@@ -17,7 +17,32 @@ const AddSwing = (props) => {
     const [sideVideoFile, setSideVideoFile] = useState([]);
     const [title, setTitle] = useState("");
     const [note, setNote] = useState("");
-    const [addSwing, { data, loading }] = useMutation(ADD_SWING);
+    const [addSwing, { data, loading }] = useMutation(ADD_SWING, {
+        update(cache, { data }) {
+            const { addSwing } = data;
+            cache.modify({
+                fields: {
+                    userSwings(existingSwings = []) {
+                        const newSwingRef = cache.writeFragment({
+                            data: addSwing,
+                            fragment: gql`
+                            fragment SwingType on Swings {
+                                _id
+                                date
+                                title
+                                note
+                                frontVideo
+                                sideVideo
+                                player
+                                owner
+                            }`
+                        });
+                        return [...existingSwings, newSwingRef];
+                    }
+                }
+            })
+        }
+    });
 
     const handleFileChange = type => (file) => {
         if (type === 'FRONT') {

@@ -26,7 +26,7 @@ const VideoSelector = (props) => {
                     items.map((item, index) => {
                         return (
                             <Tab 
-                                label={item.title + " " + moment.unix(item.createdAt).format('DD/MM/YYYY')}
+                                label={item.title + " " + moment.unix(item.createdAt / 1000).format('DD/MM/YYYY')}
                                 icon={<Avatar src="https://www.pixsy.com/wp-content/uploads/2021/04/ben-sweet-2LowviVHZ-E-unsplash-1.jpeg"/>}
                                 index={index}
                             />

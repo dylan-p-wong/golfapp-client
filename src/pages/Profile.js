@@ -38,9 +38,10 @@ const ProfilePage = () => {
         container
         spacing={3}
         >
+          <Grid item xs={2}></Grid>
           <Grid
             item
-            xs={12}
+            xs={8}
           >
             <Card>
               <Box justifyContent="center" display="flex" alignItems="center" alignContent="center" flexDirection="column" p={7}>
@@ -51,7 +52,7 @@ const ProfilePage = () => {
                 <Typography>{email}</Typography>
                 <Typography>{phone}</Typography>
                 <Typography>{`${homeCourse}, ${homeCourseCity}, ${homeCourseProvince}, ${homeCourseCountry}`}</Typography>
-                <Box sx={{ width: '60%'}}>
+                {/* <Box sx={{ width: '60%'}}>
                   <TextField 
                       fullWidth
                       placeholder="Common misses"
@@ -60,10 +61,11 @@ const ProfilePage = () => {
                       disabled
                       value={"Common misses"}
                   />
-                </Box>
+                </Box> */}
               </Box> 
             </Card>
           </Grid>
+          <Grid item xs={2}></Grid>
           <Grid
             item
             xs={6}

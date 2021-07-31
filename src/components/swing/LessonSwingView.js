@@ -60,7 +60,7 @@ const LessonSwingView= (props) => {
                 editView && <VideoSelector items={userSwingsData.userSwings} text={"Add Swing"} onAdd={onAddSwing}/>
             }
             <VideoSelector items={lessonSwingsData.getLessonSwings} text={"View Swing"} onAdd={onViewSwing}/>
-            { viewingSwing && <ViewSwing frontVideoURL={viewingSwing.frontVideo} sideVideoURL={viewingSwing.sideVideo}/> }
+            { viewingSwing && <ViewSwing video1={viewingSwing.frontVideo} video2={viewingSwing.sideVideo}/> }
         </Box>
     );
 }

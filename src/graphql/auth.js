@@ -36,6 +36,8 @@ export const ME = gql`
         playerAccount
         coachingCredentials
         dateStartedCoaching
+        createdAt
+        updatedAt
         __typename
         }
     }
