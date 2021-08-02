@@ -10,6 +10,7 @@ import { useQuery } from '@apollo/client';
 import { GET_LESSON } from 'src/graphql/lesson';
 import LessonAnalysisView from '../analysis/LessonAnalysisView';
 import moment from 'moment';
+import Spinner from '../spinner/Spinner';
 
 const Lesson = (props) => {
     const { editView } = props;
@@ -18,7 +19,7 @@ const Lesson = (props) => {
     const navigate = useNavigate();
     const { loading, error, data } = useQuery(GET_LESSON, { variables: { lessonId: _id } });
 
-    if (loading) return <h1>Loading...</h1>
+    if (loading) return <Spinner />
     if (error) return <h1>Error</h1>
 
     const handleChange = (event, newValue) => {
@@ -28,8 +29,8 @@ const Lesson = (props) => {
     return (
         <Box p={6}>
             <Box mb={3} display="flex" flexDirection="row">
-                <Typography variant='h3' flexGrow={1}>{data.getLesson.title} - {data.getLesson.player.firstname + " " + data.getLesson.player.lastname} - {moment.unix(data.getLesson.createdAt / 1000).format('MMMM Do YYYY')}</Typography>
-                { !editView ? <Button color="primary" variant="contained" onClick={() => navigate(`/app/lesson/add/${_id}`, { replace: true })}>Coach View</Button> : <Button color="primary" variant="contained" onClick={() => navigate(`/app/lesson/${_id}`, { replace: true })}>User View</Button>}
+                <Typography variant='h3' flexGrow={1}>{data.getLesson.player.firstname + " " + data.getLesson.player.lastname} - {moment.unix(data.getLesson.createdAt / 1000).format('MMMM Do YYYY')}</Typography>
+                { !editView ? <Button color="primary" variant="contained" onClick={() => navigate(`/app/lesson/edit/${_id}`, { replace: true })}>Coach View</Button> : <Button color="primary" variant="contained" onClick={() => navigate(`/app/lesson/${_id}`, { replace: true })}>User View</Button>}
                 <Button color="secondary" variant="contained">Delete</Button>
             </Box>
             <Divider />

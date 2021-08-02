@@ -15,12 +15,13 @@ import { useMutation, useQuery } from '@apollo/client';
 import { ME } from '../graphql/auth';
 import { UPDATE_USER } from 'src/graphql/user';
 import AccountTypeDetails from 'src/components/account/AccountTypeDetails';
+import Spinner from 'src/components/spinner/Spinner';
 
 const Account = () => {
   const { loading, error, data } = useQuery(ME);
   const [updateUser, {loading: updateLoading, error: updateError, data: updateData}] = useMutation(UPDATE_USER);
 
-  if (loading || updateLoading) return <h1>Loading...</h1>
+  if (loading || updateLoading) return <Spinner />
   if (error || updateError) return <h1>Error</h1>
 
   const { createdAt, updatedAt, firstname, lastname, email, phone, hand, handicap, homeCourse, homeCourseCity, homeCourseProvince, homeCourseCountry, coachingCredentials, dateStartedCoaching, playerAccount, coachAccount } = data.userInfo;

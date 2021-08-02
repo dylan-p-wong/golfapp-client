@@ -14,14 +14,15 @@ import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import LessonsTable from 'src/components/mycoaching/LessonsTable';
 import LessonRequestsTable from 'src/components/mycoaching/LessonRequestsTable';
+import Spinner from 'src/components/spinner/Spinner';
 
 const MyCoaching = () => {
   const { loading: coachLessonsLoading, error: coachLessonsError, data: coachLessonsData } = useQuery(GET_USER_LESSONS_COACH);
   const { loading : coachLessonRequestsLoading, error : coachLessonRequestsError, data : coachLessonRequestsData } = useQuery(GET_USER_LESSON_REQUESTS_COACH);
   const { loading : usersLoading, error : usersError, data : usersData } = useQuery(GET_USERS);
 
-  if (usersLoading || coachLessonsLoading || coachLessonRequestsLoading) return <h1>Loading...</h1>
-  if (usersError || coachLessonsError || coachLessonRequestsError) return <h1>Error</h1>
+  if (usersLoading || coachLessonsLoading || coachLessonRequestsLoading) return <Spinner />;
+  if (usersError || coachLessonsError || coachLessonRequestsError) return <h1>Error</h1>;
 
   return (
   <>
@@ -46,16 +47,6 @@ const MyCoaching = () => {
           >
             <LessonRequestsTable lessonRequests={coachLessonRequestsData.getUserCoachLessonRequests} players={usersData.getUsers}/>
           </Grid>
-          {/* <Grid
-            item
-            xs={4}
-          >
-            <Card>
-            <CardHeader title="Drills" action={<Button color="primary" variant="contained" size="small" onClick={() => navigate('/app/swing/add', { replace: true })}>Create Drill</Button>}/>
-              <CardContent>
-              </CardContent>
-            </Card>
-          </Grid> */}
           <Grid
             item
             xs={6}

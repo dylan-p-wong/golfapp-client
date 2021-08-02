@@ -11,7 +11,7 @@ const ProfilePage = () => {
 
   const { loading, error, data } = useQuery(ME);
 
-  if (loading) return <h1>Loading...</h1>
+  if (loading) return <Spinner />
   if (error) return <h1>Error</h1>
 
   const { firstname, lastname, email, phone, homeCourse, homeCourseCity, homeCourseProvince, homeCourseCountry, hand, handicap, coachingCredentials, dateStartedCoaching } = data.userInfo;

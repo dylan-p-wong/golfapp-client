@@ -20,7 +20,7 @@ const LessonRequestsTable = (props) => {
     const [page, setPage] = useState(0);
 
     if (lessonData) {
-        return <Navigate to={`/app/lesson/add/${lessonData.createLesson._id}`} />
+        return <Navigate to={`/app/lesson/edit/${lessonData.createLesson._id}`} />
     }
 
     const addLessonHandle = async () => {
@@ -48,7 +48,7 @@ const LessonRequestsTable = (props) => {
         >
           <DialogTitle>{"Select Student"}</DialogTitle>
           <DialogContent>
-            <TextField fullWidth label="Title" placeholder="Note title" onChange={e => setTitle(e.target.value)}/>
+            {/* <TextField fullWidth label="Title" placeholder="Note title" onChange={e => setTitle(e.target.value)}/> */}
             <Autocomplete
               onChange={(event, newValue) => { setSelectedUser(newValue) }}
               style={{ width: 300 }} 
@@ -62,7 +62,7 @@ const LessonRequestsTable = (props) => {
           </DialogActions>
         </Dialog>
         <Card>
-            <CardHeader title="Past Lessons" action={<Button color="primary" variant="contained" size="small" onClick={() => setOpen(true)}>Create Lesson</Button>}/>
+            <CardHeader title="Lesson Requests" action={<Button color="primary" variant="contained" size="small" onClick={() => setOpen(true)}>Create Lesson</Button>}/>
             <CardContent>
             <PerfectScrollbar>
                 <Box>

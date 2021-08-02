@@ -39,52 +39,64 @@ const items = [
   {
     href: '/app/dashboard',
     icon: BarChartIcon,
-    title: 'Dashboard'
+    title: 'Dashboard',
+    player: true,
+    coach: true
   },
   {
     href: '/app/coaches',
     icon: UsersIcon,
-    title: 'Coaches'
+    title: 'Coaches',
+    player: true,
+    coach: true
   },
-  {
-    href: '/app/products',
-    icon: ShoppingBagIcon,
-    title: 'Products'
-  },
+  // {
+  //   href: '/app/products',
+  //   icon: ShoppingBagIcon,
+  //   title: 'Products'
+  // },
   {
     href: '/app/account',
     icon: UserIcon,
-    title: 'Account'
+    title: 'Account',
+    player: true,
+    coach: true
   },
-  {
-    href: '/login',
-    icon: LockIcon,
-    title: 'Login'
-  },
-  {
-    href: '/register',
-    icon: UserPlusIcon,
-    title: 'Register'
-  },
-  {
-    href: '/404',
-    icon: AlertCircleIcon,
-    title: 'Error'
-  },
+  // {
+  //   href: '/login',
+  //   icon: LockIcon,
+  //   title: 'Login'
+  // },
+  // {
+  //   href: '/register',
+  //   icon: UserPlusIcon,
+  //   title: 'Register'
+  // },
+  // {
+  //   href: '/404',
+  //   icon: AlertCircleIcon,
+  //   title: 'Error'
+  // },
   {
     href: '/app/mygame',
     icon: GolfCourseIcon,
-    title: 'My Game'
+    title: 'My Game',
+    player: true,
+    coach: false
   },
   {
     href: '/app/mycoaching',
     icon: SchoolIcon,
-    title: 'My Coaching'
+    title: 'My Coaching',
+    player: false,
+    coach: true
   },
   {
     href: '/logout',
     icon: LogOutIcon,
-    title: 'Logout'
+    title: 'Logout',
+    player: true,
+    coach: true
   },
 ];
 

@@ -1,5 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { AppBar, Toolbar } from '@material-ui/core';
+import { AppBar, Button, Hidden, Toolbar, Box } from '@material-ui/core';
 import Logo from './Logo';
 
 const MainNavbar = (props) => (
@@ -11,6 +11,15 @@ const MainNavbar = (props) => (
       <RouterLink to="/">
         <Logo />
       </RouterLink>
+      <Box sx={{ flexGrow: 1 }} />
+      <Box mr={1}>
+        <RouterLink to="/login">
+          <Button variant="outlined" style={{ backgroundColor: '#F5F5F5'}}>Login</Button>
+        </RouterLink>
+      </Box>
+      <RouterLink to="/register">
+        <Button variant="outlined" style={{ backgroundColor: '#F5F5F5'}}>Sign up</Button>
+      </RouterLink>      
     </Toolbar>
   </AppBar>
 );

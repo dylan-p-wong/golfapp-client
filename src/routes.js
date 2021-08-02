@@ -18,6 +18,9 @@ import Lesson from './components/lesson/Lesson';
 import Subscriptions from './pages/Subscriptions';
 import { requireAuthentication, noAuthentication } from './components/shared/Authentication';
 import ProfilePage from './pages/Profile';
+import Home from './pages/Home';
+import Main from './components/main/Main';
+import Pricing from './components/pricing/Pricing';
 
 const NoAuthedLogin = noAuthentication(Login);
 const NoAuthedRegister = noAuthentication(Register);
@@ -35,9 +38,8 @@ const routes = [
       { path: 'products', element: <ProductList /> },
       { path: 'mygame', element: <MyGame /> },
       { path: 'mycoaching', element: <MyCoaching /> },
-      { path: 'lesson', element: <LessonPage />, children: [ {path: ':_id', element: <Lesson />}, {path: 'add/:_id', element: <Lesson editView/>} ]},
+      { path: 'lesson', element: <LessonPage />, children: [ {path: ':_id', element: <Lesson />}, {path: 'edit/:_id', element: <Lesson editView/>} ]},
       { path: 'swing', element: <SwingPage />, children: [ {path: ':_id', element: <Swing />}, {path: 'add', element: <AddSwing />} ]},
-      { path: 'drill', children: [ {path: 'add', element: <AddSwing />}, {path: ':_id', element: <Swing />} ]},
       { path: 'subscription', element: <Subscriptions />},
       { path: '*', element: <Navigate to="/404" /> },
     ]
@@ -49,7 +51,7 @@ const routes = [
       { path: 'login', element: <NoAuthedLogin /> },
       { path: 'register', element: <NoAuthedRegister /> },
       { path: '404', element: <NotFound /> },
-      { path: '/', element: <Navigate to="/app/dashboard" /> },
+      { path: '/', element: <Home />, children: [{path: '/', element: <Main />}, {path: 'contact'}] },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   }

@@ -6,6 +6,7 @@ import moment from 'moment';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { ADD_NOTE_TO_LESSON, GET_LESSON_NOTES } from 'src/graphql/lesson';
+import Spinner from '../spinner/Spinner';
 
 const Notes = (props) => {
     const { lessonId } = props; 
@@ -37,13 +38,15 @@ const Notes = (props) => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
-    if (loading) return <h1>Loading...</h1>
+    if (loading) return <Spinner />
     if (error) return <h1>Error</h1>
 
     const onAdd = async () => {
         await addNote({ variables: { title, description, lessonId }});
         toast("Note Added!");
     }
+
+    console.log(data)
 
     return (
         <Box p={6}>
@@ -74,7 +77,7 @@ const Notes = (props) => {
                                     <Divider />
                                     <Box p={1} display="flex" alignItems="center">
                                         <AccessTimeIcon color="action" />
-                                        <Typography align="left" variant="body2" color="textSecondary" pl={1}>{moment.unix(item.createdAt / 1000).fromNow()}</Typography>
+                                        <Typography align="left" variant="body2" color="textSecondary" pl={1}>{item.user.firstname} {item.user.lastname} {moment.unix(item.createdAt / 1000).fromNow()}</Typography>
                                     </Box>
                                 </Card>
                             </Box>

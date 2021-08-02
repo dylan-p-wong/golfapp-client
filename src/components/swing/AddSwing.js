@@ -85,7 +85,7 @@ const AddSwing = (props) => {
             </Box>
             <Divider />
 
-            { preview ? <Swing frontVideoURL={frontVideoFile.length ? URL.createObjectURL(frontVideoFile[0]) : null} sideVideoURL={sideVideoFile.length ? URL.createObjectURL(sideVideoFile[0]) : null}/> : 
+            { preview ? <Swing video1={frontVideoFile.length ? URL.createObjectURL(frontVideoFile[0]) : null} video2={sideVideoFile.length ? URL.createObjectURL(sideVideoFile[0]) : null}/> : 
                 <Box>
                     <Grid container spacing={3} >
                         <Grid container item xs={6} direction="column" alignItems="center" justify="center">
@@ -109,7 +109,7 @@ const AddSwing = (props) => {
                             onChange={handleDateChange}
                         />
                     </MuiPickersUtilsProvider> */}
-                    <TextField fullWidth placeholder="Title" onChange={handleTitleChange}/>
+                    {/* <TextField fullWidth placeholder="Title" onChange={handleTitleChange}/> */}
                     <TextField 
                         fullWidth
                         placeholder="Enter a note"

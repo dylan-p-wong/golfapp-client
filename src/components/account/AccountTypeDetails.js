@@ -57,9 +57,9 @@ const AccountTypeDetails = (props) => {
                         label="Coaching Account"
                         />
                         <Box ml={5}>
-                            <Typography variant="h6">Record swings</Typography>
+                            <Typography variant="h6">Upload swings</Typography>
                             <Typography variant="h6">Analyze swings</Typography>
-                            <Typography variant="h6">Record lessons</Typography>
+                            <Typography variant="h6">Create lessons</Typography>
                         </Box>              
                     </Box>
                 </CardContent>

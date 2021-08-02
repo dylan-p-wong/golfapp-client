@@ -9,6 +9,7 @@ import AddSwing from "./AddSwing";
 import VideoPlayer from "../video/VideoPlayer";
 import ViewSwing from "./SwingPlayer";
 import { toast } from "react-toastify";
+import Spinner from "../spinner/Spinner";
 
 const LessonSwingView= (props) => {
     const { lessonId, playerId, editView } = props;
@@ -42,7 +43,7 @@ const LessonSwingView= (props) => {
     const { loading: userSwingsLoading, error: userSwingsError, data: userSwingsData } = useQuery(USER_SWINGS, { variables: { playerId }});
     const [viewingSwing, setViewingSwing ] = useState(null);
 
-    if (lessonSwingsLoading || userSwingsLoading) return <h1>Loading...</h1>;
+    if (lessonSwingsLoading || userSwingsLoading) return <Spinner />
     if (lessonSwingsError || userSwingsError) return <h1>Error</h1>
 
     const onAddSwing = (swing) => {

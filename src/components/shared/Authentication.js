@@ -1,12 +1,13 @@
 import { ME } from '../../graphql/auth'
 import { useQuery } from '@apollo/client';
 import { Navigate } from 'react-router-dom';
+import Spinner from '../spinner/Spinner';
 
 const requireAuthentication = Component => ({ ...props }) => {
     const { loading, error, data } = useQuery(ME);
 
     if (loading) {
-        return <h1>Loading</h1>
+        return <Spinner />
     }
 
     if (data && data.userInfo) {
@@ -20,7 +21,7 @@ const noAuthentication = Component => ({ ...props }) => {
     const { loading, error, data } = useQuery(ME);
 
     if (loading) {
-        return <h1>Loading</h1>
+        return <Spinner />
     }
 
     if (!data || !data.userInfo) {

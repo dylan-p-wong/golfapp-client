@@ -108,8 +108,6 @@ export const ADD_SWING_TO_LESSON = gql`
             note
             frontVideo
             sideVideo
-            player
-            owner
         }
     }
 `;
@@ -124,8 +122,6 @@ export const GET_LESSON_SWINGS = gql`
             note
             frontVideo
             sideVideo
-            player
-            owner
             createdAt
         }
     }
@@ -141,8 +137,6 @@ export const GET_LESSON_ANALYSES = gql`
             note
             frontVideo
             sideVideo
-            player
-            owner
         }
     }
 `;
@@ -175,58 +169,6 @@ export const GET_LESSON = gql`
     }
 `;
 
-export const GET_LESSON_FULL = gql`
-    query($lessonId: String!){
-        getLesson(lessonId: $lessonId){
-            _id
-            createdAt
-            updatedAt
-            title
-            notes
-            player{
-                _id
-                email
-                firstname
-                lastname
-                hand
-                handicap
-            }
-            coach{
-                _id
-                email
-                firstname
-                lastname
-                hand
-                handicap
-            }
-            swings {
-                _id
-                date
-                title
-                note
-                frontVideo
-                sideVideo
-                player
-                owner
-                createdAt
-                updatedAt
-            }
-            analyses {
-                _id
-                date
-                title
-                note
-                frontVideo
-                sideVideo
-                player
-                owner
-                createdAt
-                updatedAt
-            }
-        }
-    }
-`;
-
 export const ADD_ANALYSIS_TO_LESSON = gql`
     mutation($lessonId: String!, $analysisId: String!){
         addAnalysisToLesson(lessonId: $lessonId, analysisId: $analysisId){
@@ -251,6 +193,10 @@ export const GET_LESSON_NOTES = gql`
             description
             createdAt
             updatedAt
+            user {
+                firstname
+                lastname
+            }
         }
     }
 `;
@@ -263,6 +209,10 @@ export const ADD_NOTE_TO_LESSON = gql`
             description
             createdAt
             updatedAt
+            user {
+                firstname
+                lastname
+            }
         }
     }
 `;

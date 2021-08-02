@@ -12,6 +12,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import LessonsTable from 'src/components/mycoaching/LessonsTable';
 import LessonRequestsTable from 'src/components/mygame/LessonRequestsTable';
 import SwingsTable from 'src/components/mygame/SwingsTable';
+import Spinner from 'src/components/spinner/Spinner';
 
 const MyGame = () => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const MyGame = () => {
   const { loading: userLessonRequestsLoading, error: userLessonRequestsError, data: userLessonRequestsData } = useQuery(GET_USER_LESSON_REQUESTS_PLAYER);
   const { loading: coachesLoading, error: coachesError, data: coachesData} = useQuery(GET_COACHES);
 
-  if (coachesLoading || userSwingsLoading || userLessonsLoading || userLessonRequestsLoading) return <h1>Loading...</h1>;
+  if (coachesLoading || userSwingsLoading || userLessonsLoading || userLessonRequestsLoading) return <Spinner />;
   if (coachesError || userSwingsError || userLessonsError || userLessonRequestsError) return <h1>Error</h1>;
 
   return (

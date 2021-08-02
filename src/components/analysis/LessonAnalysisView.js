@@ -7,6 +7,7 @@ import { GET_LESSON_ANALYSES, GET_LESSON_SWINGS } from "src/graphql/lesson";
 import { useState } from "react";
 import ViewSwing from "../swing/SwingPlayer";
 import AnalysisVideoPlayer from "../video/AnalysisVideoPlayer";
+import Spinner from "../spinner/Spinner";
 
 const AddAnalysis = (props) => {
     const { lessonId, playerId, editView } = props;
@@ -18,7 +19,7 @@ const AddAnalysis = (props) => {
     const [analysisURLs, setAnalysisURLs] = useState([]);
     const [open, setOpen] = useState(false);
 
-    if (lessonSwingsLoading || lessonAnalysesLoading) return <h1>Loading...</h1>
+    if (lessonSwingsLoading || lessonAnalysesLoading) return <Spinner />
     if (lessonSwingsError || lessonAnalysesError) return <h1>Error</h1>
 
     const onAddSwing = (swing) => {
