@@ -13,7 +13,8 @@ import Spinner from "../spinner/Spinner";
 
 const LessonSwingView= (props) => {
     const { lessonId, playerId, editView } = props;
-    const [addSwingToLesson, { loading, error, data }] = useMutation(ADD_SWING_TO_LESSON, {
+    const [error, setError] = useState(null);
+    const [addSwingToLesson] = useMutation(ADD_SWING_TO_LESSON, {
         update(cache, { data }) {
             const { addSwingToLesson } = data;
             cache.modify({
@@ -37,7 +38,9 @@ const LessonSwingView= (props) => {
                     }
                 }
             })
-        }
+        },
+        onError: setError,
+        onCompleted: () => toast("Swing added to lesson!")
     });
     const { loading : lessonSwingsLoading, error: lessonSwingsError, data: lessonSwingsData } = useQuery(GET_LESSON_SWINGS, { variables: { lessonId }});
     const { loading: userSwingsLoading, error: userSwingsError, data: userSwingsData } = useQuery(USER_SWINGS, { variables: { playerId }});
@@ -46,9 +49,13 @@ const LessonSwingView= (props) => {
     if (lessonSwingsLoading || userSwingsLoading) return <Spinner />
     if (lessonSwingsError || userSwingsError) return <h1>Error</h1>
 
+    if (error) {
+        toast(error.message);
+        setError(null);
+    }
+    
     const onAddSwing = (swing) => {
         addSwingToLesson({ variables: { lessonId, swingId: swing._id }});
-        toast("Swing added to lesson!");
     }
 
     const onViewSwing = (swing) => {

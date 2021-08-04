@@ -5,20 +5,10 @@ import FastForwardIcon from '@material-ui/icons/FastForward';
 import FastRewindIcon from '@material-ui/icons/FastRewind';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
-import MicIcon from '@material-ui/icons/Mic';
-import StopIcon from '@material-ui/icons/Stop';
 import GestureIcon from '@material-ui/icons/Gesture';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import RemoveIcon from '@material-ui/icons/Remove';
 import ClearIcon from '@material-ui/icons/Clear';
-import UndoIcon from '@material-ui/icons/Undo';
-import RedoIcon from '@material-ui/icons/Redo';
-import SaveIcon from '@material-ui/icons/Save';
-import CancelIcon from '@material-ui/icons/Cancel';
-import { useMutation } from '@apollo/client';
-import { ADD_ANALYSIS } from 'src/graphql/analysis';
-import { ADD_ANALYSIS_TO_LESSON } from 'src/graphql/lesson';
-import { toast } from 'react-toastify';
 
 const drawOptions = [
     {
@@ -39,8 +29,6 @@ const drawOptions = [
 ];
 
 const AnalysisBase = forwardRef((props, ref) => {
-    const [addAnalysis, {}] = useMutation(ADD_ANALYSIS);
-    const [addAnalysisToLesson, {}] = useMutation(ADD_ANALYSIS_TO_LESSON);
     
     const { videoURL } = props;
 
@@ -230,7 +218,7 @@ const AnalysisBase = forwardRef((props, ref) => {
                 </Box>
             </Box>
 
-            <video hidden crossOrigin="anonymous" src={videoURL} ref={videoRef} autoPlay loop></video>
+            <video hidden crossOrigin="anonymous" src={videoURL} ref={videoRef} autoPlay loop type="video/mp4"></video>
             <Box
                 display="flex"
                 justifyContent="center"

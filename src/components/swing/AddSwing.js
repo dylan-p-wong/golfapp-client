@@ -7,15 +7,17 @@ import MomentUtils from "@date-io/moment";
 import moment from 'moment';
 import Swing from './SwingPlayer';
 import { ADD_SWING } from 'src/graphql/swing'; 
-import { useMutation, gql } from '@apollo/client';
+import { useMutation, gql, useApolloClient } from '@apollo/client';
 import { toast } from 'react-toastify';
+import { USER_TIER_INFO } from 'src/graphql/user';
 
 const AddSwing = (props) => {
+    const client = useApolloClient();
     const navigate = useNavigate();
     const [preview, setPreview] = useState(false);
     const [frontVideoFile, setFrontVideoFile] = useState([]);
     const [sideVideoFile, setSideVideoFile] = useState([]);
-    const [title, setTitle] = useState("");
+    const [error, setError] = useState(null);
     const [note, setNote] = useState("");
     const [addSwing, { data, loading }] = useMutation(ADD_SWING, {
         update(cache, { data }) {
@@ -37,12 +39,36 @@ const AddSwing = (props) => {
                                 owner
                             }`
                         });
-                        return [...existingSwings, newSwingRef];
+                        //return [...existingSwings, newSwingRef];
+                    },
+                    userTier(existingInfo) {
+                        
+                        const data = client.readQuery({ query: USER_TIER_INFO });
+
+                        cache.writeQuery({
+                            query: USER_TIER_INFO,
+                            data: {
+                                userTier: {
+                                    ...data.userTier,
+                                    playerTier: {
+                                        ...data.userTier.playerTier,
+                                        swingsThisMonth: data.userTier.playerTier.swingsThisMonth + 1
+                                    }
+                                }
+                            }
+                        })
                     }
                 }
             })
-        }
+        }, 
+        onError: setError,
+        onCompleted: () => {toast("Swing added!"); navigate('/app/mygame', { replace: true })}
     });
+
+    if (error) {
+        toast(error.message);
+        setError(null);
+    }
 
     const handleFileChange = type => (file) => {
         if (type === 'FRONT') {
@@ -59,22 +85,9 @@ const AddSwing = (props) => {
     const handleNoteChange = (e) => {
         setNote(e.target.value);
     }
-
-    const handleTitleChange = (e) => {
-        setTitle(e.target.value);
-    }
-
-    if (data) {
-        toast("Swing Added!");
-        navigate('/app/mygame', { replace: true });
-    }
-
-    const onAddSwing = async () => {
-        try {
-            const swing = await addSwing({ variables: { frontVideo: frontVideoFile[0], sideVideo: sideVideoFile[0], note, title: title }});
-        } catch (e) {
-            console.log(e);
-        }
+    
+    const onAddSwing = () => {
+        addSwing({ variables: { frontVideo: frontVideoFile[0], sideVideo: sideVideoFile[0], note }});
     }
 
     return (

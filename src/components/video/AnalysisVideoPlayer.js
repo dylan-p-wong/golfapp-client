@@ -5,7 +5,9 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 
 const AnalysisVideoPlayer = (props) => {
-    const { video1, video2 } = props;
+    const { video1, video2, voice } = props;
+
+    console.log(props);
 
     const player = createRef();
     const [playing, setPlaying] = useState(false);
@@ -42,6 +44,13 @@ const AnalysisVideoPlayer = (props) => {
                 />
             }
             </Box>
+            <ReactPlayer 
+                ref={player}
+                playing={playing} 
+                muted={false}
+                loop={true}
+                url={voice}
+            />
             <Box
                 display="flex"
                 justifyContent="center"

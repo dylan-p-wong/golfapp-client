@@ -22,6 +22,7 @@ import { ADD_ANALYSIS_TO_LESSON } from 'src/graphql/lesson';
 import { gql, useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
 import AnalysisVideoPlayer from '../video/AnalysisVideoPlayer';
+import { ReactMic } from 'react-mic';
 
 const AnalysisPlayer = (props) => {
     const { videos, onCancel, playerId, lessonId } = props; 
@@ -59,9 +60,10 @@ const AnalysisPlayer = (props) => {
     const [recording, setRecording] = useState(false);
     const [videoURLs, setVideoURLs] = useState([...videos]);
     const [analysisVideoURLs, setAnalysisVideoURLs] = useState([]);
+    const [voiceBlob, setVoiceBlob] = useState(null);
     const analysisPlayerRef = useRef();
     const analysisPlayerRef2 = useRef();
-    
+
     const onRecord = () => {
         setRecording(true);
         if (analysisPlayerRef && analysisPlayerRef.current) {
@@ -105,8 +107,14 @@ const AnalysisPlayer = (props) => {
             file2 = analysisPlayerRef2.current.getFile();
         }
 
-        const { data, error, loading } = await addAnalysis({ variables: { date: "2021-01-01", title, playerId, video1: file1, video2: file2 } })
+        let voiceFile;
 
+        if (voiceBlob) {
+            voiceFile = new File([voiceBlob], "voiceFile.mp3", { lastModified: new Date(), type: "audio/mp3" });
+        }
+
+        const { data, error, loading } = await addAnalysis({ variables: { date: "2021-01-01", title, playerId, video1: file1, video2: file2, voice: voiceFile } });
+        
         if (lessonId) {
             await addAnalysisToLesson({ variables: { lessonId, analysisId: data.addAnalysis._id }})
         }
@@ -134,11 +142,18 @@ const AnalysisPlayer = (props) => {
         }
 
         setAnalysisVideoURLs(arr);
-        setPreview(true);
+
+        if (arr.length > 0) {
+            setPreview(true);
+        }
     }
 
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
+    }
+
+    const onVoice = (blob) => {
+        setVoiceBlob(blob);
     }
     
     return (
@@ -161,23 +176,30 @@ const AnalysisPlayer = (props) => {
                     justifyContent="center"
                     alignItems="center"
                 >
+                    <ReactMic
+                        record={recording}
+                        className="sound-wave"
+                        onStop={onVoice}
+                        strokeColor="#000000"
+                    />
+                </Box>
+                
+                <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                >
                     { recording ? <StopIcon onClick={onStopRecord}/> : <MicIcon onClick={onRecord}/>}
                     <CancelIcon onClick={onCancel}/>
-                    {!recording &&<AddToQueueIcon onClick={startPreview}/>}
+                    {!recording && <AddToQueueIcon onClick={startPreview}/>}
                 </Box>
                 <Box
                     display="flex"
                     justifyContent="center"
                     alignItems="center"
                 >
-                    {/* {
-                        videoURLs.map((item, index) => {
-                            return <AnalysisBase ref={index === 0 ? analysisPlayerRef : analysisPlayerRef2} videoURL={item}/>
-                        })
-                    } */}
                     { videoURLs.length && <AnalysisBase ref={analysisPlayerRef} videoURL={videoURLs[0]}/>}
-                    
-                    { videoURLs.length > 1 && <AnalysisBase ref={analysisPlayerRef} videoURL={videoURLs[1]}/>}
+                    { videoURLs.length > 1 && <AnalysisBase ref={analysisPlayerRef2} videoURL={videoURLs[1]}/>}
                 </Box>
             </Box>
             {
@@ -192,8 +214,7 @@ const AnalysisPlayer = (props) => {
                         <CancelIcon onClick={onCancel}/>
                         <RedoIcon onClick={() => {setPreview(false); setAnalysisVideoURLs([])}}/>
                     </Box>
-                    {/* <ViewSwing key={analysisVideoURLs.length} frontVideoURL={analysisVideoURLs.length ? analysisVideoURLs[0] : null} sideVideoURL={analysisVideoURLs.length > 1 ? analysisVideoURLs[1] : null}/> */}
-                    <AnalysisVideoPlayer video1={analysisVideoURLs.length ? analysisVideoURLs[0] : null} video2={analysisVideoURLs.length > 1 ? analysisVideoURLs[1] : null}/>
+                    <AnalysisVideoPlayer video1={analysisVideoURLs.length ? analysisVideoURLs[0] : null} video2={analysisVideoURLs.length > 1 ? analysisVideoURLs[1] : null} voice={voiceBlob.blobURL}/>
                 </Box>
             }
 

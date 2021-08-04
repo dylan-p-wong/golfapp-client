@@ -22,3 +22,20 @@ export const UPDATE_USER = gql`
         }
     }
 `;
+
+export const USER_TIER_INFO = gql`
+    query{
+        userTier{
+            coachTier {
+                tier
+                lessonsPerMonth
+                lessonsThisMonth
+            }
+            playerTier {
+                tier
+                swingsThisMonth
+                swingUploadsPerMonth
+            }
+        }
+    }
+`

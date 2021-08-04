@@ -104,6 +104,13 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
   const location = useLocation();
   const { loading, error, data } = useQuery(ME);
 
+  if (loading) return;
+  if (error) return;
+
+  const filteredItems = items.filter(item => {
+    return (item.player ? data.userInfo.playerAccount : false) || (item.coach ? data.userInfo.coachAccount : false);
+  });
+
   useEffect(() => {
     if (openMobile && onMobileClose) {
       onMobileClose();
@@ -165,7 +172,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
       <Divider />
       <Box sx={{ p: 2 }}>
         <List>
-          {items.map((item) => (
+          {filteredItems.map((item) => (
             <NavItem
               href={item.href}
               key={item.title}

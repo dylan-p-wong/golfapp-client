@@ -8,6 +8,7 @@ import { useState } from "react";
 import ViewSwing from "../swing/SwingPlayer";
 import AnalysisVideoPlayer from "../video/AnalysisVideoPlayer";
 import Spinner from "../spinner/Spinner";
+import { toast } from "react-toastify";
 
 const AddAnalysis = (props) => {
     const { lessonId, playerId, editView } = props;
@@ -24,7 +25,7 @@ const AddAnalysis = (props) => {
 
     const onAddSwing = (swing) => {
         if (analysisURLs.length >= 2) {
-
+            toast("You can only analyze 2 swings at once.");
             return;
         }
         setViewingSwing(null);
@@ -75,7 +76,7 @@ const AddAnalysis = (props) => {
             {editView && <VideoSelector items={lessonSwingsData.getLessonSwings} text={"Add Swing to Analyze"} onAdd={onAddSwing}/>}
             <VideoSelector items={lessonAnalysesData.getLessonAnalyses} text={"View Analysis"} onAdd={onViewSwing}/>
             { analysisURLs.length > 0 && editView && <AnalysisPlayer playerId={playerId} lessonId={lessonId} videos={analysisURLs} key={analysisURLs.length} onCancel={onCancel}/>}
-            { viewingSwing && <AnalysisVideoPlayer video1={viewingSwing.frontVideo} video2={viewingSwing.sideVideo}/>}
+            { viewingSwing && <AnalysisVideoPlayer video1={viewingSwing.frontVideo} video2={viewingSwing.sideVideo} voice={viewingSwing.voice}/>}
         </Box>
     )
 }

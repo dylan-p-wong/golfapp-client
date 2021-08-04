@@ -5,22 +5,27 @@ import {
   AppBar,
   Badge,
   Box,
+  Card,
+  CardContent,
   Hidden,
   IconButton,
-  Toolbar
+  Toolbar,
+  Typography
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 import Logo from './Logo';
-import { useMutation, useApolloClient } from '@apollo/client';
+import { useMutation, useApolloClient, useQuery } from '@apollo/client';
 import { LOGOUT } from '../graphql/auth';
+import { USER_TIER_INFO } from 'src/graphql/user';
 
 const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
   const client = useApolloClient();
   const navigate = useNavigate();
   const [notifications] = useState([]);
-  const [logout, { data }] = useMutation(LOGOUT);
+  const [logout, {}] = useMutation(LOGOUT);
+  const { loading, error, data } = useQuery(USER_TIER_INFO);
 
   return (
     <AppBar
@@ -32,6 +37,20 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
           <Logo />
         </RouterLink>
         <Box sx={{ flexGrow: 1 }} />
+        <Box mr={1}>
+          <Card>
+            <Box m={1}>
+              <Typography fontSize={10} color="primary">{loading ? '-' : data.userTier.playerTier.tier} Player Plan</Typography>
+              <Typography fontSize={12}>{loading ? '-' : data.userTier.playerTier.swingsThisMonth}/{loading ? '-' : data.userTier.playerTier.swingUploadsPerMonth} Swings uploaded</Typography>
+            </Box>
+          </Card>
+        </Box>
+        <Card>
+          <Box m={1}>
+            <Typography fontSize={10} color="primary">{loading ? '-' : data.userTier.coachTier.tier} Coach Plan</Typography>
+            <Typography fontSize={12}>{loading ? '-' : data.userTier.coachTier.lessonsThisMonth}/{loading ? '-' : data.userTier.coachTier.lessonsPerMonth} Lessons created</Typography>
+          </Box>
+        </Card>
         <Hidden lgDown>
           <IconButton color="inherit">
             <Badge

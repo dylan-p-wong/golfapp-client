@@ -137,6 +137,7 @@ export const GET_LESSON_ANALYSES = gql`
             note
             frontVideo
             sideVideo
+            voice
         }
     }
 `;
@@ -179,6 +180,7 @@ export const ADD_ANALYSIS_TO_LESSON = gql`
             note
             frontVideo
             sideVideo
+            voice
             player
             owner
         }
