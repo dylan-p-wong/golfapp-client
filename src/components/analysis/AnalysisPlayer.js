@@ -1,4 +1,4 @@
-import { Box, Button, DialogContent, DialogTitle, Dialog, TextField, Input, LinearProgress } from '@material-ui/core';
+import { Box, Button, DialogContent, DialogTitle, Dialog, TextField, Input, LinearProgress, Typography, Tooltip } from '@material-ui/core';
 import FastForwardIcon from '@material-ui/icons/FastForward';
 import FastRewindIcon from '@material-ui/icons/FastRewind';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
@@ -22,11 +22,14 @@ import { ADD_ANALYSIS_TO_LESSON } from 'src/graphql/lesson';
 import { gql, useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
 import AnalysisVideoPlayer from '../video/AnalysisVideoPlayer';
-import { ReactMic } from 'react-mic';
+import MicRecorder from 'mic-recorder-to-mp3';
 
 const AnalysisPlayer = (props) => {
     const { videos, onCancel, playerId, lessonId } = props; 
-    const [addAnalysis, { data, loading }] = useMutation(ADD_ANALYSIS);
+    const [error, setError] = useState(null);
+    const [addAnalysis, { data, loading }] = useMutation(ADD_ANALYSIS, {
+        onError: setError
+    });
     const [addAnalysisToLesson] = useMutation(ADD_ANALYSIS_TO_LESSON, {
         update(cache, { data }) {
             const { addAnalysisToLesson } = data;
@@ -36,13 +39,14 @@ const AnalysisPlayer = (props) => {
                         const newAnalysisRef = cache.writeFragment({
                             data: addAnalysisToLesson,
                             fragment: gql`
-                            fragment SwingType on Analyses {
+                            fragment AnalysisType on Analyses {
                                 _id
                                 date
                                 title
                                 note
                                 frontVideo
                                 sideVideo
+                                voice
                                 player
                                 owner
                             }`
@@ -51,9 +55,16 @@ const AnalysisPlayer = (props) => {
                     }
                 }
             })
-        }
+        },
+        onError: setError
     });
 
+
+    const recorderRef = useRef(new MicRecorder({
+        bitRate: 128
+    }));
+
+    const [previewOpen, setPreviewDialogOpen] = useState(false);
     const [open, setOpen] = useState(false);
     const [title, setTitle] = useState("");
     const [preview, setPreview] = useState(false);
@@ -64,8 +75,16 @@ const AnalysisPlayer = (props) => {
     const analysisPlayerRef = useRef();
     const analysisPlayerRef2 = useRef();
 
-    const onRecord = () => {
+    if (error) {
+        toast(error.message);
+        setError(null);
+    }
+
+    const onRecord = async () => {
         setRecording(true);
+
+        await recorderRef.current.start();
+
         if (analysisPlayerRef && analysisPlayerRef.current) {
             analysisPlayerRef.current.startRecord();
         }
@@ -75,25 +94,21 @@ const AnalysisPlayer = (props) => {
     }
 
     const onStopRecord = async () => {
-        const arr = [];
+        
+        recorderRef.current.stop().getMp3().then(([buffer, blob]) => {         
+            setVoiceBlob(blob);
+        });
 
         if (analysisPlayerRef && analysisPlayerRef.current) {
             analysisPlayerRef.current.stopRecord();
-            const file = analysisPlayerRef.current.getFile();
-            if (file) {
-                arr.push(URL.createObjectURL(file));
-            }
         }
 
         if (analysisPlayerRef2 && analysisPlayerRef2.current) {
             analysisPlayerRef2.current.stopRecord();
-            const file2 = analysisPlayerRef2.current.getFile();
-            if (file2) {
-                arr.push(URL.createObjectURL(file2));
-            }
         }
 
         setRecording(false);
+        setPreviewDialogOpen(true);
     }
 
     const onSave = async () => {
@@ -110,10 +125,10 @@ const AnalysisPlayer = (props) => {
         let voiceFile;
 
         if (voiceBlob) {
-            voiceFile = new File([voiceBlob], "voiceFile.mp3", { lastModified: new Date(), type: "audio/mp3" });
+            voiceFile = new File([voiceBlob], "voiceFile.mp3", { lastModified: new Date(), type: voiceBlob.type });
         }
 
-        const { data, error, loading } = await addAnalysis({ variables: { date: "2021-01-01", title, playerId, video1: file1, video2: file2, voice: voiceFile } });
+        const { data, error } = await addAnalysis({ variables: { date: "2021-01-01", title, playerId, video1: file1, video2: file2, voice: voiceFile} });
         
         if (lessonId) {
             await addAnalysisToLesson({ variables: { lessonId, analysisId: data.addAnalysis._id }})
@@ -151,10 +166,6 @@ const AnalysisPlayer = (props) => {
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
     }
-
-    const onVoice = (blob) => {
-        setVoiceBlob(blob);
-    }
     
     return (
         <Box>
@@ -170,28 +181,28 @@ const AnalysisPlayer = (props) => {
                     </Box>
                 </DialogContent>
             </Dialog>
+            <Dialog
+                open={previewOpen}
+                onClose={() => setPreviewDialogOpen(false)}
+            >
+                <DialogContent>
+                    <Box flexDirection="column" display="flex" p={4}>
+                        <Typography>Your analysis has been recorded!</Typography>
+                    </Box>
+                    <Button fullWidth onClick={() => {setPreviewDialogOpen(false); startPreview()}} variant="contained">Preview</Button>
+                </DialogContent>
+            </Dialog>
             <Box display={analysisVideoURLs.length ? "none" : ""}>
                 <Box
                     display="flex"
                     justifyContent="center"
                     alignItems="center"
                 >
-                    <ReactMic
-                        record={recording}
-                        className="sound-wave"
-                        onStop={onVoice}
-                        strokeColor="#000000"
-                    />
-                </Box>
-                
-                <Box
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                >
-                    { recording ? <StopIcon onClick={onStopRecord}/> : <MicIcon onClick={onRecord}/>}
-                    <CancelIcon onClick={onCancel}/>
-                    {!recording && <AddToQueueIcon onClick={startPreview}/>}
+                    
+                    { recording ? <Tooltip title="Stop recording"><StopIcon onClick={onStopRecord}/></Tooltip> : <Tooltip title="Record"><MicIcon onClick={onRecord}/></Tooltip>}
+                    <Tooltip title="Clear">
+                        <CancelIcon onClick={onCancel}/>
+                    </Tooltip>
                 </Box>
                 <Box
                     display="flex"
@@ -210,11 +221,17 @@ const AnalysisPlayer = (props) => {
                         justifyContent="center"
                         alignItems="center"
                     >
-                        <SaveIcon onClick={() => setOpen(true)}/>
-                        <CancelIcon onClick={onCancel}/>
-                        <RedoIcon onClick={() => {setPreview(false); setAnalysisVideoURLs([])}}/>
+                        <Tooltip title="Save">
+                            <SaveIcon onClick={() => setOpen(true)}/>
+                        </Tooltip>
+                        <Tooltip title="Clear">
+                            <CancelIcon onClick={onCancel}/>
+                        </Tooltip>
+                        <Tooltip title="Redo Recording">
+                            <RedoIcon onClick={() => {setPreview(false); setAnalysisVideoURLs([])}}/>
+                        </Tooltip>
                     </Box>
-                    <AnalysisVideoPlayer video1={analysisVideoURLs.length ? analysisVideoURLs[0] : null} video2={analysisVideoURLs.length > 1 ? analysisVideoURLs[1] : null} voice={voiceBlob.blobURL}/>
+                    <AnalysisVideoPlayer video1={analysisVideoURLs.length ? analysisVideoURLs[0] : null} video2={analysisVideoURLs.length > 1 ? analysisVideoURLs[1] : null} voice={voiceBlob ? URL.createObjectURL(voiceBlob) : null}/>
                 </Box>
             }
 

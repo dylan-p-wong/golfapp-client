@@ -7,8 +7,6 @@ import PauseIcon from '@material-ui/icons/Pause';
 const AnalysisVideoPlayer = (props) => {
     const { video1, video2, voice } = props;
 
-    console.log(props);
-
     const player = createRef();
     const [playing, setPlaying] = useState(false);
 
@@ -49,6 +47,7 @@ const AnalysisVideoPlayer = (props) => {
                 playing={playing} 
                 muted={false}
                 loop={true}
+                //url={voice}
                 url={voice}
             />
             <Box
