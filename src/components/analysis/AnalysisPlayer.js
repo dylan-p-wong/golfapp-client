@@ -1,4 +1,4 @@
-import { Box, Button, DialogContent, DialogTitle, Dialog, TextField, Input, LinearProgress, Typography, Tooltip } from '@material-ui/core';
+import { Box, Button, DialogContent, DialogTitle, Dialog, TextField, Input, LinearProgress, Typography, Tooltip, IconButton } from '@material-ui/core';
 import FastForwardIcon from '@material-ui/icons/FastForward';
 import FastRewindIcon from '@material-ui/icons/FastRewind';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
@@ -56,9 +56,9 @@ const AnalysisPlayer = (props) => {
                 }
             })
         },
-        onError: setError
+        onError: setError,
+        onCompleted: () => toast("Analysis Saved!")
     });
-
 
     const recorderRef = useRef(new MicRecorder({
         bitRate: 128
@@ -128,13 +128,12 @@ const AnalysisPlayer = (props) => {
             voiceFile = new File([voiceBlob], "voiceFile.mp3", { lastModified: new Date(), type: voiceBlob.type });
         }
 
-        const { data, error } = await addAnalysis({ variables: { date: "2021-01-01", title, playerId, video1: file1, video2: file2, voice: voiceFile} });
+        const { data } = await addAnalysis({ variables: { date: "2021-01-01", title, playerId, video1: file1, video2: file2, voice: voiceFile} });
         
         if (lessonId) {
-            await addAnalysisToLesson({ variables: { lessonId, analysisId: data.addAnalysis._id }})
+            await addAnalysisToLesson({ variables: { lessonId, analysisId: data.addAnalysis._id }});
         }
         
-        toast("Analysis Saved!");
         setPreview(false);
         onCancel();
     }
@@ -199,10 +198,12 @@ const AnalysisPlayer = (props) => {
                     alignItems="center"
                 >
                     
-                    { recording ? <Tooltip title="Stop recording"><StopIcon onClick={onStopRecord}/></Tooltip> : <Tooltip title="Record"><MicIcon onClick={onRecord}/></Tooltip>}
-                    <Tooltip title="Clear">
-                        <CancelIcon onClick={onCancel}/>
-                    </Tooltip>
+                    { recording ? <IconButton><Tooltip title="Stop recording"><StopIcon onClick={onStopRecord}/></Tooltip></IconButton> : <IconButton><Tooltip title="Record"><MicIcon onClick={onRecord}/></Tooltip></IconButton>}
+                    <IconButton>
+                        <Tooltip title="Clear">
+                            <CancelIcon onClick={onCancel}/>
+                        </Tooltip>
+                    </IconButton>
                 </Box>
                 <Box
                     display="flex"
@@ -221,15 +222,21 @@ const AnalysisPlayer = (props) => {
                         justifyContent="center"
                         alignItems="center"
                     >
-                        <Tooltip title="Save">
-                            <SaveIcon onClick={() => setOpen(true)}/>
-                        </Tooltip>
-                        <Tooltip title="Clear">
-                            <CancelIcon onClick={onCancel}/>
-                        </Tooltip>
-                        <Tooltip title="Redo Recording">
-                            <RedoIcon onClick={() => {setPreview(false); setAnalysisVideoURLs([])}}/>
-                        </Tooltip>
+                        <IconButton>
+                            <Tooltip title="Save">
+                                <SaveIcon onClick={() => setOpen(true)}/>
+                            </Tooltip>
+                        </IconButton>
+                        <IconButton>
+                            <Tooltip title="Clear">
+                                <CancelIcon onClick={onCancel}/>
+                            </Tooltip>
+                        </IconButton>
+                        <IconButton>
+                            <Tooltip title="Redo Recording">
+                                <RedoIcon onClick={() => {setPreview(false); setAnalysisVideoURLs([])}}/>
+                            </Tooltip>
+                        </IconButton>
                     </Box>
                     <AnalysisVideoPlayer video1={analysisVideoURLs.length ? analysisVideoURLs[0] : null} video2={analysisVideoURLs.length > 1 ? analysisVideoURLs[1] : null} voice={voiceBlob ? URL.createObjectURL(voiceBlob) : null}/>
                 </Box>

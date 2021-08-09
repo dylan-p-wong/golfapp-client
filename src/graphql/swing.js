@@ -8,8 +8,22 @@ export const ADD_SWING = gql`
             note
             frontVideo
             sideVideo
-            player
-            owner
+            player {
+                _id
+                email
+                firstname
+                phone
+                lastname
+                hand
+                handicap
+            }
+            owner {
+                _id
+                email
+                firstname
+                lastname
+                phone
+            }
             createdAt
             updatedAt
             __typename
@@ -27,8 +41,21 @@ export const USER_SWINGS = gql`
             note
             frontVideo
             sideVideo
-            player
-            owner
+            player {
+                _id
+                email
+                firstname
+                phone
+                lastname
+                hand
+                handicap
+            }
+            owner {
+                _id
+                email
+                firstname
+                lastname
+            }
             __typename
         }
     }
@@ -44,8 +71,33 @@ export const GET_SWING = gql`
             note
             frontVideo
             sideVideo
-            player
-            owner
+            player {
+                _id
+                email
+                firstname
+                phone
+                lastname
+                hand
+                handicap
+            }
+            owner {
+                _id
+                email
+                firstname
+                lastname
+                phone
+            }
+            isPublic
+        }
+    }
+`;
+
+export const UPDATE_SWING = gql`
+    mutation($swingId: String!, $info: SwingInputType){
+        updateSwing(swingId: $swingId, info: $info){
+            _id
+            title
+            isPublic
         }
     }
 `;

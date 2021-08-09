@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, TablePagination, CardHeader, Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel, Tooltip } from '@material-ui/core';
+import { Chip, Box, Button, Card, CardContent, TablePagination, CardHeader, Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel, Tooltip } from '@material-ui/core';
 import moment from 'moment';
 import { useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -21,7 +21,7 @@ const LessonsTable = (props) => {
 
     return (
         <Card>
-            <CardHeader title="Past Lessons"/>
+            <CardHeader title="Lessons"/>
             <CardContent>
             <PerfectScrollbar>
                 <Box>
@@ -45,6 +45,9 @@ const LessonsTable = (props) => {
                         </Tooltip>
                         </TableCell>
                         <TableCell>
+                            Status
+                        </TableCell>
+                        <TableCell>
                         Actions
                         </TableCell>
                     </TableRow>
@@ -62,7 +65,15 @@ const LessonsTable = (props) => {
                             {moment.unix(item.createdAt / 1000).format('DD/MM/YYYY')}
                         </TableCell>
                         <TableCell>
+                            <Chip
+                                color="primary"
+                                label={item.isCompleted ? 'completed' : 'pending'}
+                                size="small"
+                            />
+                        </TableCell>
+                        <TableCell>
                             <Button onClick={() => navigate(`/app/lesson/${item._id}`, { replace: true })} variant="contained" size="small">View</Button>
+                            <Button onClick={() => navigate(`/app/lesson/edit/${item._id}`, { replace: true })} variant="contained" size="small">Edit</Button>
                         </TableCell>
                         </TableRow>
                     ))}

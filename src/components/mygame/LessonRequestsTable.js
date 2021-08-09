@@ -106,12 +106,12 @@ const LessonRequestsTable = (props) => {
                         <TableCell>
                             <Chip
                             color="primary"
-                            label={item.lesson ? 'completed' : item.isCancelled ? 'cancelled' : 'pending'}
+                            label={item.lesson && item.lesson.isCompleted ? 'completed' : item.isCancelled ? 'cancelled' : 'pending'}
                             size="small"
                             />
                         </TableCell>
                         <TableCell>
-                            {item.lesson ? <Button onClick={() => navigate(`/app/lesson/${item.lesson._id}`, { replace: true })} variant="contained" size="small">View</Button> : item.isCancelled ? null : <Button variant="contained" size="small" onClick={() => cancelLessonRequestHandle(item._id)}>Cancel</Button>}
+                            {item.lesson && item.lesson.isCompleted ? <Button onClick={() => navigate(`/app/lesson/${item.lesson._id}`, { replace: true })} variant="contained" size="small">View</Button> : item.isCancelled ? null : <Button variant="contained" size="small" onClick={() => cancelLessonRequestHandle(item._id)}>Cancel</Button>}
                         </TableCell>
                         </TableRow>
                     ))}

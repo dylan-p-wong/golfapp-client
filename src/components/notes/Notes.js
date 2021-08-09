@@ -46,8 +46,6 @@ const Notes = (props) => {
         toast("Note Added!");
     }
 
-    console.log(data)
-
     return (
         <Box p={6}>
             <Grid container spacing={3}>

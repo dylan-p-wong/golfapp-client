@@ -55,10 +55,19 @@ const LessonSwingView= (props) => {
     }
     
     const onAddSwing = (swing) => {
+        if (!swing) {
+            toast("Please select a swing");
+            return;
+        }
+
         addSwingToLesson({ variables: { lessonId, swingId: swing._id }});
     }
 
     const onViewSwing = (swing) => {
+        if (!swing) {
+            toast("Please select a swing");
+            return;
+        }
         setViewingSwing(swing);
     }
 

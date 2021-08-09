@@ -9,7 +9,7 @@ import moment from 'moment';
 import { useState } from 'react';
 import { GET_COACHES } from 'src/graphql/auth';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import LessonsTable from 'src/components/mycoaching/LessonsTable';
+import LessonsTable from 'src/components/mygame/LessonsTable';
 import LessonRequestsTable from 'src/components/mygame/LessonRequestsTable';
 import SwingsTable from 'src/components/mygame/SwingsTable';
 import Spinner from 'src/components/spinner/Spinner';

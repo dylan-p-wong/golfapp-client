@@ -19,9 +19,11 @@ const LessonsTable = (props) => {
         setPage(newPage);
     };
 
+    console.log(lessons);
+
     return (
         <Card>
-            <CardHeader title="Requested Lessons" action={<Button color="primary" variant="contained" size="small" onClick={() => setOpen(true)}>Request Lesson</Button>}/>
+            <CardHeader title="Lessons" action={<Button color="primary" variant="contained" size="small" onClick={() => setOpen(true)}>Request Lesson</Button>}/>
             <CardContent>
             <PerfectScrollbar>
                 <Box>
@@ -45,9 +47,6 @@ const LessonsTable = (props) => {
                         </Tooltip>
                         </TableCell>
                         <TableCell>
-                        Status
-                        </TableCell>
-                        <TableCell>
                         Actions
                         </TableCell>
                     </TableRow>
@@ -65,14 +64,7 @@ const LessonsTable = (props) => {
                             {moment.unix(item.createdAt / 1000).format('DD/MM/YYYY')}
                         </TableCell>
                         <TableCell>
-                            <Chip
-                            color="primary"
-                            label={item.lesson ? 'completed' : item.isCancelled ? 'cancelled' : 'pending'}
-                            size="small"
-                            />
-                        </TableCell>
-                        <TableCell>
-                            {item.lesson ? <Button onClick={() => navigate(`/app/lesson/${item.lesson._id}`, { replace: true })} variant="contained" size="small">View</Button> : item.isCancelled ? null : <Button variant="contained" size="small" onClick={() => cancelLessonRequestHandle(item._id)}>Cancel</Button>}
+                            <Button onClick={() => navigate(`/app/lesson/${item._id}`, { replace: true })} variant="contained" size="small">View</Button>
                         </TableCell>
                         </TableRow>
                     ))}

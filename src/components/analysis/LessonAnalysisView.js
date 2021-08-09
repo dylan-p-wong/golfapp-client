@@ -15,7 +15,7 @@ const AddAnalysis = (props) => {
     const { loading : lessonSwingsLoading, error: lessonSwingsError, data: lessonSwingsData } = useQuery(GET_LESSON_SWINGS, { variables: { lessonId }});
     const { loading : lessonAnalysesLoading, error: lessonAnalysesError, data: lessonAnalysesData } = useQuery(GET_LESSON_ANALYSES, { variables: { lessonId }});
     const [pendingSwingToAnalyze, setPendingSwingToAnalyze] = useState(null);
-    const [viewingSwing, setViewingSwing ] = useState(null);
+    const [viewingAnalysis, setViewingAnalysis ] = useState(null);
 
     const [analysisURLs, setAnalysisURLs] = useState([]);
     const [open, setOpen] = useState(false);
@@ -24,11 +24,17 @@ const AddAnalysis = (props) => {
     if (lessonSwingsError || lessonAnalysesError) return <h1>Error</h1>
 
     const onAddSwing = (swing) => {
+        
         if (analysisURLs.length >= 2) {
             toast("You can only analyze 2 swings at once.");
             return;
         }
-        setViewingSwing(null);
+
+        if (!swing) {
+            toast("Please select a swing");
+        }
+
+        setViewingAnalysis(null);
         setPendingSwingToAnalyze(swing);
         setOpen(true);
     }
@@ -36,7 +42,7 @@ const AddAnalysis = (props) => {
     const onSelectDirection = type => () => {
         const arr = analysisURLs;
 
-        setViewingSwing(null);
+        setViewingAnalysis(null);
         if (type === 'SIDE') {
             arr.push(pendingSwingToAnalyze.sideVideo);
         } else if (type === 'FRONT') {
@@ -49,13 +55,16 @@ const AddAnalysis = (props) => {
 
     const onCancel = () => {
         setAnalysisURLs([]);
-        setViewingSwing(null);
+        setViewingAnalysis(null);
     }
 
-    const onViewSwing = (swing) => {
+    const onViewAnalysis = (analysis) => {
+        if (!analysis) {
+            toast("Please select an analysis");
+        }
         setAnalysisURLs([]);
         setPendingSwingToAnalyze(null);
-        setViewingSwing(swing);
+        setViewingAnalysis(analysis);
     }
 
     return (
@@ -74,9 +83,9 @@ const AddAnalysis = (props) => {
                 </Dialog>
             }
             {editView && <VideoSelector items={lessonSwingsData.getLessonSwings} text={"Add Swing to Analyze"} onAdd={onAddSwing}/>}
-            <VideoSelector items={lessonAnalysesData.getLessonAnalyses} text={"View Analysis"} onAdd={onViewSwing}/>
+            <VideoSelector items={lessonAnalysesData.getLessonAnalyses} text={"View Analysis"} onAdd={onViewAnalysis}/>
             { analysisURLs.length > 0 && editView && <AnalysisPlayer playerId={playerId} lessonId={lessonId} videos={analysisURLs} key={analysisURLs.length} onCancel={onCancel}/>}
-            { viewingSwing && <AnalysisVideoPlayer video1={viewingSwing.frontVideo} video2={viewingSwing.sideVideo} voice={viewingSwing.voice}/>}
+            { viewingAnalysis && <AnalysisVideoPlayer video1={viewingAnalysis.frontVideo} video2={viewingAnalysis.sideVideo} voice={viewingAnalysis.voice}/>}
         </Box>
     )
 }

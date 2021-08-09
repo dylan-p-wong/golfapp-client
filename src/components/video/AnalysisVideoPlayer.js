@@ -1,5 +1,5 @@
 import ReactPlayer from 'react-player';
-import { Icon, Box, Button } from '@material-ui/core'
+import { Icon, Box, Button, IconButton } from '@material-ui/core'
 import React, { useState, createRef } from 'react';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
@@ -55,7 +55,8 @@ const AnalysisVideoPlayer = (props) => {
                 justifyContent="center"
                 alignItems="center"
             >
-                { playing ? <PauseIcon onClick={() => setPlaying(false)} /> : <PlayArrowIcon onClick={() => setPlaying(true)} />}
+                
+                { playing ? <IconButton><PauseIcon onClick={() => setPlaying(false)} /></IconButton>  : <IconButton><PlayArrowIcon onClick={() => setPlaying(true)} /></IconButton>}
             </Box>
         </Box>
     )

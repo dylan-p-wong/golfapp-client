@@ -1,5 +1,5 @@
 import ReactPlayer from 'react-player';
-import { Icon, Box, Button, Tooltip, Divider, } from '@material-ui/core'
+import { Icon, Box, Button, Tooltip, Divider, IconButton, } from '@material-ui/core'
 import React, { useState, createRef, useRef, useEffect, Fragment, useImperativeHandle, forwardRef } from 'react';
 import FastForwardIcon from '@material-ui/icons/FastForward';
 import FastRewindIcon from '@material-ui/icons/FastRewind';
@@ -57,11 +57,6 @@ const AnalysisBase = forwardRef((props, ref) => {
         x: null,
         y: null
     });
-
-    const [endPoint, setEndPoint] = useState({
-        x: null,
-        y: null
-    });
     
     const [isDrawing, setIsDrawing] = useState(false);
     const [recording, setRecording] = useState(false);
@@ -91,7 +86,7 @@ const AnalysisBase = forwardRef((props, ref) => {
         startRecord() {
             setRecording(true);
     
-            const videoStream = combinedCanvasRef.current.captureStream(60);
+            const videoStream = combinedCanvasRef.current.captureStream(240);
             mediaRecorder.current = new MediaRecorder(videoStream);
             
             mediaRecorder.current.addEventListener('dataavailable', (e) => {
@@ -172,14 +167,13 @@ const AnalysisBase = forwardRef((props, ref) => {
     }
 
     const onMouseDown = ({ nativeEvent }) => {
+        const { offsetX, offsetY } = nativeEvent;
+
         if (drawingType === 0) {
-            const { offsetX, offsetY } = nativeEvent;
             contextRef.current.beginPath();
             contextRef.current.moveTo(offsetX, offsetY);
             setIsDrawing(true);
-        } else if (drawingType === 1) {
-            const { offsetX, offsetY } = nativeEvent;
-
+        } else if (drawingType === 1 || drawingType === 2) {
             setStartPoint({ x: offsetX, y: offsetY});
             setIsDrawing(true);
         }
@@ -189,29 +183,26 @@ const AnalysisBase = forwardRef((props, ref) => {
     const onMouseUp = () => {
         if (drawingType === 0) {
             contextRef.current.closePath();
-            setIsDrawing(false);
             canvasPush();
-        } else if (drawingType === 1) {
-            setIsDrawing(false);
+        } else if (drawingType === 1 || drawingType === 2) {
             canvasPush();
         }
+        setIsDrawing(false);
     };
 
     const onMouseMove = ({ nativeEvent }) => {
+        const { offsetX, offsetY } = nativeEvent;
+
         if (!isDrawing) {
             return;
         }
 
         if (drawingType === 0) {
-            const { offsetX, offsetY } = nativeEvent;
     
             contextRef.current.lineTo(offsetX, offsetY);
             contextRef.current.stroke();
         } else if (drawingType === 1) {
-            const { offsetX, offsetY } = nativeEvent;
-
             contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-            console.log(canvasArray);
             const image = new Image();
             image.src = canvasArray[canvasArray.length - 1];
             contextRef.current.drawImage(image, 0, 0);
@@ -219,6 +210,16 @@ const AnalysisBase = forwardRef((props, ref) => {
             contextRef.current.beginPath();
             contextRef.current.moveTo(startPoint.x, startPoint.y);
             contextRef.current.lineTo(offsetX, offsetY);
+            contextRef.current.stroke();
+            contextRef.current.closePath();
+        } else if (drawingType === 2) {
+            contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+            const image = new Image();
+            image.src = canvasArray[canvasArray.length - 1];
+            contextRef.current.drawImage(image, 0, 0);
+
+            contextRef.current.beginPath();
+            contextRef.current.arc((offsetX - startPoint.x) / 2 + startPoint.x, (offsetY - startPoint.y) / 2 + startPoint.y, Math.sqrt((startPoint.x - offsetX) * (startPoint.x - offsetX) + (startPoint.y - offsetY) * (startPoint.y - offsetY)), 0, 2 * Math.PI);
             contextRef.current.stroke();
             contextRef.current.closePath();
         }
@@ -240,12 +241,14 @@ const AnalysisBase = forwardRef((props, ref) => {
                 justifyContent="center"
                 alignItems="center"
             >
-                { drawOptions.map(item => <Tooltip title={item.text}><Box onClick={() => setDrawingType(item.value)}>{item.icon}</Box></Tooltip> )}
+                { drawOptions.map(item => <IconButton><Tooltip title={item.text}><Box onClick={() => setDrawingType(item.value)}>{item.icon}</Box></Tooltip></IconButton> )}
                 {/* <UndoIcon onClick={onUndo}/> */}
                 {/* <RedoIcon /> */}
                 
                 <Tooltip title="Clear Drawing">
-                    <ClearIcon onClick={onClear}/>
+                    <IconButton>
+                        <ClearIcon onClick={onClear}/>
+                    </IconButton>
                 </Tooltip>
             </Box>
             <Box
@@ -266,9 +269,10 @@ const AnalysisBase = forwardRef((props, ref) => {
                 justifyContent="center"
                 alignItems="center"
             >
-                <FastRewindIcon onClick={() => move(-0.1)} />
-                { playing ? <PauseIcon onClick={onPause} /> : <PlayArrowIcon onClick={onPlay} />}
-                <FastForwardIcon onClick={() => move(0.1)} />            
+                <IconButton><FastRewindIcon onClick={() => move(-0.1)} /></IconButton>
+                
+                { playing ?  <IconButton><PauseIcon onClick={onPause} /></IconButton> : <IconButton><PlayArrowIcon onClick={onPlay} /></IconButton>}
+                <IconButton><FastForwardIcon onClick={() => move(0.1)} /></IconButton>            
             </Box>
         </Box>
     )

@@ -1,5 +1,5 @@
 import ReactPlayer from 'react-player';
-import { Icon, Box, Button } from '@material-ui/core'
+import { Icon, Box, Button, IconButton } from '@material-ui/core'
 import React, { useState, createRef } from 'react';
 import FastForwardIcon from '@material-ui/icons/FastForward';
 import FastRewindIcon from '@material-ui/icons/FastRewind';
@@ -55,9 +55,9 @@ const VideoPlayer = (props) => {
                 justifyContent="center"
                 alignItems="center"
             >
-                <FastRewindIcon onClick={() => move(-0.1)} />
-                { playing ? <PauseIcon onClick={() => setPlaying(false)} /> : <PlayArrowIcon onClick={() => setPlaying(true)} />}
-                <FastForwardIcon onClick={() => move(0.1)} />
+                <IconButton><FastRewindIcon onClick={() => move(-0.1)} /></IconButton>
+                { playing ? <IconButton><PauseIcon onClick={() => setPlaying(false)} /></IconButton> : <IconButton><PlayArrowIcon onClick={() => setPlaying(true)} /></IconButton>}
+                <IconButton><FastForwardIcon onClick={() => move(0.1)} /></IconButton>
             </Box>
         </Box>
     )

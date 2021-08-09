@@ -33,8 +33,6 @@ export const GET_USER_LESSONS_PLAYER = gql`
                 note
                 frontVideo
                 sideVideo
-                player
-                owner
             }
             drills
             notes
@@ -54,6 +52,8 @@ export const GET_USER_LESSONS_PLAYER = gql`
                 hand
                 handicap
             }
+            isCompleted
+            isPublic
         }
     }
 `;
@@ -73,8 +73,6 @@ export const GET_USER_LESSONS_COACH = gql`
                 note
                 frontVideo
                 sideVideo
-                player
-                owner
             }
             drills
             notes
@@ -94,6 +92,8 @@ export const GET_USER_LESSONS_COACH = gql`
                 hand
                 handicap
             }
+            isCompleted
+            isPublic
         }
     }
 `;
@@ -163,9 +163,11 @@ export const GET_LESSON = gql`
                 email
                 firstname
                 lastname
-                hand
-                handicap
+                dateStartedCoaching
+                coachingCredentials
             }
+            isCompleted
+            isPublic
         }
     }
 `;
@@ -247,6 +249,8 @@ export const GET_USER_LESSON_REQUESTS_PLAYER = gql`
                 createdAt
                 updatedAt
                 title
+                isCompleted
+                isPublic
             }
             isCancelled
             __typename
@@ -282,6 +286,8 @@ export const GET_USER_LESSON_REQUESTS_COACH = gql`
                 createdAt
                 updatedAt
                 title
+                isCompleted
+                isPublic
             }
             isCancelled
             __typename
@@ -317,6 +323,8 @@ export const CREATE_LESSON_REQUEST = gql`
                 createdAt
                 updatedAt
                 title
+                isCompleted
+                isPublic
             }
             isCancelled
             __typename
@@ -352,6 +360,8 @@ export const ADD_LESSON_TO_LESSON_REQUEST = gql`
                 createdAt
                 updatedAt
                 title
+                isCompleted
+                isPublic
             }
             isCancelled
             __typename
@@ -387,9 +397,22 @@ export const CANCEL_LESSON_REQUEST = gql`
                 createdAt
                 updatedAt
                 title
+                isCompleted
+                isPublic
             }
             isCancelled
             __typename
+        }
+    }
+`;
+
+export const UPDATE_LESSON = gql`
+    mutation($lessonId: String!, $info: LessonInputType){
+        updateLessonResolve(info: $info, lessonId: $lessonId){
+            _id
+            title
+            isCompleted
+            isPublic
         }
     }
 `;
