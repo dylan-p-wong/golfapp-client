@@ -10,19 +10,9 @@ export const ADD_SWING = gql`
             sideVideo
             player {
                 _id
-                email
-                firstname
-                phone
-                lastname
-                hand
-                handicap
             }
             owner {
                 _id
-                email
-                firstname
-                lastname
-                phone
             }
             createdAt
             updatedAt
@@ -42,19 +32,10 @@ export const USER_SWINGS = gql`
             frontVideo
             sideVideo
             player {
-                _id
-                email
-                firstname
-                phone
-                lastname
-                hand
-                handicap
+                _id  
             }
             owner {
-                _id
-                email
-                firstname
-                lastname
+                _id               
             }
             __typename
         }

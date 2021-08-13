@@ -15,8 +15,8 @@ const AccountProfileDetails = (props) => {
   const { firstname, lastname, email, phone } = props;
 
   const [values, setValues] = useState({
-    firstname,
-    lastname,
+    // firstname,
+    // lastname,
     // email,
     phone,
   });
@@ -56,13 +56,14 @@ const AccountProfileDetails = (props) => {
             >
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
+                //helperText="Please specify the first name"
                 label="First name"
                 name="firstname"
-                onChange={handleChange}
+                //onChange={handleChange}
                 required
-                value={values.firstname}
+                value={firstname}
                 variant="outlined"
+                disabled
               />
             </Grid>
             <Grid
@@ -74,10 +75,11 @@ const AccountProfileDetails = (props) => {
                 fullWidth
                 label="Last name"
                 name="lastname"
-                onChange={handleChange}
-                value={values.lastname}
+                //onChange={handleChange}
+                value={lastname}
                 variant="outlined"
                 required
+                disabled
               />
             </Grid>
             <Grid

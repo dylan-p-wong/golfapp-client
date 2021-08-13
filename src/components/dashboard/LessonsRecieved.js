@@ -4,12 +4,14 @@ import BookIcon from '@material-ui/icons/Book';import {
     Card,
     CardContent,
     Grid,
-    Typography
+    Typography,
+    CardHeader
   } from '@material-ui/core';
   import { green } from '@material-ui/core/colors';
   
   const LessonsRecieved = (props) => (
     <Card {...props}>
+      <CardHeader title="Lessons Recieved"/>
       <CardContent>
         <Grid
           container
@@ -22,13 +24,28 @@ import BookIcon from '@material-ui/icons/Book';import {
               gutterBottom
               variant="h6"
             >
-              TOTAL LESSONS RECIEVED
+              TOTAL
             </Typography>
             <Typography
               color="textPrimary"
               variant="h3"
             >
-              11
+              {props.total}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography
+              color="textSecondary"
+              gutterBottom
+              variant="h6"
+            >
+              THIS MONTH
+            </Typography>
+            <Typography
+              color="textPrimary"
+              variant="h3"
+            >
+              {props.month}
             </Typography>
           </Grid>
           <Grid item>

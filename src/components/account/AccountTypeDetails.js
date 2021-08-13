@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, Card, CardHeader, Divider, Box, FormControlLabel, Checkbox, CardContent, Typography } from "@material-ui/core";
 
 const AccountTypeDetails = (props) => {
-    const { playerAccount, coachAccount } = props;
+    const { playerAccount, coachAccount, coachInfoCompleted, playerInfoCompleted } = props;
 
     const [values, setValues] = useState({
         playerAccount,
@@ -38,7 +38,7 @@ const AccountTypeDetails = (props) => {
                             onChange={handleChange}
                             />
                         )}
-                        label="Player Account"
+                        label={`Player Account - ${playerInfoCompleted ? "Verified" : "Unverified"}`}
                         />
                         <Box ml={5}>
                             <Typography variant="h6">Record swings</Typography>
@@ -54,7 +54,7 @@ const AccountTypeDetails = (props) => {
                             onChange={handleChange}
                             />
                         )}
-                        label="Coaching Account"
+                        label={`Coaching Account - ${coachInfoCompleted ? "Verified" : "Unverified"}`}
                         />
                         <Box ml={5}>
                             <Typography variant="h6">Upload swings</Typography>

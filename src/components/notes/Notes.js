@@ -9,41 +9,27 @@ import { ADD_NOTE_TO_LESSON, GET_LESSON_NOTES } from 'src/graphql/lesson';
 import Spinner from '../spinner/Spinner';
 
 const Notes = (props) => {
-    const { lessonId } = props; 
+    const [noteError, setNoteError] = useState(null);
+    const { lessonId, userId } = props; 
     const { data, loading, error } = useQuery(GET_LESSON_NOTES, { variables: { lessonId }});
     const [addNote, { addNoteData, addNoteLoading, addNoteError }] = useMutation(ADD_NOTE_TO_LESSON, {
-        update(cache, { data } ) {
-            const { addNoteToLesson } = data;
-            cache.modify({
-                fields: {
-                    getLessonNotes(existingNotes = []) {
-                        const newNoteRef = cache.writeFragment({
-                            data: addNoteToLesson,
-                            fragment: gql`
-                                fragment NoteType on Notes {
-                                    _id
-                                    title
-                                    description
-                                    createdAt
-                                    updatedAt
-                                }
-                            `
-                        });
-                        return [...existingNotes, newNoteRef];
-                    }
-                }
-            })
-        }
+        refetchQueries: [{query: GET_LESSON_NOTES, variables: { lessonId }}],
+        onError: setNoteError,
+        onCompleted: () => toast("Note Added!")
     });
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+
+    if (noteError) {
+        toast(noteError.message);
+        setNoteError(null);
+    }
 
     if (loading) return <Spinner />
     if (error) return <h1>Error</h1>
 
     const onAdd = async () => {
-        await addNote({ variables: { title, description, lessonId }});
-        toast("Note Added!");
+        addNote({ variables: { title, description, lessonId }});
     }
 
     return (
@@ -51,7 +37,7 @@ const Notes = (props) => {
             <Grid container spacing={3}>
                 <Grid item xs={6}>
                     <Box display="flex" flexDirection="column" m={2}>
-                        <TextField label="title" placeholder="Note title" onChange={e => setTitle(e.target.value)}/>
+                        <TextField label="Title" placeholder="Note title" onChange={e => setTitle(e.target.value)}/>
                         <TextField 
                             placeholder="Enter a note"
                             multiline

@@ -24,7 +24,7 @@ const Account = () => {
   if (loading || updateLoading) return <Spinner />
   if (error || updateError) return <h1>Error</h1>
 
-  const { createdAt, updatedAt, firstname, lastname, email, phone, hand, handicap, homeCourse, homeCourseCity, homeCourseProvince, homeCourseCountry, coachingCredentials, dateStartedCoaching, playerAccount, coachAccount } = data.userInfo;
+  const { coachInfoCompleted, playerInfoCompleted, createdAt, updatedAt, firstname, lastname, email, phone, hand, handicap, homeCourse, homeCourseCity, homeCourseProvince, homeCourseCountry, coachingCredentials, dateStartedCoaching, playerAccount, coachAccount } = data.userInfo;
 
   return (
   <>
@@ -53,7 +53,7 @@ const Account = () => {
               <AccountProfile firstname={firstname} lastname={lastname} createdAt={createdAt} updatedAt={updatedAt}/>
             </Box>
 
-            <AccountTypeDetails playerAccount={playerAccount} coachAccount={coachAccount} updateUser={updateUser}/>
+            <AccountTypeDetails playerAccount={playerAccount} coachAccount={coachAccount} updateUser={updateUser} coachInfoCompleted={coachInfoCompleted} playerInfoCompleted={playerInfoCompleted}/>
             {/* <SettingsNotifications /> */}
           </Grid>
           <Grid

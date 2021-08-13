@@ -3,6 +3,7 @@ import {
   Box,
   Card,
   CardContent,
+  CardHeader,
   Grid,
   Typography
 } from '@material-ui/core';
@@ -10,8 +11,9 @@ import { green } from '@material-ui/core/colors';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 
-const TotalCustomers = (props) => (
+const TotalStudents = (props) => (
   <Card {...props}>
+    <CardHeader title="Students"/>
     <CardContent>
       <Grid
         container
@@ -24,7 +26,7 @@ const TotalCustomers = (props) => (
             gutterBottom
             variant="h6"
           >
-            TOTAL STUDENTS
+            TOTAL
           </Typography>
           <Typography
             color="textPrimary"
@@ -73,4 +75,4 @@ const TotalCustomers = (props) => (
   </Card>
 );
 
-export default TotalCustomers;
+export default TotalStudents;

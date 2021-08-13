@@ -339,19 +339,9 @@ export const ADD_LESSON_TO_LESSON_REQUEST = gql`
             note
             player {
                 _id
-                email
-                firstname
-                lastname
-                hand
-                handicap
             }
             coach {
                 _id
-                email
-                firstname
-                lastname
-                hand
-                handicap
             }
             updatedAt
             createdAt

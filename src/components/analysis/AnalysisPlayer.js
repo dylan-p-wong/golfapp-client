@@ -18,7 +18,7 @@ import { useRef, useState } from 'react';
 import ViewSwing from '../swing/SwingPlayer';
 import AnalysisBase from './AnalysisBase';
 import { ADD_ANALYSIS } from 'src/graphql/analysis';
-import { ADD_ANALYSIS_TO_LESSON } from 'src/graphql/lesson';
+import { ADD_ANALYSIS_TO_LESSON, GET_LESSON_ANALYSES } from 'src/graphql/lesson';
 import { gql, useMutation } from '@apollo/client';
 import { toast } from 'react-toastify';
 import AnalysisVideoPlayer from '../video/AnalysisVideoPlayer';
@@ -31,31 +31,7 @@ const AnalysisPlayer = (props) => {
         onError: setError
     });
     const [addAnalysisToLesson] = useMutation(ADD_ANALYSIS_TO_LESSON, {
-        update(cache, { data }) {
-            const { addAnalysisToLesson } = data;
-            cache.modify({
-                fields: {
-                    getLessonAnalyses(existingAnalyses = []) {
-                        const newAnalysisRef = cache.writeFragment({
-                            data: addAnalysisToLesson,
-                            fragment: gql`
-                            fragment AnalysisType on Analyses {
-                                _id
-                                date
-                                title
-                                note
-                                frontVideo
-                                sideVideo
-                                voice
-                                player
-                                owner
-                            }`
-                        });
-                        return [...existingAnalyses, newAnalysisRef];
-                    }
-                }
-            })
-        },
+        refetchQueries: [{query: GET_LESSON_ANALYSES, variables: { lessonId }}],
         onError: setError,
         onCompleted: () => toast("Analysis Saved!")
     });

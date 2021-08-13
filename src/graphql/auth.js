@@ -38,6 +38,8 @@ export const ME = gql`
         dateStartedCoaching
         createdAt
         updatedAt
+        playerInfoCompleted
+        coachInfoCompleted
         __typename
         }
     }

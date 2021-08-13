@@ -38,4 +38,26 @@ export const USER_TIER_INFO = gql`
             }
         }
     }
-`
+`;
+
+export const USER_NOTIFICATIONS = gql`
+    query($count: Int){
+        userNotifications(count: $count){
+            title
+            createdAt
+        }
+    }
+`;
+
+export const USER_TOTALS = gql`
+    query{
+        userTotals{
+            totalSwings
+            swingsThisMonth
+            totalLessons
+            lessonsThisMonth
+            totalLessonsRecieved
+            lessonsRecievedThisMonth
+        }
+    }
+`;

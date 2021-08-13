@@ -14,7 +14,7 @@ const ProfilePage = () => {
   if (loading) return <Spinner />
   if (error) return <h1>Error</h1>
 
-  const { firstname, lastname, email, phone, homeCourse, homeCourseCity, homeCourseProvince, homeCourseCountry, hand, handicap, coachingCredentials, dateStartedCoaching } = data.userInfo;
+  const { firstname, lastname, email, phone, homeCourse, homeCourseCity, homeCourseProvince, homeCourseCountry, hand, handicap, coachingCredentials, dateStartedCoaching, playerAccount, coachAccount, playerInfoCompleted, coachInfoCompleted } = data.userInfo;
 
   return (
   <>
@@ -52,6 +52,7 @@ const ProfilePage = () => {
                 <Typography>{email}</Typography>
                 <Typography>{phone}</Typography>
                 <Typography>{`${homeCourse}, ${homeCourseCity}, ${homeCourseProvince}, ${homeCourseCountry}`}</Typography>
+                <Typography>{ playerAccount && coachAccount ? `Player - ${playerInfoCompleted ? "Verified" : "Unverified"} | Coach - ${coachInfoCompleted ? "Verified" : "Unverified"}` : coachAccount ? `Coach - ${coachInfoCompleted ? "Verified" : "Unverified"}` : playerAccount ? `Player - ${playerInfoCompleted ? "Verified" : "Unverified"}` : null }</Typography>
                 {/* <Box sx={{ width: '60%'}}>
                   <TextField 
                       fullWidth
@@ -70,7 +71,7 @@ const ProfilePage = () => {
             item
             xs={6}
           >
-            <Card  sx={{ height: '100%' }}>
+            <Card sx={{ height: '100%' }}>
               <Box justifyContent="center" display="flex" alignItems="center" alignContent="center" flexDirection="column" p={7}>
               <Box m={1} display="flex" flexDirection="row" alignItems="center" sx={{ width: '80%'}}>
                   <Box flexGrow={1}>
@@ -80,35 +81,23 @@ const ProfilePage = () => {
                     <Typography>{hand}</Typography>
                   </Box>
                 </Box>
-                <Box m={1} display="flex" flexDirection="row" alignItems="center" sx={{ width: '80%'}}>
+                {/* <Box m={1} display="flex" flexDirection="row" alignItems="center" sx={{ width: '80%'}}>
                   <Box flexGrow={1}>
                     <Typography>Lessons Taken</Typography>
                   </Box>
-                  <Box>
-                    <Avatar style={{ height: '50px', width: '50px' }} src="">
-                      9
-                    </Avatar>
-                  </Box>
+                  <Typography>21</Typography>
                 </Box>
                 <Box m={1} display="flex" flexDirection="row" alignItems="center" sx={{ width: '80%'}}>
                   <Box flexGrow={1}>
                     <Typography>Swings</Typography>
                   </Box>
-                  <Box>
-                    <Avatar style={{ height: '50px', width: '50px' }} src="">
-                      11
-                    </Avatar>
-                  </Box>
-                </Box>
+                  <Typography>{handicap}</Typography>
+                </Box> */}
                 <Box m={1} display="flex" flexDirection="row" alignItems="center" sx={{ width: '80%'}}>
                   <Box flexGrow={1}>
                     <Typography>Handicap</Typography>
                   </Box>
-                  <Box>
-                    <Avatar style={{ height: '50px', width: '50px' }} src="">
-                      {handicap}
-                    </Avatar>
-                  </Box>
+                  <Typography>{handicap}</Typography>
                 </Box>
               </Box> 
             </Card>
@@ -135,24 +124,18 @@ const ProfilePage = () => {
                     <Typography>{moment.unix(dateStartedCoaching / 1000).format('YYYY')}</Typography>
                   </Box>
                 </Box>
+                {/* <Box m={1} display="flex" flexDirection="row" alignItems="center" sx={{ width: '80%'}}>
+                  <Box flexGrow={1}>
+                    <Typography>Lessons Taught</Typography>
+                  </Box>
+                  <Typography>21</Typography>
+                </Box>
                 <Box m={1} display="flex" flexDirection="row" alignItems="center" sx={{ width: '80%'}}>
                   <Box flexGrow={1}>
                     <Typography>Lessons Taught</Typography>
                   </Box>
-                  <Box>
-                    <Avatar style={{ height: '50px', width: '50px' }} src="">
-                      21
-                    </Avatar>
-                  </Box>
-                </Box>
-                <Typography>Average Rating</Typography>
-                <Box display="flex" flexDirection="row" justifyContent="center">
-                  <StarIcon color="primary" style={{ fontSize: 40 }}/>
-                  <StarIcon color="primary" style={{ fontSize: 40 }}/>
-                  <StarIcon color="primary" style={{ fontSize: 40 }}/>
-                  <StarIcon style={{ fontSize: 40 }}/>
-                  <StarIcon style={{ fontSize: 40 }}/>
-                </Box>
+                    <Typography>21</Typography>
+                </Box> */}
               </Box> 
             </Card>
           </Grid>

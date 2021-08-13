@@ -24,20 +24,25 @@ const Lesson = (props) => {
     const { loading: userLoading, error: userError, data: userData } = useQuery(ME);
 
     if (loading || userLoading) return <Spinner />
-    if (error || userError) return <h1>Error</h1>
+
+    if (error || userError) {
+        return <Navigate to="/app/dashboard"/>
+    }
 
     if (editView && (data.getLesson.coach._id !== userData.userInfo._id)){
-        return <Navigate to="/dashboard"/>
+        return <Navigate to="/app/dashboard"/>
     }
 
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
+
+    const headerText = `${data.getLesson.title ? data.getLesson.title + " -" : ""} ${data.getLesson.player.firstname} ${data.getLesson.player.lastname} - ${moment.unix(data.getLesson.createdAt / 1000).format('MMMM Do YYYY')}`;
     
     return (
         <Box p={6}>
             <Box mb={3} display="flex" flexDirection="row">
-                <Typography flexGrow={1} variant='h3' >{data.getLesson.player.firstname + " " + data.getLesson.player.lastname} - {moment.unix(data.getLesson.createdAt / 1000).format('MMMM Do YYYY')}</Typography>
+                <Typography flexGrow={1} variant='h3' >{headerText}</Typography>
                 {(data.getLesson.coach._id === userData.userInfo._id) ? !editView ? <Button color="primary" variant="contained" onClick={() => navigate(`/app/lesson/edit/${_id}`, { replace: true })}>Coach View</Button> : <Button color="primary" variant="contained" onClick={() => navigate(`/app/lesson/${_id}`, { replace: true })}>User View</Button> : null}
                 <Button color="secondary" variant="contained">Delete</Button>
             </Box>
@@ -62,7 +67,7 @@ const Lesson = (props) => {
             { value == 1 && <LessonAnalysisView lessonId={_id} playerId={data.getLesson.player._id} editView={editView}/> }
             {/* { value == 2 && <DrillView lessonId={_id} /> } */}
             { value == 2 && <Notes lessonId={_id} /> }
-            { value == 3 && <LessonInfo lesson={data.getLesson}/>}
+            { value == 3 && <LessonInfo userId={userData.userInfo._id} lesson={data.getLesson}/>}
         </Box>
     )
 }

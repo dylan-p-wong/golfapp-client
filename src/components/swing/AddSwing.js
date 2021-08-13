@@ -6,7 +6,7 @@ import { useState } from "react";
 import MomentUtils from "@date-io/moment";
 import moment from 'moment';
 import Swing from './SwingPlayer';
-import { ADD_SWING } from 'src/graphql/swing'; 
+import { ADD_SWING, USER_SWINGS } from 'src/graphql/swing'; 
 import { useMutation, gql, useApolloClient } from '@apollo/client';
 import { toast } from 'react-toastify';
 import { USER_TIER_INFO } from 'src/graphql/user';
@@ -20,47 +20,7 @@ const AddSwing = (props) => {
     const [error, setError] = useState(null);
     const [note, setNote] = useState("");
     const [addSwing, { data, loading }] = useMutation(ADD_SWING, {
-        update(cache, { data }) {
-            const { addSwing } = data;
-            cache.modify({
-                fields: {
-                    userSwings(existingSwings = []) {
-                        const newSwingRef = cache.writeFragment({
-                            data: addSwing,
-                            fragment: gql`
-                            fragment SwingType on Swings {
-                                _id
-                                date
-                                title
-                                note
-                                frontVideo
-                                sideVideo
-                                player
-                                owner
-                            }`
-                        });
-                        //return [...existingSwings, newSwingRef];
-                    },
-                    userTier(existingInfo) {
-                        
-                        const data = client.readQuery({ query: USER_TIER_INFO });
-
-                        cache.writeQuery({
-                            query: USER_TIER_INFO,
-                            data: {
-                                userTier: {
-                                    ...data.userTier,
-                                    playerTier: {
-                                        ...data.userTier.playerTier,
-                                        swingsThisMonth: data.userTier.playerTier.swingsThisMonth + 1
-                                    }
-                                }
-                            }
-                        })
-                    }
-                }
-            })
-        }, 
+        refetchQueries: [{query: USER_SWINGS}],
         onError: setError,
         onCompleted: () => {toast("Swing added!"); navigate('/app/mygame', { replace: true })}
     });

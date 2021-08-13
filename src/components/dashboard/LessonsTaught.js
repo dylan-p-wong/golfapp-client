@@ -4,6 +4,7 @@ import {
     Box,
     Card,
     CardContent,
+    CardHeader,
     Grid,
     Typography
   } from '@material-ui/core';
@@ -11,10 +12,10 @@ import {
   
   const LessonsTaught = (props) => (
     <Card {...props}>
+      <CardHeader title="Lessons Taught"/>
       <CardContent>
         <Grid
           container
-          spacing={3}
           sx={{ justifyContent: 'space-between' }}
         >
           <Grid item>
@@ -23,13 +24,29 @@ import {
               gutterBottom
               variant="h6"
             >
-              TOTAL LESSONS TAUGHT
+              TOTAL
             </Typography>
             <Typography
               color="textPrimary"
               variant="h3"
             >
-              12
+              {props.total}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography
+              align="center"
+              color="textSecondary"
+              gutterBottom
+              variant="h6"
+            >
+              THIS MONTH
+            </Typography>
+            <Typography
+              color="textPrimary"
+              variant="h3"
+            >
+              {props.month}
             </Typography>
           </Grid>
           <Grid item>

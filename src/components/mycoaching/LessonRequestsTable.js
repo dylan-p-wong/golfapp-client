@@ -5,19 +5,37 @@ import { useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useNavigate } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { GET_USERS } from 'src/graphql/auth';
-import { ADD_LESSON_TO_LESSON_REQUEST, CREATE_LESSON, CREATE_LESSON_REQUEST } from 'src/graphql/lesson';
+import { ADD_LESSON_TO_LESSON_REQUEST, CREATE_LESSON, CREATE_LESSON_REQUEST, GET_USER_LESSONS_COACH, GET_USER_LESSON_REQUESTS_COACH } from 'src/graphql/lesson';
+import { USER_TIER_INFO } from 'src/graphql/user';
 
 const LessonRequestsTable = (props) => {
     const { lessonRequests, players } = props;
     const navigate = useNavigate();
-    const [createLesson, { loading : lessonLoading, error : lessonError, data : lessonData }] = useMutation(CREATE_LESSON);
-    const [addLessonToLessonRequest, { loading: addLessonToLessonRequestLoading, error: addLessonToLessonRequestError, data: addLessonToLessonRequestData }] = useMutation(ADD_LESSON_TO_LESSON_REQUEST);
+    const [error, setError] = useState(null);
+    const [createLesson, { loading : lessonLoading, error : lessonError, data : lessonData }] = useMutation(CREATE_LESSON, {
+        onError: setError,
+        refetchQueries: [{ query: GET_USER_LESSONS_COACH }, { query: USER_TIER_INFO }],
+    });
+    const [addLessonToLessonRequest, { loading: addLessonToLessonRequestLoading, error: addLessonToLessonRequestError, data: addLessonToLessonRequestData }] = useMutation(ADD_LESSON_TO_LESSON_REQUEST, {
+        refetchQueries: [
+            { query: GET_USER_LESSON_REQUESTS_COACH }
+        ],
+        onError: setError,
+        onCompleted: (data) => console.log(data)
+    });
+    
     const [title, setTitle] = useState("");
     const [selectedUser, setSelectedUser] = useState(null);
     const [open, setOpen] = useState(false);
     const [limit, setLimit] = useState(10);
     const [page, setPage] = useState(0);
+
+    if (error) {
+        toast(error.message);
+        setError(null);
+    }
 
     if (lessonData) {
         return <Navigate to={`/app/lesson/edit/${lessonData.createLesson._id}`} />
@@ -29,7 +47,7 @@ const LessonRequestsTable = (props) => {
 
     const addLessonToLessonRequestHandle = async (item) => {
         const { data } = await createLesson({ variables: { playerId: item.player._id, title: item.note }});
-        await addLessonToLessonRequest({ variables: { lessonId: data.createLesson._id, lessonRequestId: item._id }});
+        addLessonToLessonRequest({ variables: { lessonId: data.createLesson._id, lessonRequestId: item._id }});
     }
 
     const handleLimitChange = (event) => {

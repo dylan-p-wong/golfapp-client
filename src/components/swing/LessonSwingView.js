@@ -15,30 +15,7 @@ const LessonSwingView= (props) => {
     const { lessonId, playerId, editView } = props;
     const [error, setError] = useState(null);
     const [addSwingToLesson] = useMutation(ADD_SWING_TO_LESSON, {
-        update(cache, { data }) {
-            const { addSwingToLesson } = data;
-            cache.modify({
-                fields: {
-                    getLessonSwings(existingSwings = []) {
-                        const newSwingRef = cache.writeFragment({
-                            data: addSwingToLesson,
-                            fragment: gql`
-                            fragment SwingType on Swings {
-                                _id
-                                date
-                                title
-                                note
-                                frontVideo
-                                sideVideo
-                                player
-                                owner
-                            }`
-                        });
-                        return [...existingSwings, newSwingRef];
-                    }
-                }
-            })
-        },
+        refetchQueries: [{query: GET_LESSON_SWINGS, variables: { lessonId }}],
         onError: setError,
         onCompleted: () => toast("Swing added to lesson!")
     });

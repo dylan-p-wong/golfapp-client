@@ -5,12 +5,14 @@ import {
     Card,
     CardContent,
     Grid,
-    Typography
+    Typography,
+    CardHeader
 } from '@material-ui/core';
 import { green } from '@material-ui/core/colors';
   
   const TotalSwings = (props) => (
     <Card {...props}>
+      <CardHeader title="Swings"/>
       <CardContent>
         <Grid
           container
@@ -29,7 +31,22 @@ import { green } from '@material-ui/core/colors';
               color="textPrimary"
               variant="h3"
             >
-              7
+              {props.total}
+            </Typography>
+          </Grid>
+          <Grid item>
+          <Typography
+              color="textSecondary"
+              gutterBottom
+              variant="h6"
+            >
+              THIS MONTH
+            </Typography>
+            <Typography
+              color="textPrimary"
+              variant="h3"
+            >
+              {props.month}
             </Typography>
           </Grid>
           <Grid item>

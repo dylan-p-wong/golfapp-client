@@ -2,6 +2,8 @@ import { Card, CardContent, CardHeader, Typography } from "@material-ui/core";
 import moment from "moment";
 
 const UserInfo = ({user, coach, player}) => {
+
+    console.log(user);
     
     if (coach) {
         return (

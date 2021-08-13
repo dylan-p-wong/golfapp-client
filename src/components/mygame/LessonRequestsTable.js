@@ -5,7 +5,7 @@ import { useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { CANCEL_LESSON_REQUEST, CREATE_LESSON_REQUEST } from 'src/graphql/lesson';
+import { CANCEL_LESSON_REQUEST, CREATE_LESSON_REQUEST, GET_USER_LESSON_REQUESTS_PLAYER } from 'src/graphql/lesson';
 
 const LessonRequestsTable = (props) => {
     const navigate = useNavigate();
@@ -16,8 +16,19 @@ const LessonRequestsTable = (props) => {
     const [selectedCoach, setSelectedCoach] = useState(null);
     const [open, setOpen] = useState(false);
     const [note, setNote] = useState("");
-    const [createLessonRequest, { loading: createLessonRequestLoading, error: createLessonRequestError, data: createLessonRequestData }] = useMutation(CREATE_LESSON_REQUEST);
-    const [cancelLessonRequest, { loading: cancelLessonRequestLoading, error: cancelLessonRequestError, data: cancelLessonRequestData }] = useMutation(CANCEL_LESSON_REQUEST);
+    const [error, setError] = useState(null);
+
+    const [createLessonRequest, { loading: createLessonRequestLoading, error: createLessonRequestError, data: createLessonRequestData }] = useMutation(CREATE_LESSON_REQUEST, {
+        refetchQueries: [{query: GET_USER_LESSON_REQUESTS_PLAYER}],
+        onError: setError,
+        onCompleted: () => {setOpen(false); toast("Lesson Request Sent!")}
+    });
+
+    const [cancelLessonRequest, { loading: cancelLessonRequestLoading, error: cancelLessonRequestError, data: cancelLessonRequestData }] = useMutation(CANCEL_LESSON_REQUEST, {
+        refetchQueries: [{query: GET_USER_LESSON_REQUESTS_PLAYER}],
+        onError: setError,
+        onCompleted: () => toast("Lesson Request Cancelled!")
+    });
     
     const handleLimitChange = (event) => {
         setLimit(event.target.value);
@@ -28,14 +39,16 @@ const LessonRequestsTable = (props) => {
     };
 
     const cancelLessonRequestHandle = async (lessonRequestId) => {
-        await cancelLessonRequest({ variables: { lessonRequestId }});
-        toast("Lesson Request Cancelled!");
+        cancelLessonRequest({ variables: { lessonRequestId }});
     }
 
     const addLessonRequestHandle = async () => {
-        await createLessonRequest({ variables: { note, coachId: selectedCoach._id }});
-        toast("Lesson Request Sent!");
-        setOpen(false);
+        createLessonRequest({ variables: { note, coachId: selectedCoach._id }});
+    }
+
+    if (error) {
+        toast(error.message);
+        setError(null);
     }
 
     return (

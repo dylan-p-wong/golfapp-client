@@ -19,11 +19,9 @@ const LessonsTable = (props) => {
         setPage(newPage);
     };
 
-    console.log(lessons);
-
     return (
         <Card>
-            <CardHeader title="Lessons" action={<Button color="primary" variant="contained" size="small" onClick={() => setOpen(true)}>Request Lesson</Button>}/>
+            <CardHeader title="Lessons"/>
             <CardContent>
             <PerfectScrollbar>
                 <Box>

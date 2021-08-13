@@ -6,7 +6,7 @@ import { UPDATE_LESSON } from "src/graphql/lesson";
 import { UPDATE_SWING } from "src/graphql/swing";
 import UserInfo from "../user/UserInfo";
 
-const SwingInfo = ({ swing }) => {
+const SwingInfo = ({ swing, userId }) => {
     const[error, setError] = useState(null);
 
     const [updateSwing, { data, loading }] = useMutation(UPDATE_SWING, {
@@ -71,6 +71,9 @@ const SwingInfo = ({ swing }) => {
             >
                 <UserInfo user={swing.owner}/>
             </Grid>
+            { (swing.player._id === userId || swing.owner._id === userId)  &&
+            <>
+            
             <Grid
             item
             md={6}
@@ -111,25 +114,31 @@ const SwingInfo = ({ swing }) => {
                     </Tooltip>
                 </Grid> 
             </Grid>
+            </>
+        }
         </Grid>
+
         </CardContent>
         <Divider />
-        <Box
-        sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            p: 2
-        }}
-        >
-        <Button
-            color="primary"
-            variant="contained"
-            onClick={onSave}
-            disabled={loading} 
-        >
-            Save details
-        </Button>
-        </Box>
+        {
+            (swing.player._id === userId || swing.owner._id === userId) &&
+            <Box
+            sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                p: 2
+            }}
+            >
+            <Button
+                color="primary"
+                variant="contained"
+                onClick={onSave}
+                disabled={loading} 
+            >
+                Save details
+            </Button>
+            </Box>
+        }      
     </Card>
     )
 }
