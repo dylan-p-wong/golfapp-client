@@ -58,6 +58,71 @@ export const USER_TOTALS = gql`
             lessonsThisMonth
             totalLessonsRecieved
             lessonsRecievedThisMonth
+            totalStudents
         }
+    }
+`;
+
+export const USER_STUDENTS = gql`
+    query{
+        userStudents{
+            _id
+            email
+            firstname
+            lastname
+            phone
+            hand
+            handicap
+            homeCourse
+            homeCourseCity
+            homeCourseProvince
+            homeCourseCountry
+            coachAccount
+            playerAccount
+            coachingCredentials
+            dateStartedCoaching
+            playerInfoCompleted
+            coachInfoCompleted
+            createdAt
+            updatedAt
+        }
+    } 
+`;
+
+export const USER_COACHES = gql`
+    query{
+        userCoaches{
+            _id
+            email
+            firstname
+            lastname
+            phone
+            hand
+            handicap
+            homeCourse
+            homeCourseCity
+            homeCourseProvince
+            homeCourseCountry
+            coachAccount
+            playerAccount
+            coachingCredentials
+            dateStartedCoaching
+            playerInfoCompleted
+            coachInfoCompleted
+            createdAt
+            updatedAt
+        }
+    } 
+`;
+
+export const ADD_STUDENT = gql`
+    mutation($playerId: String!){
+        addPlayerCoachConnection(playerId: $playerId)
+    }
+`;
+
+export const ADD_COACH = gql`
+    mutation($playerId: String!){
+        addPlayerCoachConnection(coachId: $coachId)
     }
 `;

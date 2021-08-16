@@ -51,7 +51,7 @@ const Register = () => {
                 password: Yup.string().max(255).required('password is required'),
                 playerAccount: Yup.boolean(),
                 coachAccount: Yup.boolean(),
-                policy: Yup.boolean().oneOf([true], 'This field must be checked')
+                // policy: Yup.boolean().oneOf([true], 'This field must be checked')
               })
             }
             onSubmit={async (values) => {
@@ -181,7 +181,7 @@ const Register = () => {
                     ml: -1
                   }}
                 >
-                  <Checkbox
+                  {/* <Checkbox
                     checked={values.policy}
                     name="policy"
                     onChange={handleChange}
@@ -201,13 +201,13 @@ const Register = () => {
                     >
                       Terms and Conditions
                     </Link>
-                  </Typography>
+                  </Typography> */}
                 </Box>
-                {Boolean(touched.policy && errors.policy) && (
+                {/* {Boolean(touched.policy && errors.policy) && (
                   <FormHelperText error>
                     {errors.policy}
                   </FormHelperText>
-                )}
+                )} */}
                 <Box sx={{ py: 2 }}>
                   <Button
                     color="primary"
@@ -217,7 +217,7 @@ const Register = () => {
                     type="submit"
                     variant="contained"
                   >
-                    Sign up now
+                    Sign up
                   </Button>
                 </Box>
                 <Typography

@@ -32,7 +32,7 @@ const TotalStudents = (props) => (
             color="textPrimary"
             variant="h3"
           >
-            16
+            {props.total}
           </Typography>
         </Grid>
         <Grid item>

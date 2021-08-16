@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router";
+import Tiers from "./Tiers";
 
 const { Divider, Container, Typography, Box, Grid, Card, CardHeader, CardContent, CardActions, Button } = require("@material-ui/core")
 
@@ -54,7 +55,7 @@ const coachTiers = [
 
 const Pricing = (props) => {
     const navigate = useNavigate();
-
+    
     return (
         <>
         <Box mt={4}>
@@ -66,100 +67,7 @@ const Pricing = (props) => {
                     </Typography>
                 </Container>
             </Box>
-            <Container maxWidth="lg" component="main">
-                <Box m={3}>
-                    <Typography variant="h4" align="center">Player Account</Typography>
-                    <br />
-                    <Typography variant="h5" color="textSecondary" align="center">Upload swings | Analyze swings | Take lessons</Typography>
-                </Box>
-                <Grid container spacing={5} alignItems="flex-end">
-                    {
-                        playerTiers.map(item => {
-                            return (
-                                <Grid item key={item.title} xs={12} md={4}>
-                                    <Card>
-                                        <CardHeader 
-                                            title={item.title}
-                                            subheader={item.subheader}
-                                            titleTypographyProps={{ align: 'center' }}
-                                            subheaderTypographyProps={{ align: 'center' }}
-                                            style={{ backgroundColor: '#F5F5F5' }}                               
-                                        />
-                                        <CardContent>
-                                            <Box mb={3} display="flex" justifyContent="center" alignItems="baseline">
-                                                <Typography variant="h2">
-                                                    ${item.price}
-                                                </Typography>
-                                                <Typography variant="h5">
-                                                    /mo
-                                                </Typography>
-                                            </Box>
-                                            <ul>
-                                                {item.description.map(line => 
-                                                    <Typography variant="h6" align="center" key={line}>
-                                                        {line}
-                                                    </Typography>
-                                                )}
-                                            </ul>
-                                        </CardContent>
-                                        <CardActions>
-                                            <Button fullWidth variant={item.buttonVariant} color="primary" onClick={() => navigate('/register', { replace: true })}>
-                                                {item.buttonText}
-                                            </Button>
-                                        </CardActions>
-                                    </Card>
-                                </Grid>
-                            )
-                        })
-                    }
-                </Grid>
-                <Box m={3}>
-                    <Typography variant="h4" align="center">Coach Account</Typography>
-                    <br />
-                    <Typography variant="h5" color="textSecondary" align="center">Upload swings | Analyze swings | Create drills | Create lessons</Typography>
-                </Box>
-                <Grid container spacing={5} alignItems="flex-end">
-                    {
-                        coachTiers.map(item => {
-                            return (
-                                <Grid item key={item.title} xs={12} md={4}>
-                                    <Card>
-                                        <CardHeader 
-                                            title={item.title}
-                                            subheader={item.subheader}
-                                            titleTypographyProps={{ align: 'center' }}
-                                            subheaderTypographyProps={{ align: 'center' }}
-                                            style={{ backgroundColor: '#F5F5F5' }}                               
-                                        />
-                                        <CardContent>
-                                            <Box mb={3} display="flex" justifyContent="center" alignItems="baseline">
-                                                <Typography variant="h2">
-                                                    ${item.price}
-                                                </Typography>
-                                                <Typography variant="h5">
-                                                    /mo
-                                                </Typography>
-                                            </Box>
-                                            <ul>
-                                                {item.description.map(line => 
-                                                    <Typography variant="h6" align="center" key={line}>
-                                                        {line}
-                                                    </Typography>
-                                                )}
-                                            </ul>
-                                        </CardContent>
-                                        <CardActions>
-                                            <Button fullWidth variant={item.buttonVariant} color="primary" onClick={() => navigate('/register', { replace: true })}>
-                                                {item.buttonText}
-                                            </Button>
-                                        </CardActions>
-                                    </Card>
-                                </Grid>
-                            )
-                        })
-                    }
-                </Grid>
-            </Container>
+            <Tiers />
         </Box>
             
         </>

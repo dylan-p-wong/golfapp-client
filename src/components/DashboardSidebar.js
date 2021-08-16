@@ -9,6 +9,7 @@ import {
   Drawer,
   Hidden,
   List,
+  ListItem,
   Typography
 } from '@material-ui/core';
 import {
@@ -25,15 +26,10 @@ import {
 import NavItem from './NavItem';
 import GolfCourseIcon from '@material-ui/icons/GolfCourse';
 import SchoolIcon from '@material-ui/icons/School';
-import { useQuery } from '@apollo/client';
-import { ME } from '../graphql/auth';
+import { useApolloClient, useMutation, useQuery } from '@apollo/client';
+import { LOGOUT, ME } from '../graphql/auth';
 import getInitials from 'src/utils/getInitials';
-
-const user = {
-  avatar: '/static/images/avatars/avatar_6.png',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith'
-};
+import CardMembershipIcon from '@material-ui/icons/CardMembership';
 
 const items = [
   {
@@ -43,40 +39,6 @@ const items = [
     player: true,
     coach: true
   },
-  {
-    href: '/app/coaches',
-    icon: UsersIcon,
-    title: 'Coaches',
-    player: true,
-    coach: true
-  },
-  // {
-  //   href: '/app/products',
-  //   icon: ShoppingBagIcon,
-  //   title: 'Products'
-  // },
-  {
-    href: '/app/account',
-    icon: UserIcon,
-    title: 'Account',
-    player: true,
-    coach: true
-  },
-  // {
-  //   href: '/login',
-  //   icon: LockIcon,
-  //   title: 'Login'
-  // },
-  // {
-  //   href: '/register',
-  //   icon: UserPlusIcon,
-  //   title: 'Register'
-  // },
-  // {
-  //   href: '/404',
-  //   icon: AlertCircleIcon,
-  //   title: 'Error'
-  // },
   {
     href: '/app/mygame',
     icon: GolfCourseIcon,
@@ -92,17 +54,30 @@ const items = [
     coach: true
   },
   {
-    href: '/logout',
-    icon: LogOutIcon,
-    title: 'Logout',
+    href: '/app/subscription',
+    icon: CardMembershipIcon,
+    title: 'My Subscription',
     player: true,
     coach: true
   },
+  {
+    href: '/app/account',
+    icon: UserIcon,
+    title: 'Account',
+    player: true,
+    coach: true
+  }
 ];
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
+  const client = useApolloClient();
   const location = useLocation();
   const { loading, error, data } = useQuery(ME);
+  const [logout, {}] = useMutation(LOGOUT, {
+    onCompleted: async () => {
+      await client.resetStore();
+    }
+  });
 
   if (loading) return;
   if (error) return;
@@ -180,10 +155,17 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
               icon={item.icon}
             />
           ))}
+          <NavItem
+              href={'/logout'}
+              key={'Logout'}
+              title={'Logout'}
+              icon={LogOutIcon}
+              onClick={logout}
+            />
         </List>
       </Box>
       <Box sx={{ flexGrow: 1 }} />
-      <Box
+      {/* <Box
         sx={{
           backgroundColor: 'background.default',
           m: 2,
@@ -197,12 +179,12 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
         >
           Want to upload more swings?
         </Typography>
-        {/* <Typography
+        <Typography
           align="center"
           variant="body2"
         >
           Upgrade your subscription
-        </Typography> */}
+        </Typography>
         <Box
           sx={{
             display: 'flex',
@@ -219,7 +201,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
             View Subscriptions
           </Button>
         </Box>
-      </Box>
+      </Box> */}
     </Box>
   );
 

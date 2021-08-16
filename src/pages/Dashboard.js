@@ -10,7 +10,7 @@ import Budget from 'src/components/dashboard//Budget';
 import LatestOrders from 'src/components/dashboard//LatestOrders';
 import LatestProducts from 'src/components/dashboard//LatestProducts';
 import TasksProgress from 'src/components/dashboard//TasksProgress';
-import TotalStudents from 'src/components/dashboard//TotalCustomers';
+import TotalStudents from 'src/components/dashboard/TotalStudents';
 import TotalProfit from 'src/components/dashboard//TotalProfit';
 import LessonsTaught from 'src/components/dashboard/LessonsTaught';
 import LessonsRecieved from 'src/components/dashboard/LessonsRecieved';
@@ -20,15 +20,14 @@ import Activity from 'src/components/dashboard/Activity';
 import { useQuery } from '@apollo/client';
 import { USER_TOTALS } from 'src/graphql/user';
 import Spinner from 'src/components/spinner/Spinner';
+import { ME } from 'src/graphql/auth';
 
 const Dashboard = () => {
-
+  const { loading: userLoading, error: userError, data: userData } = useQuery(ME); 
   const { error, loading, data} = useQuery(USER_TOTALS);
 
-  if (loading) return <Spinner />
-  if (error) return <h1>Error</h1>
-
-  console.log(data);
+  if (loading || userLoading) return <Spinner />
+  if (error || userError) return <h1>Error</h1>
   
   return (
   <>
@@ -52,43 +51,61 @@ const Dashboard = () => {
           container
           spacing={3}
         >
-          <Grid
-            item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <LessonsRecieved sx={{ height: '100%' }} total={data.userTotals.totalLessonsRecieved} month={data.userTotals.lessonsRecievedThisMonth}/>
-          </Grid>
-          <Grid
-            item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <TotalStudents sx={{ height: '100%' }}/>
-          </Grid>
-          <Grid
-            item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <TotalSwings total={data.userTotals.totalSwings} month={data.userTotals.swingsThisMonth}/>
-          </Grid>
-          <Grid
-            item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <LessonsTaught sx={{ height: '100%' }} total={data.userTotals.totalLessons} month={data.userTotals.lessonsThisMonth}/>
-          </Grid>
+          {
+            userData.userInfo.playerAccount && 
+            <>
+            <Grid
+              item
+              lg={3}
+              sm={6}
+              xl={3}
+              xs={12}
+            >
+              <LessonsRecieved sx={{ height: '100%' }} total={data.userTotals.totalLessonsRecieved} month={data.userTotals.lessonsRecievedThisMonth}/>
+            </Grid>
+            <Grid
+              item
+              lg={3}
+              sm={6}
+              xl={3}
+              xs={12}
+            >
+              <TotalSwings total={data.userTotals.totalSwings} month={data.userTotals.swingsThisMonth}/>
+            </Grid>
+            </>
+          }
 
+          {
+            userData.userInfo.coachAccount &&
+            <>
+            <Grid
+              item
+              lg={3}
+              sm={6}
+              xl={3}
+              xs={12}
+            >
+              <LessonsTaught sx={{ height: '100%' }} total={data.userTotals.totalLessons} month={data.userTotals.lessonsThisMonth}/>
+            </Grid>
+            <Grid
+              item
+              lg={3}
+              sm={6}
+              xl={3}
+              xs={12}
+            >
+              <TotalStudents total={data.userTotals.totalStudents} sx={{ height: '100%' }}/>
+            </Grid>
+            </>
+          }
+          
+          
+          </Grid>
+          <Grid
+            mt={3}
+            container
+            spacing={3}
+          >
           <Grid
             item
             lg={4}

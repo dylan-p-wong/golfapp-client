@@ -2,7 +2,7 @@ import { Navigate } from 'react-router-dom';
 import DashboardLayout from 'src/components/DashboardLayout';
 import MainLayout from 'src/components/MainLayout';
 import Account from 'src/pages/Account';
-import CustomerList from 'src/pages/CustomerList';
+import CustomerList from 'src/pages/CoachesList';
 import Dashboard from 'src/pages/Dashboard';
 import Login from 'src/pages/Login';
 import NotFound from 'src/pages/NotFound';
@@ -31,9 +31,9 @@ const routes = [
     path: 'app',
     element: <AuthedDashboardLayout />,
     children: [
-      { path: 'profile', element: <ProfilePage />, children: [{path: ':_id'}] },
+      { path: 'profile/:_id', element: <ProfilePage />},
       { path: 'account', element: <Account /> },
-      { path: 'coaches', element: <CustomerList /> },
+      // { path: 'coaches', element: <CustomerList /> },
       { path: 'dashboard', element:  <Dashboard />},
       { path: 'products', element: <ProductList /> },
       { path: 'mygame', element: <MyGame /> },
@@ -41,7 +41,7 @@ const routes = [
       { path: 'lesson', element: <LessonPage />, children: [ {path: ':_id', element: <Lesson />}, {path: 'edit/:_id', element: <Lesson editView/>} ]},
       { path: 'swing', element: <SwingPage />, children: [ {path: ':_id', element: <Swing />}, {path: 'add', element: <AddSwing />} ]},
       { path: 'subscription', element: <Subscriptions />},
-      { path: '*', element: <Navigate to="/404" /> },
+      { path: '*', element: <Navigate to="/" /> },
     ]
   },
   {
@@ -50,9 +50,9 @@ const routes = [
     children: [
       { path: 'login', element: <NoAuthedLogin /> },
       { path: 'register', element: <NoAuthedRegister /> },
-      { path: '404', element: <NotFound /> },
+      { path: '404', element: <Navigate to="/" /> },
       { path: '/', element: <Home />, children: [{path: '/', element: <Main />}, {path: 'contact'}] },
-      { path: '*', element: <Navigate to="/404" /> }
+      { path: '*', element: <Navigate to="/" /> }
     ]
   }
 ];

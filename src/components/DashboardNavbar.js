@@ -52,7 +52,7 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
           </Box>
         </Card>
         <Hidden lgDown>
-          <IconButton color="inherit">
+          {/* <IconButton color="inherit">
             <Badge
               badgeContent={notifications.length}
               color="primary"
@@ -60,7 +60,7 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
             >
               <NotificationsIcon />
             </Badge>
-          </IconButton>
+          </IconButton> */}
           <IconButton color="inherit">
             <InputIcon onClick={async () => {
               await logout(); 

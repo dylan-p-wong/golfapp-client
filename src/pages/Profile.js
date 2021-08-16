@@ -3,16 +3,21 @@ import { Box, Avatar, Container, Grid, Card, TextField, CardHeader, Button, Card
 import { Outlet, useParams } from 'react-router';
 import StarIcon from '@material-ui/icons/Star';
 import { useQuery } from '@apollo/client';
-import { ME } from 'src/graphql/auth';
+import { ME, USER_INFO } from 'src/graphql/auth';
 import moment from 'moment';
+import Spinner from 'src/components/spinner/Spinner';
+import { USER_SWINGS } from 'src/graphql/swing';
 
 const ProfilePage = () => {
   const { _id } = useParams();
+  
+  const { loading, error, data } = useQuery(USER_INFO, { variables: { _id } });
+  const { loading: swingsLoading, error: swingsError, data: swingsData } = useQuery(USER_SWINGS,{ variables: { playerId: _id } });
 
-  const { loading, error, data } = useQuery(ME);
+  if (loading || swingsLoading) return <Spinner />
+  if (error || swingsError) return <h1>Error</h1>
 
-  if (loading) return <Spinner />
-  if (error) return <h1>Error</h1>
+  console.log(swingsData)
 
   const { firstname, lastname, email, phone, homeCourse, homeCourseCity, homeCourseProvince, homeCourseCountry, hand, handicap, coachingCredentials, dateStartedCoaching, playerAccount, coachAccount, playerInfoCompleted, coachInfoCompleted } = data.userInfo;
 
@@ -30,15 +35,17 @@ const ProfilePage = () => {
     >
       <Container maxWidth={false}>
         <Box mb={3} p={2} display="flex" flexDirection="row">
-          <Typography variant='h2' flexGrow={1}>Profile</Typography>
+          <Box flexGrow={1}></Box>
+          <Button variant="contained">Contact</Button>
         </Box>
         <Divider />
-
         <Grid
         container
         spacing={3}
+        mt={2}
+        alignItems="center"
+        justifyContent="center"
         >
-          <Grid item xs={2}></Grid>
           <Grid
             item
             xs={8}
@@ -66,79 +73,60 @@ const ProfilePage = () => {
               </Box> 
             </Card>
           </Grid>
-          <Grid item xs={2}></Grid>
-          <Grid
-            item
-            xs={6}
-          >
-            <Card sx={{ height: '100%' }}>
-              <Box justifyContent="center" display="flex" alignItems="center" alignContent="center" flexDirection="column" p={7}>
-              <Box m={1} display="flex" flexDirection="row" alignItems="center" sx={{ width: '80%'}}>
-                  <Box flexGrow={1}>
-                    <Typography>Hand</Typography>
-                  </Box>
-                  <Box>
-                    <Typography>{hand}</Typography>
-                  </Box>
-                </Box>
-                {/* <Box m={1} display="flex" flexDirection="row" alignItems="center" sx={{ width: '80%'}}>
-                  <Box flexGrow={1}>
-                    <Typography>Lessons Taken</Typography>
-                  </Box>
-                  <Typography>21</Typography>
-                </Box>
+          {
+            playerAccount &&
+            <Grid
+              item
+              xs={6}
+            >
+              <Card sx={{ height: '100%' }}>
+                <Box justifyContent="center" display="flex" alignItems="center" alignContent="center" flexDirection="column" p={7}>
                 <Box m={1} display="flex" flexDirection="row" alignItems="center" sx={{ width: '80%'}}>
-                  <Box flexGrow={1}>
-                    <Typography>Swings</Typography>
+                    <Box flexGrow={1}>
+                      <Typography>Hand</Typography>
+                    </Box>
+                    <Box>
+                      <Typography>{hand}</Typography>
+                    </Box>
                   </Box>
-                  <Typography>{handicap}</Typography>
-                </Box> */}
-                <Box m={1} display="flex" flexDirection="row" alignItems="center" sx={{ width: '80%'}}>
-                  <Box flexGrow={1}>
-                    <Typography>Handicap</Typography>
+                  <Box m={1} display="flex" flexDirection="row" alignItems="center" sx={{ width: '80%'}}>
+                    <Box flexGrow={1}>
+                      <Typography>Handicap</Typography>
+                    </Box>
+                    <Typography>{handicap}</Typography>
                   </Box>
-                  <Typography>{handicap}</Typography>
-                </Box>
-              </Box> 
-            </Card>
-          </Grid>
-          <Grid
-            item
-            xs={6}
-          >
-            <Card sx={{ height: '100%' }}>
-              <Box justifyContent="center" display="flex" alignItems="center" alignContent="center" flexDirection="column" p={7}>
-                <Box m={1} display="flex" flexDirection="row" alignItems="center" sx={{ width: '80%'}}>
-                  <Box flexGrow={1}>
-                    <Typography>Coaching Credentials</Typography>
+                </Box> 
+              </Card>
+            </Grid>
+          }
+          {
+            coachAccount &&
+            <Grid
+              item
+              xs={6}
+            >
+              <Card sx={{ height: '100%' }}>
+                <Box justifyContent="center" display="flex" alignItems="center" alignContent="center" flexDirection="column" p={7}>
+                  <Box m={1} display="flex" flexDirection="row" alignItems="center" sx={{ width: '80%'}}>
+                    <Box flexGrow={1}>
+                      <Typography>Coaching Credentials</Typography>
+                    </Box>
+                    <Box>
+                      <Typography>{coachingCredentials}</Typography>
+                    </Box>
                   </Box>
-                  <Box>
-                    <Typography>{coachingCredentials}</Typography>
+                  <Box m={1} display="flex" flexDirection="row" alignItems="center" sx={{ width: '80%'}}>
+                    <Box flexGrow={1}>
+                      <Typography>Year Started Coaching</Typography>
+                    </Box>
+                    <Box>
+                      <Typography>{moment.unix(dateStartedCoaching / 1000).format('YYYY')}</Typography>
+                    </Box>
                   </Box>
-                </Box>
-                <Box m={1} display="flex" flexDirection="row" alignItems="center" sx={{ width: '80%'}}>
-                  <Box flexGrow={1}>
-                    <Typography>Year Started Coaching</Typography>
-                  </Box>
-                  <Box>
-                    <Typography>{moment.unix(dateStartedCoaching / 1000).format('YYYY')}</Typography>
-                  </Box>
-                </Box>
-                {/* <Box m={1} display="flex" flexDirection="row" alignItems="center" sx={{ width: '80%'}}>
-                  <Box flexGrow={1}>
-                    <Typography>Lessons Taught</Typography>
-                  </Box>
-                  <Typography>21</Typography>
-                </Box>
-                <Box m={1} display="flex" flexDirection="row" alignItems="center" sx={{ width: '80%'}}>
-                  <Box flexGrow={1}>
-                    <Typography>Lessons Taught</Typography>
-                  </Box>
-                    <Typography>21</Typography>
-                </Box> */}
-              </Box> 
-            </Card>
-          </Grid>
+                </Box> 
+              </Card>
+            </Grid>
+          }
         </Grid>
       </Container>
     </Box>

@@ -22,7 +22,7 @@ const Main = (props) => {
             </Box>
             <img src="https://via.placeholder.com/900x400"/>
             <Grid container m={4}>
-                <Grid container item xs={4} alignItems="center" justifyContent="center">
+                <Grid container item item xs={12} lg={4} alignItems="center" justifyContent="center">
                     <Card>
                         <Box p={2} display="flex" flexDirection="column" justifyContent="center" alignItems="center" width={300}> 
                             <SchoolIcon fontSize='large'/>
@@ -32,7 +32,7 @@ const Main = (props) => {
                         </Box>
                     </Card>
                 </Grid>
-                <Grid container item xs={4} alignItems="center" justifyContent="center">
+                <Grid container item xs={12} lg={4} alignItems="center" justifyContent="center">
                     <Card> 
                         <Box p={2} display="flex" flexDirection="column" justifyContent="center" alignItems="center" width={300}>
                             <AssessmentIcon fontSize='large'/>
@@ -42,7 +42,7 @@ const Main = (props) => {
                         </Box>
                     </Card>
                 </Grid>
-                <Grid container item xs={4} alignItems="center" justifyContent="center">
+                <Grid container item item xs={12} lg={4} alignItems="center" justifyContent="center">
                     <Card>
                         <Box p={2} display="flex" flexDirection="column" justifyContent="center" alignItems="center" width={300}>
                             <GolfCourseIcon fontSize='large'/>

@@ -21,26 +21,53 @@ export const SIGNUP = gql`
 export const ME = gql`
     query{
         userInfo{
-        _id
-        email
-        phone
-        firstname
-        lastname
-        hand
-        handicap
-        homeCourse
-        homeCourseCity
-        homeCourseCountry
-        homeCourseProvince
-        coachAccount
-        playerAccount
-        coachingCredentials
-        dateStartedCoaching
-        createdAt
-        updatedAt
-        playerInfoCompleted
-        coachInfoCompleted
-        __typename
+            _id
+            email
+            phone
+            firstname
+            lastname
+            hand
+            handicap
+            homeCourse
+            homeCourseCity
+            homeCourseCountry
+            homeCourseProvince
+            coachAccount
+            playerAccount
+            coachingCredentials
+            dateStartedCoaching
+            createdAt
+            updatedAt
+            playerInfoCompleted
+            coachInfoCompleted
+            __typename
+        }
+    }
+`;
+
+export const USER_INFO = gql`
+    query($_id: String){
+        userInfo(_id: $_id){
+            _id
+            email
+            phone
+            firstname
+            lastname
+            hand
+            handicap
+            homeCourse
+            homeCourseCity
+            homeCourseCountry
+            homeCourseProvince
+            coachAccount
+            playerAccount
+            coachingCredentials
+            dateStartedCoaching
+            createdAt
+            updatedAt
+            playerInfoCompleted
+            coachInfoCompleted
+            __typename
         }
     }
 `;

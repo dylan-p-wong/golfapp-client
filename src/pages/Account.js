@@ -16,13 +16,24 @@ import { ME } from '../graphql/auth';
 import { UPDATE_USER } from 'src/graphql/user';
 import AccountTypeDetails from 'src/components/account/AccountTypeDetails';
 import Spinner from 'src/components/spinner/Spinner';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const Account = () => {
-  const { loading, error, data } = useQuery(ME);
-  const [updateUser, {loading: updateLoading, error: updateError, data: updateData}] = useMutation(UPDATE_USER);
+  const { loading, userError, data } = useQuery(ME);
+  const [error, setError] = useState(null);
+  const [updateUser, {loading: updateLoading, error: updateError, data: updateData}] = useMutation(UPDATE_USER, {
+    onError: setError,
+    onCompleted: () => toast("Account Updated")
+  });
 
-  if (loading || updateLoading) return <Spinner />
-  if (error || updateError) return <h1>Error</h1>
+  if (loading) return <Spinner />
+  if (userError) return <h1>Error</h1>
+
+  if (error) {
+    toast(error.message);
+    setError(null);
+  }
 
   const { coachInfoCompleted, playerInfoCompleted, createdAt, updatedAt, firstname, lastname, email, phone, hand, handicap, homeCourse, homeCourseCity, homeCourseProvince, homeCourseCountry, coachingCredentials, dateStartedCoaching, playerAccount, coachAccount } = data.userInfo;
 
@@ -74,7 +85,7 @@ const Account = () => {
             <Box mb={2}>
               {coachAccount && <AccountCoachDetails dateStartedCoaching={dateStartedCoaching} coachingCredentials={coachingCredentials} updateUser={updateUser}/>}
             </Box>
-            <SettingsPassword />
+            <SettingsPassword updateUser={updateUser}/>
           </Grid>
         </Grid>
       </Container>

@@ -21,7 +21,7 @@ const LessonRequestsTable = (props) => {
     const [createLessonRequest, { loading: createLessonRequestLoading, error: createLessonRequestError, data: createLessonRequestData }] = useMutation(CREATE_LESSON_REQUEST, {
         refetchQueries: [{query: GET_USER_LESSON_REQUESTS_PLAYER}],
         onError: setError,
-        onCompleted: () => {setOpen(false); toast("Lesson Request Sent!")}
+        onCompleted: () => {; toast("Lesson Request Sent!")}
     });
 
     const [cancelLessonRequest, { loading: cancelLessonRequestLoading, error: cancelLessonRequestError, data: cancelLessonRequestData }] = useMutation(CANCEL_LESSON_REQUEST, {
@@ -43,7 +43,12 @@ const LessonRequestsTable = (props) => {
     }
 
     const addLessonRequestHandle = async () => {
-        createLessonRequest({ variables: { note, coachId: selectedCoach._id }});
+        if (selectedCoach) {
+            createLessonRequest({ variables: { note, coachId: selectedCoach._id }});
+            setOpen(false);
+        } else {
+            toast("Please select a coach");
+        }
     }
 
     if (error) {

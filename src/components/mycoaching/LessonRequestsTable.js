@@ -8,7 +8,7 @@ import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { GET_USERS } from 'src/graphql/auth';
 import { ADD_LESSON_TO_LESSON_REQUEST, CREATE_LESSON, CREATE_LESSON_REQUEST, GET_USER_LESSONS_COACH, GET_USER_LESSON_REQUESTS_COACH } from 'src/graphql/lesson';
-import { USER_TIER_INFO } from 'src/graphql/user';
+import { USER_NOTIFICATIONS, USER_TIER_INFO } from 'src/graphql/user';
 
 const LessonRequestsTable = (props) => {
     const { lessonRequests, players } = props;
@@ -16,12 +16,10 @@ const LessonRequestsTable = (props) => {
     const [error, setError] = useState(null);
     const [createLesson, { loading : lessonLoading, error : lessonError, data : lessonData }] = useMutation(CREATE_LESSON, {
         onError: setError,
-        refetchQueries: [{ query: GET_USER_LESSONS_COACH }, { query: USER_TIER_INFO }],
+        refetchQueries: [{ query: GET_USER_LESSONS_COACH }, { query: USER_TIER_INFO }, { query: USER_NOTIFICATIONS}],
     });
     const [addLessonToLessonRequest, { loading: addLessonToLessonRequestLoading, error: addLessonToLessonRequestError, data: addLessonToLessonRequestData }] = useMutation(ADD_LESSON_TO_LESSON_REQUEST, {
-        refetchQueries: [
-            { query: GET_USER_LESSON_REQUESTS_COACH }
-        ],
+        refetchQueries: [{ query: GET_USER_LESSON_REQUESTS_COACH }],
         onError: setError,
         onCompleted: (data) => console.log(data)
     });
@@ -66,7 +64,7 @@ const LessonRequestsTable = (props) => {
         >
           <DialogTitle>{"Select Student"}</DialogTitle>
           <DialogContent>
-            {/* <TextField fullWidth label="Title" placeholder="Note title" onChange={e => setTitle(e.target.value)}/> */}
+            <TextField fullWidth label="Title" placeholder="Note title" onChange={e => setTitle(e.target.value)}/>
             <Autocomplete
               onChange={(event, newValue) => { setSelectedUser(newValue) }}
               style={{ width: 300 }} 

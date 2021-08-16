@@ -8,6 +8,7 @@ import {
   Divider,
   TextField
 } from '@material-ui/core';
+import { toast } from 'react-toastify';
 
 const SettingsPassword = (props) => {
   const [values, setValues] = useState({
@@ -21,6 +22,18 @@ const SettingsPassword = (props) => {
       [event.target.name]: event.target.value
     });
   };
+
+  const handleUpdate = async () => {
+    if (values.password === values.confirm) {
+      await props.updateUser({ variables: {info: { password: values.password }}});
+      setValues({
+        password: '',
+        confirm: ''
+      });
+    } else {
+      toast("Passwords must match");
+    }
+  }
 
   return (
     <form {...props}>
@@ -63,6 +76,7 @@ const SettingsPassword = (props) => {
           <Button
             color="primary"
             variant="contained"
+            onClick={handleUpdate}
           >
             Update
           </Button>

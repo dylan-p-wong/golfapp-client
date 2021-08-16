@@ -9,7 +9,7 @@ import Swing from './SwingPlayer';
 import { ADD_SWING, USER_SWINGS } from 'src/graphql/swing'; 
 import { useMutation, gql, useApolloClient } from '@apollo/client';
 import { toast } from 'react-toastify';
-import { USER_TIER_INFO } from 'src/graphql/user';
+import { USER_NOTIFICATIONS, USER_TIER_INFO, USER_TOTALS } from 'src/graphql/user';
 
 const AddSwing = (props) => {
     const client = useApolloClient();
@@ -20,7 +20,7 @@ const AddSwing = (props) => {
     const [error, setError] = useState(null);
     const [note, setNote] = useState("");
     const [addSwing, { data, loading }] = useMutation(ADD_SWING, {
-        refetchQueries: [{query: USER_SWINGS}],
+        refetchQueries: [{query: USER_SWINGS}, {query: USER_TOTALS}, {query: USER_TIER_INFO}, {query: USER_NOTIFICATIONS}],
         onError: setError,
         onCompleted: () => {toast("Swing added!"); navigate('/app/mygame', { replace: true })}
     });
