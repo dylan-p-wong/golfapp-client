@@ -10,7 +10,7 @@ import { createUploadLink } from 'apollo-upload-client'
 import { ToastContainer, toast } from 'react-toastify';
 
 const link = createUploadLink({
-  uri: 'http://localhost:4000/customers/api',
+  uri: process.env.REACT_APP_API_URL,
   credentials: 'include'
 });
 
