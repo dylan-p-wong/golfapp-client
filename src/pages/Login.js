@@ -15,11 +15,21 @@ import FacebookIcon from 'src/icons/Facebook';
 import GoogleIcon from 'src/icons/Google';
 import { useMutation, useApolloClient } from '@apollo/client';
 import { LOGIN } from '../graphql/auth';
+import { toast } from 'react-toastify';
+import { useState } from 'react';
 
 const Login = () => {
   const client = useApolloClient();
   const navigate = useNavigate();
-  const [login, { loading, error, data }] = useMutation(LOGIN);
+  const [error, setError] = useState(null);
+  const [login, { loading, data }] = useMutation(LOGIN, {
+    onError: setError
+  });
+
+  if (error) {
+    toast(error.message);
+    setError(null);
+  }
 
   return (
     <>

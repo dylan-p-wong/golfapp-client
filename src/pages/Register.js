@@ -14,11 +14,25 @@ import {
 } from '@material-ui/core';
 import { useMutation, useApolloClient } from '@apollo/client';
 import { SIGNUP } from '../graphql/auth';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const Register = () => {
   const client = useApolloClient();
   const navigate = useNavigate();
-  const [signup, { data }] = useMutation(SIGNUP);
+  const [error, setError] = useState(null);
+  const [signup, { data }] = useMutation(SIGNUP, {
+    onError: setError,
+    onCompleted: async () => {
+      await client.resetStore();
+      navigate('/app/dashboard', { replace: true });
+    }
+  });
+
+  if (error) {
+    toast(error.message);
+    setError(null);
+  }
 
   return (
     <>
@@ -56,9 +70,7 @@ const Register = () => {
             }
             onSubmit={async (values) => {
               const { email, password, firstName, lastName, playerAccount, coachAccount } = values;
-              await signup({ variables: { email, password, firstname: firstName, lastname: lastName, playerAccount, coachAccount }});
-              await client.resetStore();
-              navigate('/app/dashboard', { replace: true });
+              signup({ variables: { email, password, firstname: firstName, lastname: lastName, playerAccount, coachAccount }});
             }}
           >
             {({
