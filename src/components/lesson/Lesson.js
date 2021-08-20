@@ -44,7 +44,7 @@ const Lesson = (props) => {
             <Box mb={3} display="flex" flexDirection="row">
                 <Typography flexGrow={1} variant='h3' >{headerText}</Typography>
                 {(data.getLesson.coach._id === userData.userInfo._id) ? !editView ? <Button color="primary" variant="contained" onClick={() => navigate(`/app/lesson/edit/${_id}`, { replace: true })}>Coach View</Button> : <Button color="primary" variant="contained" onClick={() => navigate(`/app/lesson/${_id}`, { replace: true })}>User View</Button> : null}
-                <Button color="secondary" variant="contained">Delete</Button>
+                <Button style={{ marginLeft: 5 }} color="secondary" variant="contained">Delete</Button>
             </Box>
 
             <Divider />

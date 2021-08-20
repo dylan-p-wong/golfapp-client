@@ -12,13 +12,13 @@ import { toast } from 'react-toastify';
 import { USER_NOTIFICATIONS, USER_TIER_INFO, USER_TOTALS } from 'src/graphql/user';
 
 const AddSwing = (props) => {
-    const client = useApolloClient();
     const navigate = useNavigate();
     const [preview, setPreview] = useState(false);
     const [frontVideoFile, setFrontVideoFile] = useState([]);
     const [sideVideoFile, setSideVideoFile] = useState([]);
     const [error, setError] = useState(null);
     const [note, setNote] = useState("");
+    const [title, setTitle] = useState("");
     const [addSwing, { data, loading }] = useMutation(ADD_SWING, {
         refetchQueries: [{query: USER_SWINGS}, {query: USER_TOTALS}, {query: USER_TIER_INFO}, {query: USER_NOTIFICATIONS}],
         onError: setError,
@@ -45,9 +45,13 @@ const AddSwing = (props) => {
     const handleNoteChange = (e) => {
         setNote(e.target.value);
     }
+
+    const handleTitleChange = (e) => {
+        setTitle(e.target.value);
+    }
     
     const onAddSwing = () => {
-        addSwing({ variables: { frontVideo: frontVideoFile[0], sideVideo: sideVideoFile[0], note }});
+        addSwing({ variables: { frontVideo: frontVideoFile[0], sideVideo: sideVideoFile[0], note, title }});
     }
 
     return (
@@ -82,8 +86,9 @@ const AddSwing = (props) => {
                             onChange={handleDateChange}
                         />
                     </MuiPickersUtilsProvider> */}
-                    {/* <TextField fullWidth placeholder="Title" onChange={handleTitleChange}/> */}
+                    <TextField margin='dense' fullWidth placeholder="Optional" label="Title" onChange={handleTitleChange}/>
                     <TextField 
+                        margin='dense' 
                         fullWidth
                         placeholder="Enter a note"
                         multiline

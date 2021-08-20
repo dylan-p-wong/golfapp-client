@@ -21,10 +21,12 @@ import { useQuery } from '@apollo/client';
 import { USER_TOTALS } from 'src/graphql/user';
 import Spinner from 'src/components/spinner/Spinner';
 import { ME } from 'src/graphql/auth';
+import { useNavigate } from 'react-router';
 
 const Dashboard = () => {
   const { loading: userLoading, error: userError, data: userData } = useQuery(ME); 
   const { error, loading, data} = useQuery(USER_TOTALS);
+  const navigate = useNavigate();
 
   if (loading || userLoading) return <Spinner />
   if (error || userError) return <h1>Error</h1>
@@ -44,8 +46,8 @@ const Dashboard = () => {
       <Container maxWidth={false}>
         <Box mb={3} display="flex" flexDirection="row">
             <Typography flexGrow={1} variant='h3' >Dashboard</Typography>
-            <Button variant="contained">My Game</Button>
-            <Button variant="contained">My Coaching</Button>
+            {userData.userInfo.playerAccount && <Button variant="contained" onClick={() => navigate(`/app/mygame`, { replace: true })}>My Game</Button>}
+            {userData.userInfo.coachAccount && <Button style={{ marginLeft: 5 }} variant="contained" onClick={() => navigate(`/app/mycoaching`, { replace: true })}>My Coaching</Button>}
         </Box>
         <Grid
           container

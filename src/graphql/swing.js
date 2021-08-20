@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const ADD_SWING = gql`
-    mutation ($frontVideo: Upload, $sideVideo: Upload, $note: String!, $playerId: String){
-        addSwing(note: $note, playerId: $playerId, frontVideo: $frontVideo, sideVideo: $sideVideo) {
+    mutation ($frontVideo: Upload, $sideVideo: Upload, $note: String!, $playerId: String, $title: String){
+        addSwing(note: $note, playerId: $playerId, frontVideo: $frontVideo, sideVideo: $sideVideo, title: $title) {
             _id
             title
             note

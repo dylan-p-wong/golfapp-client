@@ -64,7 +64,7 @@ const LessonRequestsTable = (props) => {
         >
           <DialogTitle>{"Select Coach"}</DialogTitle>
           <DialogContent>
-            <TextField fullWidth label="Note" placeholder="Swing fix" onChange={e => setNote(e.target.value)}/>
+            <TextField margin='normal' fullWidth label="Note" placeholder="Swing fix" onChange={e => setNote(e.target.value)}/>
             <Autocomplete
               onChange={(event, newValue) => { setSelectedCoach(newValue) }}
               style={{ width: 300 }} 

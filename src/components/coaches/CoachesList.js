@@ -68,7 +68,7 @@ const CoachesList = ({ coaches, ...rest }) => {
         >
           <DialogTitle>{"Select Coach"}</DialogTitle>
           <DialogContent>
-            <TextField fullWidth label="Note" placeholder="Swing fix" onChange={e => setNote(e.target.value)}/>
+            <TextField margin='normal' fullWidth label="Note" placeholder="Swing fix" onChange={e => setNote(e.target.value)}/>
             <Autocomplete
               value={selectedCoach}
               onChange={(event, newValue) => { setSelectedCoach(newValue) }}

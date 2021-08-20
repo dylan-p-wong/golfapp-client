@@ -73,7 +73,7 @@ const LessonsTable = (props) => {
                         </TableCell>
                         <TableCell>
                             <Button onClick={() => navigate(`/app/lesson/${item._id}`, { replace: true })} variant="contained" size="small">View</Button>
-                            <Button onClick={() => navigate(`/app/lesson/edit/${item._id}`, { replace: true })} variant="contained" size="small">Edit</Button>
+                            <Button style={{ marginLeft: 5 }} onClick={() => navigate(`/app/lesson/edit/${item._id}`, { replace: true })} variant="contained" size="small">Edit</Button>
                         </TableCell>
                         </TableRow>
                     ))}
