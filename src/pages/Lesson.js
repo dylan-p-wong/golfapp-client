@@ -7,7 +7,7 @@ const LessonPage = () => {
   return (
   <>
     <Helmet>
-      <title>Customers | Material Kit</title>
+      <title>Customers</title>
     </Helmet>
     <Box
       sx={{

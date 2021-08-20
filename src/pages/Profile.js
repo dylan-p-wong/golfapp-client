@@ -17,14 +17,12 @@ const ProfilePage = () => {
   if (loading || swingsLoading) return <Spinner />
   if (error || swingsError) return <h1>Error</h1>
 
-  console.log(swingsData)
-
   const { firstname, lastname, email, phone, homeCourse, homeCourseCity, homeCourseProvince, homeCourseCountry, hand, handicap, coachingCredentials, dateStartedCoaching, playerAccount, coachAccount, playerInfoCompleted, coachInfoCompleted } = data.userInfo;
 
   return (
   <>
     <Helmet>
-      <title>Profile | Material Kit</title>
+      <title>Profile</title>
     </Helmet>
     <Box
       sx={{

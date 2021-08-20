@@ -36,7 +36,7 @@ const MyGame = () => {
   return (
   <>
     <Helmet>
-      <title>Swings | Material Kit</title>
+      <title>Swings</title>
     </Helmet>
     <Box
       sx={{

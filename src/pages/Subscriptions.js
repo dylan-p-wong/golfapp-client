@@ -17,7 +17,7 @@ const Subscriptions = () => {
   return (
   <>
     <Helmet>
-      <title>Subscriptions | Material Kit</title>
+      <title>Subscriptions</title>
     </Helmet>
     <Box
       sx={{

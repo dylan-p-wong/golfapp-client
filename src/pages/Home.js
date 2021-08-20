@@ -28,7 +28,7 @@ const classes = useStyles();
 return (
     <>
         <Helmet>
-        <title>Home | Material Kit</title>
+        <title>Home</title>
         </Helmet>
         <Box>
             <Container maxWidth={false}>

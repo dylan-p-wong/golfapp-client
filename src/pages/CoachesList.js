@@ -17,7 +17,7 @@ const CustomerList = () => {
   return (
   <>
     <Helmet>
-      <title>Coaches | Material Kit</title>
+      <title>Coaches</title>
     </Helmet>
     <Box
       sx={{
