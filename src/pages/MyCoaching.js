@@ -35,7 +35,7 @@ const MyCoaching = () => {
   return (
   <>
     <Helmet>
-      <title>Customers</title>
+      <title>My Coaching</title>
     </Helmet>
     <Box
       sx={{

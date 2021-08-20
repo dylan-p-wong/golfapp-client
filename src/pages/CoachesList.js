@@ -16,9 +16,6 @@ const CustomerList = () => {
 
   return (
   <>
-    <Helmet>
-      <title>Coaches</title>
-    </Helmet>
     <Box
       sx={{
         backgroundColor: 'background.default',
