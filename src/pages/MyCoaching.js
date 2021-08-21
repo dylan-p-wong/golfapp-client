@@ -68,13 +68,15 @@ const MyCoaching = () => {
           <>
             <Grid
               item
-              xs={6}
+              xs={12}
+              lg={6}
             >
               <LessonRequestsTable lessonRequests={coachLessonRequestsData.getUserCoachLessonRequests} players={usersData.getUsers}/>
             </Grid>
             <Grid
               item
-              xs={6}
+              xs={12}
+              lg={6}
             >
               <LessonsTable lessons={coachLessonsData.getUserCoachLessons} />
             </Grid>
