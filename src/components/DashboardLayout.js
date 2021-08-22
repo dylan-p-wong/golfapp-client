@@ -3,9 +3,6 @@ import { Outlet } from 'react-router-dom';
 import { experimentalStyled } from '@material-ui/core';
 import DashboardNavbar from './DashboardNavbar';
 import DashboardSidebar from './DashboardSidebar';
-import { useQuery } from '@apollo/client';
-import { ME } from '../graphql/auth';
-import { useNavigate } from 'react-router';
 
 const DashboardLayoutRoot = experimentalStyled('div')(
   ({ theme }) => ({

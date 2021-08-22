@@ -2,7 +2,6 @@ import { Helmet } from 'react-helmet';
 import { Box, Container } from '@material-ui/core';
 import CustomerListResults from 'src/components/customer/CustomerListResults';
 import CoachListToolbar from 'src/components/coaches/CoachListToolbar';
-import customers from 'src/__mocks__/customers'
 import { GET_COACHES } from 'src/graphql/auth';
 import { useQuery } from '@apollo/client';
 import CoachesList from 'src/components/coaches/CoachesList';

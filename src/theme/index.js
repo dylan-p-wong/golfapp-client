@@ -9,13 +9,17 @@ const theme = createMuiTheme({
       paper: colors.common.white
     },
     primary: {
-      contrastText: '#ffffff',
-      main: '#5664d2'
+      contrastText: '#FAF9F6',
+      main: '#5d755d'
     },
+    pending: {
+      contrastText: '#000000',
+      main: '#eff5ab'
+    }, 
     text: {
       primary: '#172b4d',
       secondary: '#6b778c'
-    }
+    },
   },
   shadows,
   typography,

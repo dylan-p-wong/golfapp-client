@@ -123,7 +123,7 @@ const LessonRequestsTable = (props) => {
                         </TableCell>
                         <TableCell>
                             <Chip
-                            color="primary"
+                            color={item.lesson && item.lesson.isCompleted ? "primary" : item.isCancelled ? "secondary" : 'pending'}
                             label={item.lesson && item.lesson.isCompleted ? 'completed' : item.isCancelled ? 'cancelled' : 'pending'}
                             size="small"
                             />

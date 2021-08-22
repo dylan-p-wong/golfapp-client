@@ -9,6 +9,7 @@ import { useState } from "react";
 import SwingInfo from "./SwingInfo";
 import { ME } from "src/graphql/auth";
 import moment from "moment";
+import AnalysisBase from "../analysis/AnalysisBase";
 
 const Swing = (props) => {
     const { _id } = useParams();
@@ -41,11 +42,18 @@ const Swing = (props) => {
                     indicatorColor="primary"
                 >
                     <Tab label="Swing"/>
+                    <Tab label="Analyze"/>
                     <Tab label="Info"/>
                 </Tabs>
             </AppBar>
             { value == 0 && <ViewSwing video1={data.getSwing.frontVideo} video2={data.getSwing.sideVideo}/>}
-            { value == 1 && <SwingInfo userId={userData.userInfo._id} swing={data.getSwing}/> }
+            { value == 1 &&  
+                <Box p={6} display="flex" justifyContent="center" alignItems="center">
+                    {data.getSwing.frontVideo && <AnalysisBase videoURL={data.getSwing.frontVideo}/>}
+                    {data.getSwing.sideVideo && <AnalysisBase videoURL={data.getSwing.sideVideo}/>}
+                </Box>
+            }
+            { value == 2 && <SwingInfo userId={userData.userInfo._id} swing={data.getSwing}/> }
         </Box>
     )
 }

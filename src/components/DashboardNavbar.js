@@ -15,7 +15,6 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
-import Logo from './Logo';
 import { useMutation, useApolloClient, useQuery } from '@apollo/client';
 import { LOGOUT } from '../graphql/auth';
 import { USER_TIER_INFO } from 'src/graphql/user';
@@ -34,7 +33,7 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
     >
       <Toolbar>
         <RouterLink to="/">
-          <Logo />
+          <img height={50} src="/static/images/logo.png"/>
         </RouterLink>
         <Box sx={{ flexGrow: 1 }} />
         <Box mr={1}>

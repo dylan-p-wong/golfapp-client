@@ -1,27 +1,19 @@
-import { Helmet } from 'react-helmet';
-import {
-  Box,
-  Container,
-  Grid,
-  Button,
-  Typography
-} from '@material-ui/core';
-import Budget from 'src/components/dashboard//Budget';
-import LatestOrders from 'src/components/dashboard//LatestOrders';
-import LatestProducts from 'src/components/dashboard//LatestProducts';
-import TasksProgress from 'src/components/dashboard//TasksProgress';
-import TotalStudents from 'src/components/dashboard/TotalStudents';
-import TotalProfit from 'src/components/dashboard//TotalProfit';
-import LessonsTaught from 'src/components/dashboard/LessonsTaught';
-import LessonsRecieved from 'src/components/dashboard/LessonsRecieved';
-import TotalSwings from 'src/components/dashboard/TotalSwings';
-import Messages from 'src/components/dashboard/Messages';
-import Activity from 'src/components/dashboard/Activity';
 import { useQuery } from '@apollo/client';
-import { USER_TOTALS } from 'src/graphql/user';
+import {
+  Box, Button, Container,
+  Grid, Typography
+} from '@material-ui/core';
+import { Helmet } from 'react-helmet';
+import { useNavigate } from 'react-router';
+import Activity from 'src/components/dashboard/Activity';
+import LessonsRecieved from 'src/components/dashboard/LessonsRecieved';
+import LessonsTaught from 'src/components/dashboard/LessonsTaught';
+import Messages from 'src/components/dashboard/Messages';
+import TotalStudents from 'src/components/dashboard/TotalStudents';
+import TotalSwings from 'src/components/dashboard/TotalSwings';
 import Spinner from 'src/components/spinner/Spinner';
 import { ME } from 'src/graphql/auth';
-import { useNavigate } from 'react-router';
+import { USER_TOTALS } from 'src/graphql/user';
 
 const Dashboard = () => {
   const { loading: userLoading, error: userError, data: userData } = useQuery(ME); 

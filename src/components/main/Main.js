@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router';
 
 const useStyles = makeStyles(theme => ({
     mainImage: {
+        borderRadius: 25,
         [theme.breakpoints.down('sm')]: {
             width: 300
         },
@@ -36,7 +37,7 @@ const Main = (props) => {
             <Box m={4} alignItems="center" justifyContent="center" display="flex" flexDirection="column">
             <Typography align="center" variant="h1">Built for golfers</Typography>
                 <Container maxWidth="sm" style={{ marginTop: 20 }}>
-                    <Typography align="center" variant="h4" color="textSecondary">Golf App provides golfers and coaches a place to collaborate and make golf improvement easier than ever.</Typography>
+                    <Typography align="center" variant="h4" color="textSecondary">Our platform provides golfers and coaches a place to collaborate and make golf improvement easier than ever.</Typography>
                 </Container>
                 <Box m={3}>
                     <Button variant="contained" onClick={() => navigate('/register', { replace: true })}>Get Started</Button>

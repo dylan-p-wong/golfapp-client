@@ -2,11 +2,8 @@ import { Navigate } from 'react-router-dom';
 import DashboardLayout from 'src/components/DashboardLayout';
 import MainLayout from 'src/components/MainLayout';
 import Account from 'src/pages/Account';
-import CustomerList from 'src/pages/CoachesList';
 import Dashboard from 'src/pages/Dashboard';
 import Login from 'src/pages/Login';
-import NotFound from 'src/pages/NotFound';
-import ProductList from 'src/pages/ProductList';
 import Register from 'src/pages/Register';
 import MyGame from 'src/pages/MyGame';
 import MyCoaching from 'src/pages/MyCoaching';
@@ -20,7 +17,8 @@ import { requireAuthentication, noAuthentication } from './components/shared/Aut
 import ProfilePage from './pages/Profile';
 import Home from './pages/Home';
 import Main from './components/main/Main';
-import Pricing from './components/pricing/Pricing';
+import About from './components/about/About';
+import Contact from './components/contact/Contact';
 
 const NoAuthedLogin = noAuthentication(Login);
 const NoAuthedRegister = noAuthentication(Register);
@@ -35,7 +33,6 @@ const routes = [
       { path: 'account', element: <Account /> },
       // { path: 'coaches', element: <CustomerList /> },
       { path: 'dashboard', element:  <Dashboard />},
-      { path: 'products', element: <ProductList /> },
       { path: 'mygame', element: <MyGame /> },
       { path: 'mycoaching', element: <MyCoaching /> },
       { path: 'lesson', element: <LessonPage />, children: [ {path: ':_id', element: <Lesson />}, {path: 'edit/:_id', element: <Lesson editView/>} ]},
@@ -51,7 +48,7 @@ const routes = [
       { path: 'login', element: <NoAuthedLogin /> },
       { path: 'register', element: <NoAuthedRegister /> },
       { path: '404', element: <Navigate to="/" /> },
-      { path: '/', element: <Home />, children: [{path: '/', element: <Main />}, {path: 'contact'}] },
+      { path: '/', element: <Home />, children: [{path: '/', element: <Main />}, {path: 'about', element: <About />}, {path: 'contact', element: <Contact />}] },
       { path: '*', element: <Navigate to="/" /> }
     ]
   }

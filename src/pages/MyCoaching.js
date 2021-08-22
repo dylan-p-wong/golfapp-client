@@ -1,10 +1,8 @@
 import { Helmet } from 'react-helmet';
 import { AppBar, Tabs, Tab, Box, Container, Grid, Card, CardHeader, Button, CardContent, Dialog, DialogContent, DialogTitle, DialogActions, Autocomplete, TextField, Divider, Typography, Chip, Table, TableBody, TableCell, TableHead, TableRow, TableSortLabel, Tooltip } from '@material-ui/core';
 import CustomerListResults from 'src/components/customer/CustomerListResults';
-import customers from 'src/__mocks__/customers';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import users from '../__mocks__/customers';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_USERS } from 'src/graphql/auth';
 import { ADD_LESSON_TO_LESSON_REQUEST, CREATE_LESSON, GET_USER_LESSONS_COACH, GET_USER_LESSON_REQUESTS_COACH } from 'src/graphql/lesson';

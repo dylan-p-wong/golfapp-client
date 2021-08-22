@@ -88,7 +88,7 @@ const Tiers = ({ playerTier, coachTier, showPlayerTier = true, showCoachTier = t
                                             subheader={item.subheader}
                                             titleTypographyProps={{ align: 'center' }}
                                             subheaderTypographyProps={{ align: 'center' }}
-                                            style={{ backgroundColor: item.key === playerTier ? '#ADD8E6' : '#F5F5F5' }}                               
+                                            style={{ backgroundColor: item.key === playerTier ? '#b8e3a3' : '#F5F5F5' }}                               
                                         />
                                         <CardContent>
                                             <Box mb={3} display="flex" justifyContent="center" alignItems="baseline">
@@ -139,7 +139,7 @@ const Tiers = ({ playerTier, coachTier, showPlayerTier = true, showCoachTier = t
                                             subheader={item.subheader}
                                             titleTypographyProps={{ align: 'center' }}
                                             subheaderTypographyProps={{ align: 'center' }}
-                                            style={{ backgroundColor: item.key === coachTier ? '#ADD8E6' : '#F5F5F5' }}                               
+                                            style={{ backgroundColor: item.key === coachTier ? '#b8e3a3' : '#F5F5F5' }}                               
                                         />
                                         <CardContent>
                                             <Box mb={3} display="flex" justifyContent="center" alignItems="baseline">

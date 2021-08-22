@@ -37,10 +37,10 @@ return (
             <Container maxWidth="md" component="footer" className={classes.footer}>
                 <Grid container spacing={4} justifyContent="space-evenly">
                     <Grid container item xs={6} sm={3} alignItems="center" justifyContent="center" flexDirection="column">
-                        <Typography variant="h5" gutterBottom>Golf App</Typography>
+                        <Typography variant="h5" gutterBottom>Mangrove Golf</Typography>
                         <ul>
                             <li>
-                                <Link href="#" variant="subtitle1" color="textSecondary">
+                                <Link href="/about" variant="subtitle1" color="textSecondary">
                                     About
                                 </Link>
                             </li>
@@ -50,7 +50,7 @@ return (
                         <Typography variant="h5" gutterBottom>Resources</Typography>
                         <ul>
                             <li>
-                                <Link href="#" variant="subtitle1" color="textSecondary">
+                                <Link href="/contact" variant="subtitle1" color="textSecondary">
                                     Contact
                                 </Link>
                             </li>
@@ -58,7 +58,7 @@ return (
                     </Grid>
                 </Grid>
                 <Box mt={5}>
-                    <Typography variant="body2" color="textSecondary" align="center">Golf App 2021</Typography>
+                    <Typography variant="body2" color="textSecondary" align="center">Mangrove Golf 2021</Typography>
                 </Box>
             </Container>
         </Box>
